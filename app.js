@@ -887,6 +887,8 @@ function renderStepChips() {
     stepChipsEl.appendChild(chip);
   });
 
+  updateAddStepState();
+
   // keep the active chip visible in the carousel
   const active = stepChipsEl.querySelector(".step-chip.active");
   if (active) {
@@ -913,11 +915,13 @@ $("resetAllBtn").addEventListener("click", resetAllPlay);
 
 let suppressChipClick = false;
 
+// No pointer capture here: capturing retargets the follow-up click to the
+// container, which silently killed clicks on chips and their delete badges.
+// Window-level listeners track the drag instead.
 stepChipsEl.addEventListener("pointerdown", (e) => {
   const startX = e.clientX;
   const startScroll = stepChipsEl.scrollLeft;
   let moved = false;
-  try { stepChipsEl.setPointerCapture(e.pointerId); } catch (_) {}
 
   const move = (ev) => {
     const dx = ev.clientX - startX;
@@ -931,15 +935,15 @@ stepChipsEl.addEventListener("pointerdown", (e) => {
     }
   };
   const up = () => {
-    stepChipsEl.removeEventListener("pointermove", move);
-    stepChipsEl.removeEventListener("pointerup", up);
-    stepChipsEl.removeEventListener("pointercancel", up);
+    window.removeEventListener("pointermove", move);
+    window.removeEventListener("pointerup", up);
+    window.removeEventListener("pointercancel", up);
     stepChipsEl.classList.remove("dragging");
     if (moved) suppressChipClick = true; // swallow the click that follows a drag
   };
-  stepChipsEl.addEventListener("pointermove", move);
-  stepChipsEl.addEventListener("pointerup", up);
-  stepChipsEl.addEventListener("pointercancel", up);
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", up);
+  window.addEventListener("pointercancel", up);
 });
 
 stepChipsEl.addEventListener("click", (e) => {
@@ -1142,12 +1146,20 @@ function renderScrubber() {
   }
 }
 
+// + only makes sense when the last step has drawn actions — otherwise a
+// new step would create two consecutive steps where nothing happens.
+function updateAddStepState() {
+  const steps = currentPlay().steps;
+  $("addStepBtn").disabled = !hasMoves(steps[steps.length - 1]);
+}
+
 // Re-render everything that changes while editing the current step.
 function refreshEdit() {
   renderPositions(positionsAt(playhead));
   renderArrows();
   renderHandles();
   renderScrubber();
+  updateAddStepState();
 }
 
 /* ================= Tools ================= */
@@ -1701,8 +1713,12 @@ scrubber.addEventListener("input", () => {
 });
 
 // Appends a new step at the end, committing the last step's arrows.
+// A new step requires the last one to have actions — otherwise the play
+// would contain two consecutive steps where nothing happens.
 function addStep() {
   stopPlayback();
+  const steps0 = currentPlay().steps;
+  if (!hasMoves(steps0[steps0.length - 1])) return;
   pushUndo();
   const steps = currentPlay().steps;
   const last = steps[steps.length - 1];

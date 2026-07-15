@@ -452,7 +452,12 @@ select:hover, .btn:hover { border-color: #5a5a63; }
   font-weight: 700;
 }
 
-.step-chip.step-add:hover { background: #36b95a; border-color: #36b95a; }
+.step-chip.step-add:hover:not(:disabled) { background: #36b95a; border-color: #36b95a; }
+
+.step-chip.step-add:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 .step-chip.step-reset {
   background: #d05050;

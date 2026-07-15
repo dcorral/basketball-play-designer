@@ -29,18 +29,31 @@ body {
 .home {
   position: relative;
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  overflow-y: auto;
+  padding: 0 24px;
+}
+
+/* margin:auto centres the content when it fits and lets the page
+   scroll naturally when it doesn't */
+.home-inner {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 30px;
-  padding: 24px;
+  padding: 18px 0 40px;
+  width: 100%;
 }
 
 .home .lang-select {
-  position: absolute;
-  top: 16px;
+  position: fixed;
+  top: 12px;
   right: 16px;
+  z-index: 5;
 }
 
 .lang-select {
@@ -56,7 +69,6 @@ body {
 .home-logo {
   width: 150px;
   height: auto;
-  filter: drop-shadow(0 8px 24px #0009);
   margin-bottom: -8px;
 }
 
@@ -70,9 +82,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: min(480px, 92vw);
-  max-height: 50vh;
-  overflow-y: auto;
+  width: 100%;
+  max-width: 500px;
 }
 
 .play-list:empty { display: none; }
@@ -80,9 +91,8 @@ body {
 .play-card {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 16px 20px;
+  gap: 10px;
+  padding: 12px 14px 12px 8px;
   background: var(--panel);
   border: 1px solid #3c3c42;
   border-radius: 12px;
@@ -92,6 +102,51 @@ body {
 }
 
 .play-card:hover { border-color: var(--accent); background: var(--panel-2); }
+
+.play-card .card-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-del { margin-left: auto; }
+
+.card-grip {
+  color: #55555c;
+  cursor: grab;
+  touch-action: none;
+  padding: 6px 4px;
+  display: flex;
+  flex: none;
+}
+
+.card-grip svg { width: 13px; height: 17px; }
+
+.card-grip:hover { color: var(--muted); }
+
+.card-del {
+  background: none;
+  border: none;
+  color: #e05252;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 7px;
+  display: flex;
+  flex: none;
+}
+
+.card-del svg { width: 15px; height: 15px; }
+
+.card-del:hover { background: #e0525226; }
+
+.play-card.dragging-card {
+  opacity: 0.93;
+  z-index: 10;
+  position: relative;
+  box-shadow: 0 10px 28px #000b;
+  border-color: var(--accent);
+  cursor: grabbing;
+}
 
 .play-card .meta {
   color: var(--muted);

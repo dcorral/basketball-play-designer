@@ -94,6 +94,7 @@ const I18N = {
     ttGrip: "Drag to move the toolbar (double-click to reset)",
     ttZoomIn: "Zoom in", ttZoomOut: "Zoom out",
     ttZoomReset: "Reset zoom (or double-click the court)",
+    ttReorder: "Drag to reorder",
     exportAll: "⤓ Export all (.zip)", importAll: "⤒ Import (.zip)",
     ttExportAll: "Download every play as a .zip backup",
     ttImportAll: "Import plays from a .zip backup",
@@ -146,6 +147,7 @@ const I18N = {
     ttGrip: "Arrastra para mover la barra (doble clic para restablecer)",
     ttZoomIn: "Acercar", ttZoomOut: "Alejar",
     ttZoomReset: "Restablecer zoom (o doble clic en la pista)",
+    ttReorder: "Arrastra para reordenar",
     exportAll: "⤓ Exportar todo (.zip)", importAll: "⤒ Importar (.zip)",
     ttExportAll: "Descargar todas las jugadas como copia de seguridad .zip",
     ttImportAll: "Importar jugadas desde una copia de seguridad .zip",
@@ -374,20 +376,106 @@ function openPlay(id) {
   resetZoom();
 }
 
+let cardDragJustEnded = false;
+
 function renderHome() {
   playListEl.innerHTML = "";
   for (const p of plays) {
     const card = document.createElement("div");
     card.className = "play-card";
+    card.dataset.id = p.id;
+
+    const grip = document.createElement("span");
+    grip.className = "card-grip";
+    grip.title = t("ttReorder");
+    grip.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none">' +
+      '<circle cx="9" cy="5" r="1.8"/><circle cx="15" cy="5" r="1.8"/>' +
+      '<circle cx="9" cy="12" r="1.8"/><circle cx="15" cy="12" r="1.8"/>' +
+      '<circle cx="9" cy="19" r="1.8"/><circle cx="15" cy="19" r="1.8"/></svg>';
+    attachCardReorder(grip, card);
+
     const name = document.createElement("span");
+    name.className = "card-name";
     name.textContent = p.name;
+
+    const del = document.createElement("button");
+    del.className = "card-del";
+    del.title = t("ttDelete");
+    del.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M4 7 H20 M10 4 H14 M6.5 7 L7.5 20 H16.5 L17.5 7 M10 11 V16 M14 11 V16"/></svg>';
+    del.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const ok = await openModal({
+        title: t("deleteTitle"),
+        message: t("deleteMsg", p.name),
+        confirmLabel: t("deleteConfirm"),
+        danger: true,
+      });
+      if (!ok) return;
+      plays = plays.filter((x) => x.id !== p.id);
+      save();
+      renderHome();
+    });
+
     const meta = document.createElement("span");
     meta.className = "meta";
     meta.textContent = p.steps.length + " " + (p.steps.length === 1 ? t("stepSingular") : t("stepPlural"));
-    card.append(name, meta);
-    card.addEventListener("click", () => openPlay(p.id));
+
+    card.append(grip, name, meta, del);
+    card.addEventListener("click", () => {
+      if (cardDragJustEnded) return;
+      openPlay(p.id);
+    });
     playListEl.appendChild(card);
   }
+}
+
+// Drag the grip to reorder plays in the list.
+function attachCardReorder(grip, card) {
+  grip.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try { grip.setPointerCapture(e.pointerId); } catch (_) {}
+    const startY = e.clientY;
+    let moved = false;
+
+    const move = (ev) => {
+      const dy = ev.clientY - startY;
+      if (!moved && Math.abs(dy) > 6) {
+        moved = true;
+        card.classList.add("dragging-card");
+      }
+      if (moved) card.style.transform = `translateY(${dy}px)`;
+    };
+    const up = (ev) => {
+      grip.removeEventListener("pointermove", move);
+      grip.removeEventListener("pointerup", up);
+      grip.removeEventListener("pointercancel", up);
+      card.classList.remove("dragging-card");
+      card.style.transform = "";
+      if (!moved) return;
+      cardDragJustEnded = true;
+      setTimeout(() => { cardDragJustEnded = false; }, 200);
+      // new index = how many other cards' centres sit above the drop point
+      const others = [...playListEl.querySelectorAll(".play-card")].filter((c) => c !== card);
+      const newIdx = others.filter((c) => {
+        const r = c.getBoundingClientRect();
+        return r.top + r.height / 2 < ev.clientY;
+      }).length;
+      const oldIdx = plays.findIndex((p) => p.id === card.dataset.id);
+      if (oldIdx >= 0 && newIdx !== oldIdx) {
+        const [p] = plays.splice(oldIdx, 1);
+        plays.splice(newIdx, 0, p);
+        save();
+      }
+      renderHome();
+    };
+    grip.addEventListener("pointermove", move);
+    grip.addEventListener("pointerup", up);
+    grip.addEventListener("pointercancel", up);
+  });
 }
 
 /* ================= Play management ================= */
@@ -1695,7 +1783,7 @@ document.addEventListener("keydown", (e) => {
 (async function loadTeamLogo() {
   const el = $("teamLogo");
   try {
-    const resp = await fetch("assets/logo.svg");
+    const resp = await fetch("assets/logo.png");
     if (!resp.ok) throw new Error("missing");
     const blob = await resp.blob();
     const dataUrl = await new Promise((res, rej) => {

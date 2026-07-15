@@ -88,6 +88,13 @@ const I18N = {
     ttPrev: "Previous step", ttNext: "Next step", ttPlay: "Play / Pause",
     ttSpeed: "Playback speed",
     ttUndo: "Undo (Ctrl+Z)", ttRedo: "Redo (Ctrl+Y / Ctrl+Shift+Z)",
+    exportAll: "⤓ Export all (.zip)", importAll: "⤒ Import (.zip)",
+    ttExportAll: "Download every play as a .zip backup",
+    ttImportAll: "Import plays from a .zip backup",
+    importDoneTitle: "Import complete",
+    importDoneMsg: (a, u) => `${a} new plays imported, ${u} updated.`,
+    importErrTitle: "Import failed",
+    importErrMsg: "That file doesn't look like a Playbook backup (.zip).",
   },
   es: {
     createNew: "＋ CREAR NUEVA",
@@ -129,6 +136,13 @@ const I18N = {
     ttPrev: "Paso anterior", ttNext: "Paso siguiente", ttPlay: "Reproducir / Pausa",
     ttSpeed: "Velocidad de reproducción",
     ttUndo: "Deshacer (Ctrl+Z)", ttRedo: "Rehacer (Ctrl+Y / Ctrl+Mayús+Z)",
+    exportAll: "⤓ Exportar todo (.zip)", importAll: "⤒ Importar (.zip)",
+    ttExportAll: "Descargar todas las jugadas como copia de seguridad .zip",
+    ttImportAll: "Importar jugadas desde una copia de seguridad .zip",
+    importDoneTitle: "Importación completada",
+    importDoneMsg: (a, u) => `${a} jugadas nuevas importadas, ${u} actualizadas.`,
+    importErrTitle: "Error al importar",
+    importErrMsg: "El archivo no parece una copia de seguridad de Playbook (.zip).",
   },
 };
 
@@ -175,6 +189,7 @@ function applyLang() {
     modalCancel: "cancel", exportCancel: "cancel", exportGo: "exportGo",
     exportTitle: "exportTitle", exportFormatLabel: "formatLabel",
     exportMoveLabel: "moveDur", exportPauseLabel: "pauseDur",
+    exportAllBtn: "exportAll", importAllBtn: "importAll",
   };
   for (const [id, key] of Object.entries(texts)) $(id).textContent = t(key);
 
@@ -184,6 +199,7 @@ function applyLang() {
     resetAllBtn: "ttResetAll", prevBtn: "ttPrev", nextBtn: "ttNext",
     playBtn: "ttPlay", speedSelect: "ttSpeed",
     undoBtn: "ttUndo", redoBtn: "ttRedo",
+    exportAllBtn: "ttExportAll", importAllBtn: "ttImportAll",
   };
   for (const [id, key] of Object.entries(titles)) $(id).title = t(key);
 
@@ -212,11 +228,12 @@ for (const id of ["langHome", "langEditor"]) {
 
 // openModal resolves with the input text (or true when there is no input),
 // or null if cancelled.
-function openModal({ title, message = "", input = false, value = "", confirmLabel = "OK", danger = false }) {
+function openModal({ title, message = "", input = false, value = "", confirmLabel = "OK", danger = false, noCancel = false }) {
   return new Promise((resolve) => {
     $("modalTitle").textContent = title;
     $("modalMsg").textContent = message;
     $("modalMsg").hidden = !message;
+    $("modalCancel").hidden = noCancel;
     const inputEl = $("modalInput");
     inputEl.hidden = !input;
     inputEl.value = value;

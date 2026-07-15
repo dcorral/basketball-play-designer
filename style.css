@@ -221,7 +221,6 @@ body {
   gap: 16px;
   padding: 10px 96px 10px 16px; /* right space reserved for the language select */
   background: var(--panel);
-  border-bottom: 1px solid #0009;
   flex-wrap: wrap;
 }
 
@@ -344,10 +343,27 @@ select:hover, .btn:hover { border-color: #5a5a63; }
   mask-image: linear-gradient(to right, transparent 0, #000 42px);
 }
 
-.step-controls > .step-add,
-.step-controls > .step-reset {
-  flex: 0 0 auto;
-  margin-top: 4px;
+/* centered row of step actions under the steps carousel */
+.step-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 6px 0 10px;
+  background: var(--panel);
+  border-bottom: 1px solid #0009;
+}
+
+.step-actions .step-chip {
+  padding: 6px 28px;
+  font-size: 15px;
+}
+
+/* centered delete-play row at the very bottom, under the player */
+.delete-row {
+  display: flex;
+  justify-content: center;
+  padding: 2px 0 12px;
+  background: var(--panel);
 }
 
 .step-chips::-webkit-scrollbar { height: 5px; width: 5px; }

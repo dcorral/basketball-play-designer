@@ -41,20 +41,17 @@
       </button>
       <div class="step-controls">
         <div id="stepChips" class="step-chips"></div>
-        <button id="addStepBtn" class="step-chip step-add" title="Next step">＋</button>
-        <button id="resetAllBtn" class="step-chip step-reset" title="Reset all">↺</button>
       </div>
-      <button id="deletePlayBtn" class="btn btn-danger-solid icon-btn" title="Delete current play">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 7 H20 M10 4 H14 M6.5 7 L7.5 20 H16.5 L17.5 7 M10 11 V16 M14 11 V16"/>
-        </svg>
-        <span id="deletePlayLabel">Delete</span>
-      </button>
       <select id="langEditor" class="lang-select" title="Language / Idioma">
         <option value="en">🇬🇧 EN</option>
         <option value="es">🇪🇸 ES</option>
       </select>
     </header>
+
+    <div class="step-actions">
+      <button id="addStepBtn" class="step-chip step-add" title="Next step">＋</button>
+      <button id="resetAllBtn" class="step-chip step-reset" title="Reset all">↺</button>
+    </div>
 
     <main class="stage-wrap">
       <div id="stage" class="stage">
@@ -183,6 +180,15 @@
         <option value="2">2×</option>
       </select>
     </footer>
+
+    <div class="delete-row">
+      <button id="deletePlayBtn" class="btn btn-danger-solid icon-btn" title="Delete current play">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7 H20 M10 4 H14 M6.5 7 L7.5 20 H16.5 L17.5 7 M10 11 V16 M14 11 V16"/>
+        </svg>
+        <span id="deletePlayLabel">Delete</span>
+      </button>
+    </div>
   </div>
 
   <!-- ============ Modal ============ -->

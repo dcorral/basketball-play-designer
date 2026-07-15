@@ -105,7 +105,8 @@ const I18N = {
     sharedErrMsg: "This share link is not valid.",
     renamedToast: (n) => `That name was already in use — this play is now called "${n}".`,
     sharedAddedToast: (n) => `Shared play "${n}" added to your plays.`,
-    sharedExistsMsg: (n) => `You already have this play — it's called "${n}". Nothing was added.`,
+    sharedExistsMsg: (n) => `You already have this play — it's called "${n}". Add it anyway?`,
+    sharedAddAnyway: "Add anyway",
     exportAll: "⤓ Export all (.zip)", importAll: "⤒ Import (.zip)",
     ttExportAll: "Download every play as a .zip backup",
     ttImportAll: "Import plays from a .zip backup",
@@ -169,7 +170,8 @@ const I18N = {
     sharedErrMsg: "El enlace no es válido.",
     renamedToast: (n) => `Ese nombre ya existía — la jugada ahora se llama "${n}".`,
     sharedAddedToast: (n) => `Jugada compartida "${n}" añadida a tus jugadas.`,
-    sharedExistsMsg: (n) => `Ya tienes esta jugada — se llama "${n}". No se ha añadido nada.`,
+    sharedExistsMsg: (n) => `Ya tienes esta jugada — se llama "${n}". ¿Añadirla igualmente?`,
+    sharedAddAnyway: "Añadir igualmente",
     exportAll: "⤓ Exportar todo (.zip)", importAll: "⤒ Importar (.zip)",
     ttExportAll: "Descargar todas las jugadas como copia de seguridad .zip",
     ttImportAll: "Importar jugadas desde una copia de seguridad .zip",
@@ -1899,17 +1901,17 @@ async function importFromLink() {
     if (!raw || !raw.name || !Array.isArray(raw.steps) || !raw.steps.length) throw new Error("bad");
     const p = migrateBall(migratePlay(raw));
     p.id = "play-" + Math.random().toString(36).slice(2, 10); // always a fresh copy
-    // identical content already in the list (regardless of name) — skip
+    // identical content already in the list (regardless of name) —
+    // let the user decide whether to add a duplicate copy
     const incoming = JSON.stringify(p.steps);
     const existing = plays.find((x) => JSON.stringify(x.steps) === incoming);
     if (existing) {
-      openModal({
+      const ok = await openModal({
         title: t("sharedTitle"),
         message: t("sharedExistsMsg", existing.name),
-        confirmLabel: "OK",
-        noCancel: true,
+        confirmLabel: t("sharedAddAnyway"),
       });
-      return;
+      if (!ok) return;
     }
     const desired = p.name;
     p.name = uniquePlayName(desired);

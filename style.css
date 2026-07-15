@@ -502,8 +502,8 @@ select:hover, .btn:hover { border-color: #5a5a63; }
    ratio must never distort. */
 .stage {
   position: relative;
-  width: min(100cqw, 100cqh);
-  aspect-ratio: 1 / 1;
+  width: min(100cqw, calc(100cqh * 57 / 62));
+  aspect-ratio: 57 / 62;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 10px 40px #000a;

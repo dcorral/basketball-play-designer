@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Playbook — Basketball Play Designer</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -59,7 +62,7 @@
     <main class="stage-wrap">
       <div id="stage" class="stage">
         <!-- Court background -->
-        <svg id="courtSvg" viewBox="-6 -6 62 62" preserveAspectRatio="xMidYMid meet">
+        <svg id="courtSvg" viewBox="-3.5 -6 57 62" preserveAspectRatio="xMidYMid meet">
           <defs>
             <linearGradient id="woodOut" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stop-color="#8a5a2b"/>
@@ -69,15 +72,15 @@
               <stop offset="0" stop-color="#c98d4b"/>
               <stop offset="1" stop-color="#b87c3c"/>
             </linearGradient>
-            <pattern id="planks" width="4" height="62" patternUnits="userSpaceOnUse" x="-6" y="-6">
+            <pattern id="planks" width="4" height="62" patternUnits="userSpaceOnUse" x="-3.5" y="-6">
               <rect width="4" height="62" fill="none"/>
               <line x1="0" y1="0" x2="0" y2="62" stroke="rgba(0,0,0,0.07)" stroke-width="0.15"/>
             </pattern>
           </defs>
 
           <!-- out of bounds floor -->
-          <rect x="-6" y="-6" width="62" height="62" fill="url(#woodOut)"/>
-          <rect x="-6" y="-6" width="62" height="62" fill="url(#planks)"/>
+          <rect x="-3.5" y="-6" width="57" height="62" fill="url(#woodOut)"/>
+          <rect x="-3.5" y="-6" width="57" height="62" fill="url(#planks)"/>
 
           <!-- court floor -->
           <rect x="0" y="0" width="50" height="54" fill="url(#woodIn)"/>
@@ -110,7 +113,7 @@
         </svg>
 
         <!-- Arrows overlay -->
-        <svg id="arrowsSvg" viewBox="-6 -6 62 62" preserveAspectRatio="xMidYMid meet">
+        <svg id="arrowsSvg" viewBox="-3.5 -6 57 62" preserveAspectRatio="xMidYMid meet">
           <defs>
             <marker id="arrowHead" viewBox="0 0 10 10" refX="8" refY="5"
                     markerWidth="5" markerHeight="5" orient="auto-start-reverse">

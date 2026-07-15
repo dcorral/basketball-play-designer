@@ -3,8 +3,8 @@
 /* ================= Constants ================= */
 
 // Court coordinate system = SVG viewBox units (feet).
-const VB = { minX: -6, minY: -6, w: 62, h: 62 };
-const CLAMP = { minX: -5.5, maxX: 55.5, minY: -5.5, maxY: 55 };
+const VB = { minX: -3.5, minY: -6, w: 57, h: 62 };
+const CLAMP = { minX: -3, maxX: 53, minY: -5.5, maxY: 55 };
 // Each sequential action (screen wave, pass, cut wave) gets this long, so a
 // busy step lasts proportionally longer than a simple one.
 const SECONDS_PER_PHASE = 1.8;

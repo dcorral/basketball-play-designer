@@ -104,6 +104,7 @@ const I18N = {
     sharedAdd: "Add",
     sharedErrMsg: "This share link is not valid.",
     renamedToast: (n) => `That name was already in use — this play is now called "${n}".`,
+    sharedAddedToast: (n) => `Shared play "${n}" added to your plays.`,
     exportAll: "⤓ Export all (.zip)", importAll: "⤒ Import (.zip)",
     ttExportAll: "Download every play as a .zip backup",
     ttImportAll: "Import plays from a .zip backup",
@@ -166,6 +167,7 @@ const I18N = {
     sharedAdd: "Añadir",
     sharedErrMsg: "El enlace no es válido.",
     renamedToast: (n) => `Ese nombre ya existía — la jugada ahora se llama "${n}".`,
+    sharedAddedToast: (n) => `Jugada compartida "${n}" añadida a tus jugadas.`,
     exportAll: "⤓ Exportar todo (.zip)", importAll: "⤒ Importar (.zip)",
     ttExportAll: "Descargar todas las jugadas como copia de seguridad .zip",
     ttImportAll: "Importar jugadas desde una copia de seguridad .zip",
@@ -1895,18 +1897,12 @@ async function importFromLink() {
     if (!raw || !raw.name || !Array.isArray(raw.steps) || !raw.steps.length) throw new Error("bad");
     const p = migrateBall(migratePlay(raw));
     p.id = "play-" + Math.random().toString(36).slice(2, 10); // always a fresh copy
-    const ok = await openModal({
-      title: t("sharedTitle"),
-      message: t("sharedMsg", p.name),
-      confirmLabel: t("sharedAdd"),
-    });
-    if (!ok) return;
     const desired = p.name;
     p.name = uniquePlayName(desired);
     plays.push(p);
     save();
     openPlay(p.id);
-    if (p.name !== desired) showToast(t("renamedToast", p.name));
+    showToast(p.name !== desired ? t("renamedToast", p.name) : t("sharedAddedToast", p.name));
   } catch (_) {
     openModal({ title: t("importErrTitle"), message: t("sharedErrMsg"), confirmLabel: "OK", noCancel: true });
   }

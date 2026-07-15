@@ -376,6 +376,7 @@ select:hover, .btn:hover { border-color: #556072; }
 
 /* ---------- Stage ---------- */
 .stage-wrap {
+  position: relative;
   flex: 1;
   display: flex;
   align-items: center;
@@ -560,19 +561,16 @@ input[type="range"]::-moz-range-thumb {
 
 .speed-select { padding: 5px 8px; font-size: 13px; }
 
-/* ---------- Toolbar ---------- */
+/* ---------- Toolbar (floating over everything, drag anywhere) ---------- */
 .toolbar {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed;
   display: flex;
   gap: 4px;
   padding: 6px;
   background: #fdfdfd;
   border-radius: 12px;
   box-shadow: 0 4px 18px #0007;
-  z-index: 20;
+  z-index: 60;
 }
 
 .tool {
@@ -743,7 +741,7 @@ body[data-tool="eraser"] .screen-cap {
   .step-chip { padding: 5px 9px; font-size: 12px; }
 
   .stage-wrap { padding: 8px; }
-  .toolbar { top: 8px; padding: 4px; gap: 2px; border-radius: 10px; }
+  .toolbar { padding: 4px; gap: 2px; border-radius: 10px; }
   .tool { width: 32px; height: 32px; }
   .tool svg { width: 17px; height: 17px; }
   .tool .knum { display: none; }

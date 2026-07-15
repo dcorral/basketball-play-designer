@@ -161,6 +161,7 @@ function t(key, ...args) {
 const $ = (id) => document.getElementById(id);
 const homeEl = $("home");
 const editorEl = $("editor");
+const stageWrapEl = document.querySelector(".stage-wrap");
 const playListEl = $("playList");
 const stageEl = $("stage");
 const tokensEl = $("tokens");
@@ -357,6 +358,7 @@ function openPlay(id) {
   save();
   setTool("select");
   renderAll();
+  applyToolbarPos();
 }
 
 function renderHome() {
@@ -488,15 +490,38 @@ function screenReceivers(step) {
   return out;
 }
 
-// Order of events inside a step: the pass, then screeners together with
-// every other cut, and finally the cuts that use a screen.
+// A pass with timing "after" is thrown to where its receiver ENDS UP: the
+// receiver's cut runs first, then the ball flies, then the passer may move.
+function passIsDelayed(step) {
+  return !!(step.pass && step.pass.timing === "after" && step.moves[step.pass.to]);
+}
+
+// Start/end points of the pass arrow (court coords, ball-offset applied).
+function passEndpoints(step) {
+  const a = ballPoint(step.pos[step.ball]);
+  const delayed = passIsDelayed(step);
+  const b = ballPoint(delayed ? step.moves[step.pass.to].to : step.pos[step.pass.to]);
+  return { a, b, delayed };
+}
+
+// Order of events inside a step:
+//   normal pass:  pass → screeners + other cuts → screen-using cuts
+//   delayed pass: screeners + cuts (incl. receiver) → screen-using cuts →
+//                 pass to the receiver's end position → the passer's own cut
 function segmentPhases(step) {
   const receivers = screenReceivers(step);
+  const delayed = passIsDelayed(step);
+  const owner = step.ball;
+  const moverIds = Object.keys(step.moves);
   const phases = [];
-  if (step.pass) phases.push("pass");
-  if (Object.keys(step.moves).some((id) => !receivers.has(id))) phases.push("main");
-  if (receivers.size) phases.push("recv");
-  return { phases, receivers };
+  if (step.pass && !delayed) phases.push("pass");
+  if (moverIds.some((id) => !receivers.has(id) && !(delayed && id === owner))) phases.push("main");
+  if (moverIds.some((id) => receivers.has(id) && !(delayed && id === owner))) phases.push("recv");
+  if (step.pass && delayed) {
+    phases.push("pass");
+    if (step.moves[owner]) phases.push("ownermove");
+  }
+  return { phases, receivers, delayed, owner };
 }
 
 // Arrows on the last step play as a pending segment even before
@@ -528,7 +553,7 @@ function positionsAt(t) {
   const frac = Math.min(Math.max(t - i, 0), 1);
   const from = play.steps[Math.min(i, play.steps.length - 1)];
   const target = segmentTargetPos(play, i);
-  const { phases, receivers } = segmentPhases(from);
+  const { phases, receivers, delayed, owner } = segmentPhases(from);
   const n = Math.max(phases.length, 1);
   const localU = (name) => {
     const k = phases.indexOf(name);
@@ -540,9 +565,10 @@ function positionsAt(t) {
     const a = from.pos[id];
     const b = target[id];
     const m = from.moves[id];
-    const u = m
-      ? easeInOutCubic(localU(receivers.has(id) ? "recv" : "main"))
-      : easeInOutCubic(frac);
+    let u;
+    if (m && delayed && id === owner) u = easeInOutCubic(localU("ownermove"));
+    else if (m) u = easeInOutCubic(localU(receivers.has(id) ? "recv" : "main"));
+    else u = easeInOutCubic(frac);
     out[id] = m && m.via
       ? bezierPoint(a, m.via, b, u)
       : { x: lerp(a.x, b.x, u), y: lerp(a.y, b.y, u) };
@@ -557,7 +583,7 @@ function positionsAt(t) {
     else if (u >= 1) out.BALL = ballPoint(out[from.pass.to]);
     else {
       const A = ballPoint(from.pos[from.ball]);
-      const B = ballPoint(from.pos[from.pass.to]);
+      const B = ballPoint(delayed ? target[from.pass.to] : from.pos[from.pass.to]);
       out.BALL = from.pass.via
         ? bezierPoint(A, from.pass.via, B, u)
         : { x: lerp(A.x, B.x, u), y: lerp(A.y, B.y, u) };
@@ -672,6 +698,23 @@ function moveToken(tokenId, p) {
   if (currentStep > 0 && steps[currentStep - 1].moves[tokenId]) {
     steps[currentStep - 1].moves[tokenId].to = { ...p };
   }
+}
+
+// Nearest pass target for a point: a teammate where they stand now
+// ("before"), or the end of a teammate's cut ("after" — cut first, then pass).
+function nearestPassTarget(step, p) {
+  let best = null, bd = Infinity;
+  for (const id of PLAYER_IDS) {
+    if (id === step.ball) continue;
+    const d1 = Math.hypot(step.pos[id].x - p.x, step.pos[id].y - p.y);
+    if (d1 < bd) { bd = d1; best = { to: id, timing: "before" }; }
+    const m = step.moves[id];
+    if (m) {
+      const d2 = Math.hypot(m.to.x - p.x, m.to.y - p.y);
+      if (d2 < bd) { bd = d2; best = { to: id, timing: "after" }; }
+    }
+  }
+  return best;
 }
 
 // Ball ownership flows through the steps: each step starts with whoever
@@ -844,19 +887,17 @@ function renderArrows() {
     if (m) addEls(makeArrowEls(id, step.pos[id], m, ghost));
   }
   if (step.pass) {
-    addEls(makeArrowEls("BALL", ballPoint(step.pos[step.ball]), {
-      to: ballPoint(step.pos[step.pass.to]),
-      via: step.pass.via,
-      type: "move",
-    }, ghost));
+    const { a, b } = passEndpoints(step);
+    addEls(makeArrowEls("BALL", a, { to: b, via: step.pass.via, type: "move" }, ghost));
   }
 }
 
 function handlePoint(step, tokenId, kind) {
   let a, to, via;
   if (tokenId === "BALL") {
-    a = ballPoint(step.pos[step.ball]);
-    to = ballPoint(step.pos[step.pass.to]);
+    const ends = passEndpoints(step);
+    a = ends.a;
+    to = ends.b;
     via = step.pass.via;
   } else {
     const m = step.moves[tokenId];
@@ -978,14 +1019,23 @@ toolbar.addEventListener("click", (e) => {
 
 const TOOLBAR_POS_KEY = "playbook-toolbar-pos";
 
+// The toolbar floats over the whole window: saved position is a viewport
+// fraction; the default hovers over the top of the court.
 function applyToolbarPos() {
+  if (editorEl.hidden) return;
+  const tb = toolbar.getBoundingClientRect();
+  let x = null, y = null;
   try {
     const p = JSON.parse(localStorage.getItem(TOOLBAR_POS_KEY));
-    if (!p) return;
-    toolbar.style.left = p.x * 100 + "%";
-    toolbar.style.top = p.y * 100 + "%";
-    toolbar.style.transform = "none";
+    if (p) { x = p.x * window.innerWidth; y = p.y * window.innerHeight; }
   } catch (_) { /* ignore bad stored value */ }
+  if (x === null) {
+    const st = stageEl.getBoundingClientRect();
+    x = st.left + st.width / 2 - tb.width / 2;
+    y = st.top + 10;
+  }
+  toolbar.style.left = Math.min(Math.max(x, 0), window.innerWidth - tb.width) + "px";
+  toolbar.style.top = Math.min(Math.max(y, 0), window.innerHeight - tb.height) + "px";
 }
 
 toolbar.addEventListener("pointerdown", (e) => {
@@ -997,22 +1047,19 @@ toolbar.addEventListener("pointerdown", (e) => {
   const dy = e.clientY - tb.top;
 
   const move = (ev) => {
-    const st = stageEl.getBoundingClientRect();
-    const x = Math.min(Math.max(ev.clientX - st.left - dx, 0), st.width - tb.width);
-    const y = Math.min(Math.max(ev.clientY - st.top - dy, 0), st.height - tb.height);
+    const x = Math.min(Math.max(ev.clientX - dx, 0), window.innerWidth - tb.width);
+    const y = Math.min(Math.max(ev.clientY - dy, 0), window.innerHeight - tb.height);
     toolbar.style.left = x + "px";
     toolbar.style.top = y + "px";
-    toolbar.style.transform = "none";
   };
   const up = () => {
     toolbar.removeEventListener("pointermove", move);
     toolbar.removeEventListener("pointerup", up);
     toolbar.removeEventListener("pointercancel", up);
-    const st = stageEl.getBoundingClientRect();
     const now = toolbar.getBoundingClientRect();
     localStorage.setItem(TOOLBAR_POS_KEY, JSON.stringify({
-      x: (now.left - st.left) / st.width,
-      y: (now.top - st.top) / st.height,
+      x: now.left / window.innerWidth,
+      y: now.top / window.innerHeight,
     }));
   };
   toolbar.addEventListener("pointermove", move);
@@ -1024,12 +1071,10 @@ toolbar.addEventListener("pointerdown", (e) => {
 toolbar.addEventListener("dblclick", (e) => {
   if (e.target.closest(".tool")) return;
   localStorage.removeItem(TOOLBAR_POS_KEY);
-  toolbar.style.left = "";
-  toolbar.style.top = "";
-  toolbar.style.transform = "";
+  applyToolbarPos();
 });
 
-applyToolbarPos();
+window.addEventListener("resize", applyToolbarPos);
 
 // Eraser helper: removes a token's arrow (or the pass) with a history entry.
 function eraseMove(tokenId) {
@@ -1134,11 +1179,12 @@ function startArrowDraw(el, tokenId, e) {
     previewGroup.innerHTML = "";
     if (dest && Math.hypot(dest.x - start.x, dest.y - start.y) > 1.2) {
       if (isPass) {
-        // A pass snaps to the closest teammate.
-        const receiver = nearestPlayerIn(step.pos, dest, step.ball);
-        if (receiver) {
+        // A pass snaps to the closest teammate — or to the end of a
+        // teammate's cut, making the cut happen before the pass.
+        const tgt = nearestPassTarget(step, dest);
+        if (tgt) {
           pushUndo();
-          step.pass = { to: receiver, via: null };
+          step.pass = { to: tgt.to, via: null, timing: tgt.timing };
           syncBallChain();
           save();
         }
@@ -1185,14 +1231,16 @@ function attachHandleDrag(handle, tokenId, kind) {
         const pass = step.pass;
         if (!pass) return;
         if (kind === "end") {
-          // Retarget the pass: it always ends on a teammate.
-          const receiver = nearestPlayerIn(step.pos, p, step.ball);
-          if (receiver && receiver !== pass.to) {
-            pass.to = receiver;
+          // Retarget the pass: a teammate, or the end of a teammate's cut.
+          const tgt = nearestPassTarget(step, p);
+          if (tgt && (tgt.to !== pass.to || tgt.timing !== pass.timing)) {
+            pass.to = tgt.to;
+            pass.timing = tgt.timing;
             syncBallChain();
           }
         } else {
-          pass.via = solveVia(ballPoint(step.pos[step.ball]), ballPoint(step.pos[pass.to]), p);
+          const ends = passEndpoints(step);
+          pass.via = solveVia(ends.a, ends.b, p);
         }
       } else {
         const m = step.moves[tokenId];
@@ -1474,6 +1522,26 @@ document.addEventListener("keydown", (e) => {
 });
 
 /* ================= Boot ================= */
+
+// Team logo: inline as a data URI so the SVG serialization used by the
+// exports keeps it (external hrefs don't load inside rasterized SVGs).
+(async function loadTeamLogo() {
+  const el = $("teamLogo");
+  try {
+    const resp = await fetch("assets/logo.svg");
+    if (!resp.ok) throw new Error("missing");
+    const blob = await resp.blob();
+    const dataUrl = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result);
+      r.onerror = rej;
+      r.readAsDataURL(blob);
+    });
+    el.setAttribute("href", dataUrl);
+  } catch (_) {
+    el.remove(); // no logo asset — plain court
+  }
+})();
 
 load();
 applyLang();

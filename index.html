@@ -69,6 +69,10 @@
           <rect x="0" y="0" width="50" height="47" fill="url(#woodIn)"/>
           <rect x="0" y="0" width="50" height="47" fill="url(#planks)"/>
 
+          <!-- team logo painted on the floor (href injected at runtime) -->
+          <image id="teamLogo" x="19.15" y="26" width="11.7" height="13" opacity="0.9"
+                 preserveAspectRatio="xMidYMid meet"/>
+
           <g stroke="#f6f0e8" stroke-width="0.35" fill="none" stroke-linecap="round">
             <!-- boundary -->
             <rect x="0" y="0" width="50" height="47"/>
@@ -106,41 +110,43 @@
         <!-- Arrow edit handles -->
         <div id="handles"></div>
 
-        <!-- Floating tool bar -->
-        <div id="toolbar" class="toolbar">
-          <div id="toolGrip" class="tool-grip" title="Drag to move the toolbar (double-click to reset)">
-            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
-              <circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/>
-              <circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/>
-              <circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/>
-            </svg>
-          </div>
-          <button class="tool active" data-tool="select" title="Select / move players (1) — only on step 1">
-            <svg viewBox="0 0 24 24"><path d="M5 3 L19 11 L12.5 12.6 L9 20 Z" fill="currentColor" stroke="none"/></svg>
-            <span class="knum">1</span>
-          </button>
-          <button class="tool" data-tool="arrow" title="Movement arrow — drag from a player to where they cut (2)">
-            <svg viewBox="0 0 24 24"><path d="M4 12 H 18 M12 6 l 6 6 -6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="knum">2</span>
-          </button>
-          <button class="tool" data-tool="screen" title="Screen / block — drag from the screener to where they set it (3)">
-            <svg viewBox="0 0 24 24"><path d="M4 12 H 16 M19 5 V 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            <span class="knum">3</span>
-          </button>
-          <button class="tool" data-tool="eraser" title="Eraser — click an arrow or a player to remove its arrow (4)">
-            <svg viewBox="0 0 24 24"><path d="M14.5 4.5 l 5 5 L10 19 H6 v-4 z M5 20 h 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="knum">4</span>
-          </button>
-          <div class="tool-sep"></div>
-          <button id="undoBtn" class="tool" disabled title="Undo (Ctrl+Z)">
-            <svg viewBox="0 0 24 24"><path d="M8 5 L3 10 L8 15 M3 10 H14.5 a4.75 4.75 0 0 1 0 9.5 H10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <button id="redoBtn" class="tool" disabled title="Redo (Ctrl+Y)">
-            <svg viewBox="0 0 24 24"><path d="M16 5 L21 10 L16 15 M21 10 H9.5 a4.75 4.75 0 0 0 0 9.5 H14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
       </div>
+
     </main>
+
+    <!-- Floating tool bar -->
+    <div id="toolbar" class="toolbar">
+      <div id="toolGrip" class="tool-grip" title="Drag to move the toolbar (double-click to reset)">
+        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+          <circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/>
+          <circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/>
+          <circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/>
+        </svg>
+      </div>
+      <button class="tool active" data-tool="select" title="Select / move players (1) — only on step 1">
+        <svg viewBox="0 0 24 24"><path d="M5 3 L19 11 L12.5 12.6 L9 20 Z" fill="currentColor" stroke="none"/></svg>
+        <span class="knum">1</span>
+      </button>
+      <button class="tool" data-tool="arrow" title="Movement arrow — drag from a player to where they cut (2)">
+        <svg viewBox="0 0 24 24"><path d="M4 12 H 18 M12 6 l 6 6 -6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="knum">2</span>
+      </button>
+      <button class="tool" data-tool="screen" title="Screen / block — drag from the screener to where they set it (3)">
+        <svg viewBox="0 0 24 24"><path d="M4 12 H 16 M19 5 V 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="knum">3</span>
+      </button>
+      <button class="tool" data-tool="eraser" title="Eraser — click an arrow or a player to remove its arrow (4)">
+        <svg viewBox="0 0 24 24"><path d="M14.5 4.5 l 5 5 L10 19 H6 v-4 z M5 20 h 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="knum">4</span>
+      </button>
+      <div class="tool-sep"></div>
+      <button id="undoBtn" class="tool" disabled title="Undo (Ctrl+Z)">
+        <svg viewBox="0 0 24 24"><path d="M8 5 L3 10 L8 15 M3 10 H14.5 a4.75 4.75 0 0 1 0 9.5 H10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button id="redoBtn" class="tool" disabled title="Redo (Ctrl+Y)">
+        <svg viewBox="0 0 24 24"><path d="M16 5 L21 10 L16 15 M21 10 H9.5 a4.75 4.75 0 0 0 0 9.5 H14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
 
     <footer class="player-bar">
       <button id="prevBtn" class="pbtn" title="Previous step">◀◀</button>

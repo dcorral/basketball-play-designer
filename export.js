@@ -134,8 +134,9 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label) {
       if (m) exDrawArrow(ctx, W, H, step.pos[id], m, false, ghost);
     }
     if (step.pass) {
-      exDrawArrow(ctx, W, H, ballPoint(step.pos[step.ball]), {
-        to: ballPoint(step.pos[step.pass.to]),
+      const ends = passEndpoints(step);
+      exDrawArrow(ctx, W, H, ends.a, {
+        to: ends.b,
         via: step.pass.via,
         type: "move",
       }, true, ghost);

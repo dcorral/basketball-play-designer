@@ -874,6 +874,12 @@ body[data-tool="eraser"] .screen-cap {
 }
 
 .arrow-path.ghost, .screen-cap.ghost { opacity: 0.45; }
+
+/* the carrier's ordered pass/move lines are clickable */
+.arrow-path.order-line {
+  pointer-events: stroke;
+  cursor: pointer;
+}
 .arrow-path.preview, .screen-cap.preview { opacity: 0.7; }
 
 /* ---------- Handles ---------- */

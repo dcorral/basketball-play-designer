@@ -110,6 +110,7 @@ const I18N = {
     sharedAdd: "Add",
     sharedErrMsg: "This share link is not valid.",
     renamedToast: (n) => `That name was already in use — this play is now called "${n}".`,
+    orderHelp: "This player has two actions — the lighter line happens second. Double-click (or long-press) a line to make it go first.",
     sharedAddedToast: (n) => `Shared play "${n}" added to your plays.`,
     sharedExistsMsg: (n) => `You already have this play — it's called "${n}". Add it anyway?`,
     sharedAddAnyway: "Add anyway",
@@ -180,6 +181,7 @@ const I18N = {
     sharedAdd: "Añadir",
     sharedErrMsg: "El enlace no es válido.",
     renamedToast: (n) => `Ese nombre ya existía — la jugada ahora se llama "${n}".`,
+    orderHelp: "Este jugador tiene dos acciones — la línea más tenue ocurre después. Doble clic (o mantén pulsado) sobre una línea para que vaya primero.",
     sharedAddedToast: (n) => `Jugada compartida "${n}" añadida a tus jugadas.`,
     sharedExistsMsg: (n) => `Ya tienes esta jugada — se llama "${n}". ¿Añadirla igualmente?`,
     sharedAddAnyway: "Añadir igualmente",
@@ -696,39 +698,46 @@ function screenReceivers(step) {
   return out;
 }
 
-// A pass with timing "after" is thrown to where its receiver ENDS UP: the
-// receiver's cut runs first, then the ball flies, then the passer may move.
-function passIsDelayed(step) {
-  return !!(step.pass && step.pass.timing === "after" && step.moves[step.pass.to]);
+// When the ball carrier has both a pass AND a movement, pass.order decides
+// which happens first: 1 = pass first then move (give and go),
+// 2 = move first with the ball (dribble) then pass from the movement's end.
+function passOrderOf(step) {
+  return step.pass && step.moves[step.ball] && step.pass.order === 2 ? 2 : 1;
 }
 
 // Start/end points of the pass arrow (court coords, ball-offset applied).
 function passEndpoints(step) {
-  const a = ballPoint(step.pos[step.ball]);
-  const delayed = passIsDelayed(step);
-  const b = ballPoint(delayed ? step.moves[step.pass.to].to : step.pos[step.pass.to]);
-  return { a, b, delayed };
+  const ownerMove = step.moves[step.ball];
+  const a = ballPoint(passOrderOf(step) === 2 ? ownerMove.to : step.pos[step.ball]);
+  const rm = step.moves[step.pass.to];
+  const b = ballPoint(rm ? rm.to : step.pos[step.pass.to]);
+  return { a, b };
 }
 
 // Order of events inside a step:
-//   normal:       pass + screeners + all other cuts together → screen-using cuts
-//   delayed pass: screeners + cuts (incl. receiver) → screen-using cuts →
-//                 pass to the receiver's end position → the passer's own cut
+//   main:      screeners + every cut that doesn't use a screen (and the pass,
+//              when the receiver is static and the carrier isn't dribbling first)
+//   recv:      cuts that use a screen
+//   pass:      a pass that had to wait (moving receiver, or thrown after a dribble)
+//   ownermove: the carrier's own cut when it comes after the pass
 function segmentPhases(step) {
   const receivers = screenReceivers(step);
-  const delayed = passIsDelayed(step);
   const owner = step.ball;
+  const pass = step.pass;
+  const ownerMove = step.moves[owner];
+  const receiverMoves = !!(pass && step.moves[pass.to]);
+  const passOrder = passOrderOf(step);
+  const ownerMoveLate = !!(ownerMove && pass && passOrder === 1);
+  const passInMain = !!(pass && !receiverMoves && passOrder === 1);
   const moverIds = Object.keys(step.moves);
   const phases = [];
-  const hasMain = moverIds.some((id) => !receivers.has(id) && !(delayed && id === owner)) ||
-    (step.pass && !delayed);
+  const hasMain = moverIds.some((id) => !receivers.has(id) && !(id === owner && ownerMoveLate)) ||
+    passInMain;
   if (hasMain) phases.push("main");
-  if (moverIds.some((id) => receivers.has(id) && !(delayed && id === owner))) phases.push("recv");
-  if (step.pass && delayed) {
-    phases.push("pass");
-    if (step.moves[owner]) phases.push("ownermove");
-  }
-  return { phases, receivers, delayed, owner };
+  if (moverIds.some((id) => receivers.has(id) && !(id === owner && ownerMoveLate))) phases.push("recv");
+  if (pass && !passInMain) phases.push("pass");
+  if (ownerMoveLate) phases.push("ownermove");
+  return { phases, receivers, owner, ownerMoveLate, passInMain };
 }
 
 // Arrows on the last step play as a pending segment even before
@@ -766,7 +775,7 @@ function positionsAt(t) {
   const frac = Math.min(Math.max(t - i, 0), 1);
   const from = play.steps[Math.min(i, play.steps.length - 1)];
   const target = segmentTargetPos(play, i);
-  const { phases, receivers, delayed, owner } = segmentPhases(from);
+  const { phases, receivers, owner, ownerMoveLate, passInMain } = segmentPhases(from);
   const n = Math.max(phases.length, 1);
   const localU = (name) => {
     const k = phases.indexOf(name);
@@ -779,7 +788,7 @@ function positionsAt(t) {
     const b = target[id];
     const m = from.moves[id];
     let u;
-    if (m && delayed && id === owner) u = easeInOutCubic(localU("ownermove"));
+    if (m && id === owner && ownerMoveLate) u = easeInOutCubic(localU("ownermove"));
     else if (m) u = easeInOutCubic(localU(receivers.has(id) ? "recv" : "main"));
     else u = easeInOutCubic(frac);
     out[id] = m && m.via
@@ -787,16 +796,17 @@ function positionsAt(t) {
       : { x: lerp(a.x, b.x, u), y: lerp(a.y, b.y, u) };
   }
 
-  // Ball: attached to its owner unless a pass is in flight. A normal pass
-  // flies during the main phase, straight at the receiver's live position.
+  // Ball: attached to its owner unless a pass is in flight (the owner never
+  // moves while the ball flies, so the departure point is stable; a dribbling
+  // owner carries the ball through their move first).
   if (!from.pass) {
     out.BALL = ballPoint(out[from.ball]);
   } else {
-    const u = easeInOutCubic(localU(delayed ? "pass" : "main"));
+    const u = easeInOutCubic(localU(passInMain ? "main" : "pass"));
     if (u <= 0) out.BALL = ballPoint(out[from.ball]);
     else if (u >= 1) out.BALL = ballPoint(out[from.pass.to]);
     else {
-      const A = ballPoint(from.pos[from.ball]);
+      const A = ballPoint(out[from.ball]);
       const B = ballPoint(out[from.pass.to]);
       out.BALL = { x: lerp(A.x, B.x, u), y: lerp(A.y, B.y, u) };
     }
@@ -922,6 +932,7 @@ function nearestPassTarget(step, p) {
   for (const id of PLAYER_IDS) {
     if (id === step.ball) continue;
     const m = step.moves[id];
+    if (m && m.type === "screen") continue; // screeners can't receive the ball
     const spot = m ? m.to : step.pos[id];
     const d = Math.hypot(spot.x - p.x, spot.y - p.y);
     if (d < bd) { bd = d; best = { to: id, timing: m ? "after" : "before" }; }
@@ -934,11 +945,27 @@ function nearestPassTarget(step, p) {
 function syncBallChain() {
   const steps = currentPlay().steps;
   for (let i = 0; i < steps.length; i++) {
-    if (i > 0) steps[i].ball = steps[i - 1].pass ? steps[i - 1].pass.to : steps[i - 1].ball;
-    if (steps[i].pass && steps[i].pass.to === steps[i].ball) steps[i].pass = null;
-    // a moving receiver is always reached at the END of their movement
-    if (steps[i].pass) {
-      steps[i].pass.timing = steps[i].moves[steps[i].pass.to] ? "after" : "before";
+    const s = steps[i];
+    if (i > 0) s.ball = steps[i - 1].pass ? steps[i - 1].pass.to : steps[i - 1].ball;
+    if (s.pass && s.pass.to === s.ball) s.pass = null;
+    // the ball carrier can never be setting a screen
+    const om = s.moves[s.ball];
+    if (om && om.type === "screen") {
+      om.type = "move";
+      delete om.angle;
+    }
+    if (s.pass) {
+      const rm = s.moves[s.pass.to];
+      // a screener can never receive the ball
+      if (rm && rm.type === "screen") {
+        s.pass = null;
+      } else {
+        // a moving receiver is always reached at the END of their movement
+        s.pass.timing = rm ? "after" : "before";
+        // action order only exists when the carrier also moves
+        if (s.moves[s.ball]) s.pass.order = s.pass.order === 2 ? 2 : 1;
+        else delete s.pass.order;
+      }
     }
   }
 }
@@ -1133,6 +1160,19 @@ function makeArrowEls(tokenId, a, move, ghost) {
   return els;
 }
 
+// Give one of the ball carrier's two actions preference (make it happen first).
+function preferOrder(passFirst) {
+  if (viewPlay) return;
+  const step = currentPlay().steps[currentStep];
+  if (!step.pass || !step.moves[step.ball]) return;
+  const want = passFirst ? 1 : 2;
+  if (passOrderOf(step) === want) return;
+  pushUndo();
+  step.pass.order = want;
+  save();
+  refreshEdit();
+}
+
 // Draw the arrows of the step the playhead is in.
 function renderArrows() {
   arrowsGroup.innerHTML = "";
@@ -1154,13 +1194,55 @@ function renderArrows() {
       arrowsGroup.appendChild(el);
     }
   };
+
+  // The carrier's two actions (pass + move) are ordered: the later one draws
+  // lighter; double-click or long-press a line to make it go first.
+  const ownerMove = step.moves[step.ball];
+  const dual = !!(step.pass && ownerMove);
+  const passOrder = dual ? passOrderOf(step) : 1;
+  const addOrderHandlers = (els, passFirst) => {
+    for (const el of els) {
+      el.classList.add("order-line");
+      el.addEventListener("dblclick", (e) => {
+        e.stopPropagation();
+        preferOrder(passFirst);
+      });
+      el.addEventListener("pointerdown", (e) => {
+        if (tool === "eraser" || playing || viewPlay) return;
+        const timer = setTimeout(() => preferOrder(passFirst), 550); // long press
+        const cancel = () => {
+          clearTimeout(timer);
+          el.removeEventListener("pointermove", cancel);
+          el.removeEventListener("pointerup", cancel);
+          el.removeEventListener("pointercancel", cancel);
+        };
+        el.addEventListener("pointermove", cancel);
+        el.addEventListener("pointerup", cancel);
+        el.addEventListener("pointercancel", cancel);
+      });
+    }
+  };
+
   for (const id of PLAYER_IDS) {
     const m = step.moves[id];
-    if (m) addEls(makeArrowEls(id, step.pos[id], m, ghost));
+    if (!m) continue;
+    const isDualMove = dual && id === step.ball;
+    const els = makeArrowEls(id, step.pos[id], m, ghost || (isDualMove && passOrder === 1));
+    addEls(els);
+    if (isDualMove) addOrderHandlers(els, false);
   }
   if (step.pass) {
     const { a, b } = passEndpoints(step);
-    addEls(makeArrowEls("BALL", a, { to: b, via: null, type: "move" }, ghost));
+    const els = makeArrowEls("BALL", a, { to: b, via: null, type: "move" },
+      ghost || (dual && passOrder === 2));
+    addEls(els);
+    if (dual) addOrderHandlers(els, true);
+  }
+
+  // one-time hint the first time a player has two ordered actions
+  if (dual && !playing && !viewPlay && !localStorage.getItem("playbook-order-help")) {
+    localStorage.setItem("playbook-order-help", "1");
+    showToast(t("orderHelp"));
   }
 }
 
@@ -1381,7 +1463,7 @@ stageEl.addEventListener("pointerup", stagePointerEnd);
 stageEl.addEventListener("pointercancel", stagePointerEnd);
 
 stageEl.addEventListener("dblclick", (e) => {
-  if (e.target.closest(".token, .handle")) return;
+  if (e.target.closest(".token, .handle, .order-line")) return;
   resetZoom();
 });
 
@@ -1522,9 +1604,10 @@ function attachTokenPointer(el, tokenId) {
 
 function startArrowDraw(el, tokenId, e) {
   const step = currentPlay().steps[currentStep];
-  // Any arrow drawn from the ball is a pass; screens belong to players.
+  // Any arrow drawn from the ball is a pass; screens belong to players —
+  // but never to the ball carrier.
   const isPass = tokenId === "BALL";
-  const type = tool === "screen" && !isPass ? "screen" : "move";
+  const type = tool === "screen" && !isPass && tokenId !== step.ball ? "screen" : "move";
   const start = isPass ? ballPoint(step.pos[step.ball]) : step.pos[tokenId];
   el.setPointerCapture(e.pointerId);
 

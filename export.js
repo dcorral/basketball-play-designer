@@ -129,9 +129,12 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label) {
   ctx.drawImage(courtImg, 0, 0, W, H);
   if (arrowsStepIdx !== null) {
     const step = currentPlay().steps[arrowsStepIdx];
+    const dual = !!(step.pass && step.moves[step.ball]);
+    const passOrder = dual ? passOrderOf(step) : 1;
     for (const id of PLAYER_IDS) {
       const m = step.moves[id];
-      if (m) exDrawArrow(ctx, W, H, step.pos[id], m, false, ghost);
+      if (m) exDrawArrow(ctx, W, H, step.pos[id], m, false,
+        ghost || (dual && id === step.ball && passOrder === 1));
     }
     if (step.pass) {
       const ends = passEndpoints(step);
@@ -139,7 +142,7 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label) {
         to: ends.b,
         via: null,
         type: "move",
-      }, true, ghost);
+      }, true, ghost || (dual && passOrder === 2));
     }
   }
   for (const d of TOKEN_DEFS) exDrawToken(ctx, W, H, d, posMap[d.id]);

@@ -205,14 +205,14 @@ body {
 #helpHome {
   position: fixed;
   top: 12px;
-  right: 136px;
+  right: 78px;
   z-index: 5;
 }
 
 #helpEditor {
   position: absolute;
   top: 9px;
-  right: 100px;
+  right: 76px;
 }
 
 /* spotlight tour — the container passes clicks through; only the shades
@@ -446,7 +446,7 @@ body.view-only .play-name { cursor: default; }
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 10px 150px 10px 16px; /* corner space for help + language */
+  padding: 10px 124px 10px 16px; /* corner space for help + language */
   background: var(--panel);
   flex-wrap: wrap;
 }
@@ -1055,9 +1055,9 @@ body[data-tool="eraser"] .screen-cap {
 
 /* ---------- Phones ---------- */
 @media (max-width: 640px) {
-  .topbar { padding: 6px 118px 6px 8px; gap: 6px; }
-  #helpEditor { right: 82px; top: 6px; }
-  #helpHome { right: 118px; }
+  .topbar { padding: 6px 104px 6px 8px; gap: 6px; }
+  #helpEditor { right: 62px; top: 6px; }
+  #helpHome { right: 64px; }
   #langEditor { top: 6px; right: 8px; }
   .topbar .btn { padding: 5px 8px; font-size: 12px; border-radius: 7px; }
   .play-name { font-size: 15px; padding: 3px 4px; max-width: 40vw; }

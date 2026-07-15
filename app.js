@@ -703,7 +703,7 @@ function passEndpoints(step) {
 }
 
 // Order of events inside a step:
-//   normal pass:  pass → screeners + other cuts → screen-using cuts
+//   normal:       pass + screeners + all other cuts together → screen-using cuts
 //   delayed pass: screeners + cuts (incl. receiver) → screen-using cuts →
 //                 pass to the receiver's end position → the passer's own cut
 function segmentPhases(step) {
@@ -712,8 +712,9 @@ function segmentPhases(step) {
   const owner = step.ball;
   const moverIds = Object.keys(step.moves);
   const phases = [];
-  if (step.pass && !delayed) phases.push("pass");
-  if (moverIds.some((id) => !receivers.has(id) && !(delayed && id === owner))) phases.push("main");
+  const hasMain = moverIds.some((id) => !receivers.has(id) && !(delayed && id === owner)) ||
+    (step.pass && !delayed);
+  if (hasMain) phases.push("main");
   if (moverIds.some((id) => receivers.has(id) && !(delayed && id === owner))) phases.push("recv");
   if (step.pass && delayed) {
     phases.push("pass");
@@ -778,19 +779,18 @@ function positionsAt(t) {
       : { x: lerp(a.x, b.x, u), y: lerp(a.y, b.y, u) };
   }
 
-  // Ball: attached to its owner unless a pass is in flight.
+  // Ball: attached to its owner unless a pass is in flight. A normal pass
+  // flies during the main phase, straight at the receiver's live position.
   if (!from.pass) {
     out.BALL = ballPoint(out[from.ball]);
   } else {
-    const u = easeInOutCubic(localU("pass"));
+    const u = easeInOutCubic(localU(delayed ? "pass" : "main"));
     if (u <= 0) out.BALL = ballPoint(out[from.ball]);
     else if (u >= 1) out.BALL = ballPoint(out[from.pass.to]);
     else {
       const A = ballPoint(from.pos[from.ball]);
-      const B = ballPoint(delayed ? target[from.pass.to] : from.pos[from.pass.to]);
-      out.BALL = from.pass.via
-        ? bezierPoint(A, from.pass.via, B, u)
-        : { x: lerp(A.x, B.x, u), y: lerp(A.y, B.y, u) };
+      const B = ballPoint(out[from.pass.to]);
+      out.BALL = { x: lerp(A.x, B.x, u), y: lerp(A.y, B.y, u) };
     }
   }
   return out;
@@ -1148,7 +1148,7 @@ function renderArrows() {
   }
   if (step.pass) {
     const { a, b } = passEndpoints(step);
-    addEls(makeArrowEls("BALL", a, { to: b, via: step.pass.via, type: "move" }, ghost));
+    addEls(makeArrowEls("BALL", a, { to: b, via: null, type: "move" }, ghost));
   }
 }
 
@@ -1158,7 +1158,7 @@ function handlePoint(step, tokenId, kind) {
     const ends = passEndpoints(step);
     a = ends.a;
     to = ends.b;
-    via = step.pass.via;
+    via = null; // passes are straight
   } else {
     const m = step.moves[tokenId];
     a = step.pos[tokenId];
@@ -1187,7 +1187,8 @@ function renderHandles() {
   const step = currentPlay().steps[currentStep];
   for (const d of TOKEN_DEFS) {
     if (!hasArrow(step, d.id)) continue;
-    const kinds = ["end", "mid"];
+    // passes are straight lines: destination handle only
+    const kinds = d.id === "BALL" ? ["end"] : ["end", "mid"];
     const m = step.moves[d.id];
     if (m && m.type === "screen") kinds.push("rot");
     for (const kind of kinds) {
@@ -1595,9 +1596,6 @@ function attachHandleDrag(handle, tokenId, kind) {
             pass.timing = tgt.timing;
             syncBallChain();
           }
-        } else {
-          const ends = passEndpoints(step);
-          pass.via = solveVia(ends.a, ends.b, p);
         }
       } else {
         const m = step.moves[tokenId];

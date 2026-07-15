@@ -86,7 +86,7 @@ function exDrawArrow(ctx, W, H, a, m, isBall, ghost) {
 
 function exDrawToken(ctx, W, H, def, p) {
   const c = exPoint(p, W, H);
-  const r = def.type === "ball" ? W * 0.016 : W * 0.029;
+  const r = def.type === "ball" ? W * 0.0195 : W * 0.029;
   ctx.save();
   if (def.type === "ball") {
     const g = ctx.createRadialGradient(c.x - r * 0.3, c.y - r * 0.4, r * 0.2, c.x, c.y, r);
@@ -137,7 +137,7 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label) {
       const ends = passEndpoints(step);
       exDrawArrow(ctx, W, H, ends.a, {
         to: ends.b,
-        via: step.pass.via,
+        via: null,
         type: "move",
       }, true, ghost);
     }

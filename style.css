@@ -656,7 +656,7 @@ select:hover, .btn:hover { border-color: #5a5a63; }
 }
 
 .token.ball {
-  width: 3.2%;
+  width: 3.9%;
   background: radial-gradient(circle at 35% 30%, #ff9c50, #d35f14);
   border: 2px solid #7a3c0c;
 }

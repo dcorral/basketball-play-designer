@@ -410,12 +410,13 @@ select:hover, .btn:hover { border-color: #5a5a63; }
   font-size: 15px;
 }
 
-/* centered delete-play row at the very bottom, under the player */
+/* delete-play lives in its own section, separated from the player */
 .delete-row {
   display: flex;
   justify-content: center;
-  padding: 2px 0 12px;
-  background: var(--panel);
+  padding: 11px 0 13px;
+  background: var(--bg);
+  border-top: 1px solid #34343b;
 }
 
 .step-chips::-webkit-scrollbar { height: 5px; width: 5px; }

@@ -1,0 +1,6 @@
+*.gif
+*.webm
+*.mp4
+*.pdf
+!gif.js
+!gif.worker.js

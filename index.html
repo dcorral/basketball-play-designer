@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playbook — Basketball Play Designer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ============ Home screen ============ -->
+  <div id="home" class="home">
+    <select id="langHome" class="lang-select" title="Language / Idioma">
+      <option value="en">🇬🇧 English</option>
+      <option value="es">🇪🇸 Español</option>
+    </select>
+    <h1>🏀 Playbook</h1>
+    <div id="playList" class="play-list"></div>
+    <button id="createNewBtn" class="create-new">＋ CREATE NEW</button>
+  </div>
+
+  <!-- ============ Editor ============ -->
+  <div id="editor" class="editor" hidden>
+    <header class="topbar">
+      <button id="backBtn" class="btn" title="Back to all plays">← Plays</button>
+      <div id="playName" class="play-name"></div>
+      <button id="renamePlayBtn" class="btn" title="Rename current play">✎ Rename</button>
+      <button id="exportBtn" class="btn" title="Export as GIF, video or PDF">⤓ Export</button>
+      <button id="deletePlayBtn" class="btn btn-danger" title="Delete current play">✕ Delete</button>
+      <div class="step-controls">
+        <div id="stepChips" class="step-chips"></div>
+        <button id="addStepBtn" class="btn btn-primary">Next step ＋</button>
+        <button id="deleteStepBtn" class="btn" title="Delete current step">Delete step</button>
+        <button id="resetAllBtn" class="btn btn-danger" title="Clear all steps">Reset all</button>
+      </div>
+      <select id="langEditor" class="lang-select" title="Language / Idioma">
+        <option value="en">🇬🇧 EN</option>
+        <option value="es">🇪🇸 ES</option>
+      </select>
+    </header>
+
+    <main class="stage-wrap">
+      <div id="stage" class="stage">
+        <!-- Court background -->
+        <svg id="courtSvg" viewBox="-6 -6 62 59" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="woodOut" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#8a5a2b"/>
+              <stop offset="1" stop-color="#7a4e24"/>
+            </linearGradient>
+            <linearGradient id="woodIn" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#c98d4b"/>
+              <stop offset="1" stop-color="#b87c3c"/>
+            </linearGradient>
+            <pattern id="planks" width="4" height="59" patternUnits="userSpaceOnUse" x="-6" y="-6">
+              <rect width="4" height="59" fill="none"/>
+              <line x1="0" y1="0" x2="0" y2="59" stroke="rgba(0,0,0,0.07)" stroke-width="0.15"/>
+            </pattern>
+          </defs>
+
+          <!-- out of bounds floor -->
+          <rect x="-6" y="-6" width="62" height="59" fill="url(#woodOut)"/>
+          <rect x="-6" y="-6" width="62" height="59" fill="url(#planks)"/>
+
+          <!-- court floor -->
+          <rect x="0" y="0" width="50" height="47" fill="url(#woodIn)"/>
+          <rect x="0" y="0" width="50" height="47" fill="url(#planks)"/>
+
+          <g stroke="#f6f0e8" stroke-width="0.35" fill="none" stroke-linecap="round">
+            <!-- boundary -->
+            <rect x="0" y="0" width="50" height="47"/>
+            <!-- paint / key -->
+            <rect x="17" y="0" width="16" height="19" fill="rgba(180,60,40,0.35)"/>
+            <!-- free throw circle -->
+            <circle cx="25" cy="19" r="6"/>
+            <!-- restricted area -->
+            <path d="M 21 5.25 A 4 4 0 0 0 29 5.25"/>
+            <!-- 3pt line -->
+            <path d="M 3 0 L 3 14.2 A 23.75 23.75 0 0 0 47 14.2 L 47 0"/>
+            <!-- half court circle -->
+            <path d="M 19 47 A 6 6 0 0 1 31 47"/>
+            <!-- backboard -->
+            <line x1="22" y1="4" x2="28" y2="4" stroke-width="0.5"/>
+          </g>
+          <!-- rim -->
+          <circle cx="25" cy="5.25" r="0.9" fill="none" stroke="#ff6b35" stroke-width="0.4"/>
+        </svg>
+
+        <!-- Arrows overlay -->
+        <svg id="arrowsSvg" viewBox="-6 -6 62 59" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <marker id="arrowHead" viewBox="0 0 10 10" refX="8" refY="5"
+                    markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.85)"/>
+            </marker>
+          </defs>
+          <g id="arrowsGroup"></g>
+          <g id="previewGroup"></g>
+        </svg>
+
+        <!-- Player tokens go here -->
+        <div id="tokens"></div>
+        <!-- Arrow edit handles -->
+        <div id="handles"></div>
+
+        <!-- Floating tool bar -->
+        <div id="toolbar" class="toolbar">
+          <button class="tool active" data-tool="select" title="Select / move players (1) — only on step 1">
+            <svg viewBox="0 0 24 24"><path d="M5 3 L19 11 L12.5 12.6 L9 20 Z" fill="currentColor" stroke="none"/></svg>
+            <span class="knum">1</span>
+          </button>
+          <button class="tool" data-tool="arrow" title="Movement arrow — drag from a player to where they cut (2)">
+            <svg viewBox="0 0 24 24"><path d="M4 12 H 18 M12 6 l 6 6 -6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="knum">2</span>
+          </button>
+          <button class="tool" data-tool="screen" title="Screen / block — drag from the screener to where they set it (3)">
+            <svg viewBox="0 0 24 24"><path d="M4 12 H 16 M19 5 V 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span class="knum">3</span>
+          </button>
+          <button class="tool" data-tool="eraser" title="Eraser — click an arrow or a player to remove its arrow (4)">
+            <svg viewBox="0 0 24 24"><path d="M14.5 4.5 l 5 5 L10 19 H6 v-4 z M5 20 h 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="knum">4</span>
+          </button>
+          <div class="tool-sep"></div>
+          <button id="undoBtn" class="tool" disabled title="Undo (Ctrl+Z)">
+            <svg viewBox="0 0 24 24"><path d="M8 5 L3 10 L8 15 M3 10 H14.5 a4.75 4.75 0 0 1 0 9.5 H10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button id="redoBtn" class="tool" disabled title="Redo (Ctrl+Y)">
+            <svg viewBox="0 0 24 24"><path d="M16 5 L21 10 L16 15 M21 10 H9.5 a4.75 4.75 0 0 0 0 9.5 H14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="player-bar">
+      <button id="prevBtn" class="pbtn" title="Previous step">◀◀</button>
+      <button id="playBtn" class="pbtn pbtn-main" title="Play / Pause">▶</button>
+      <button id="nextBtn" class="pbtn" title="Next step">▶▶</button>
+      <div class="timeline-wrap">
+        <div id="timelineTicks" class="timeline-ticks"></div>
+        <input type="range" id="scrubber" min="0" max="1000" value="0" step="1">
+      </div>
+      <div id="stepIndicator" class="step-indicator">Step 1 / 1</div>
+      <select id="speedSelect" class="speed-select" title="Playback speed">
+        <option value="0.5">0.5×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.5">1.5×</option>
+        <option value="2">2×</option>
+      </select>
+    </footer>
+  </div>
+
+  <!-- ============ Modal ============ -->
+  <div id="modal" class="modal-overlay" hidden>
+    <div class="modal">
+      <h2 id="modalTitle"></h2>
+      <p id="modalMsg"></p>
+      <input id="modalInput" type="text" autocomplete="off">
+      <div class="modal-actions">
+        <button id="modalCancel" class="btn">Cancel</button>
+        <button id="modalOk" class="btn btn-primary">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Export modal ============ -->
+  <div id="exportModal" class="modal-overlay" hidden>
+    <div class="modal">
+      <h2 id="exportTitle">Export play</h2>
+      <label class="field">
+        <span id="exportFormatLabel">Format</span>
+        <select id="exportFormat">
+          <option value="gif">GIF animation</option>
+          <option value="video">Video (MP4 / WebM)</option>
+          <option value="pdf">PDF — all steps</option>
+        </select>
+      </label>
+      <div id="exportTiming">
+        <label class="field">
+          <span id="exportMoveLabel">Movement duration (seconds)</span>
+          <input id="exportMove" type="number" min="0.3" max="8" step="0.1" value="2.4">
+        </label>
+        <label class="field">
+          <span id="exportPauseLabel">Pause between steps (seconds)</span>
+          <input id="exportPause" type="number" min="0" max="10" step="0.1" value="1">
+        </label>
+      </div>
+      <p id="exportStatus" class="export-status" hidden></p>
+      <div class="modal-actions">
+        <button id="exportCancel" class="btn">Cancel</button>
+        <button id="exportGo" class="btn btn-primary">Export</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="gif.js"></script>
+  <script src="app.js"></script>
+  <script src="export.js"></script>
+</body>
+</html>

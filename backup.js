@@ -140,7 +140,8 @@ function exportBackup() {
   exDownload(blob, "playbook-backup-" + new Date().toISOString().slice(0, 10) + ".zip");
 }
 
-// Merge plays from a backup zip: same id updates, new id adds.
+// Import plays from a backup zip: always added as fresh copies (never
+// overriding existing plays), grouped in their own "imported" section.
 async function importBackup(buffer) {
   const entries = await readZip(buffer);
   const dec = new TextDecoder();
@@ -155,17 +156,19 @@ async function importBackup(buffer) {
   }
   if (!imported) throw new Error("no plays found");
 
-  let added = 0, updated = 0;
+  let added = 0;
   for (const raw of imported) {
     if (!raw || typeof raw !== "object" || !raw.id || !raw.name ||
         !Array.isArray(raw.steps) || !raw.steps.length) continue;
     const p = normalizePassTimings(migrateBall(migratePlay(raw)));
-    const idx = plays.findIndex((x) => x.id === p.id);
-    if (idx >= 0) { plays[idx] = p; updated++; }
-    else { p.name = uniquePlayName(p.name); plays.push(p); added++; }
+    p.id = "play-" + Math.random().toString(36).slice(2, 10);
+    p.imported = true;
+    p.name = uniquePlayName(p.name);
+    plays.push(p);
+    added++;
   }
   save();
-  return { added, updated };
+  return { added };
 }
 
 /* ---------------- Wiring ---------------- */
@@ -179,11 +182,11 @@ $("importFile").addEventListener("change", async (e) => {
   e.target.value = "";
   if (!file) return;
   try {
-    const { added, updated } = await importBackup(await file.arrayBuffer());
+    const { added } = await importBackup(await file.arrayBuffer());
     renderHome();
     await openModal({
       title: t("importDoneTitle"),
-      message: t("importDoneMsg", added, updated),
+      message: t("importDoneMsg", added),
       confirmLabel: "OK",
       noCancel: true,
     });

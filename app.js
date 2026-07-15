@@ -145,7 +145,8 @@ const I18N = {
     ttExportAll: "Download every play as a .zip backup",
     ttImportAll: "Import plays from a .zip backup",
     importDoneTitle: "Import complete",
-    importDoneMsg: (a, u) => `${a} new plays imported, ${u} updated.`,
+    importDoneMsg: (a) => `${a} plays imported.`,
+    importedSection: "Imported",
     importErrTitle: "Import failed",
     importErrMsg: "That file doesn't look like a Playbook backup (.zip).",
   },
@@ -243,7 +244,8 @@ const I18N = {
     ttExportAll: "Descargar todas las jugadas como copia de seguridad .zip",
     ttImportAll: "Importar jugadas desde una copia de seguridad .zip",
     importDoneTitle: "Importación completada",
-    importDoneMsg: (a, u) => `${a} jugadas nuevas importadas, ${u} actualizadas.`,
+    importDoneMsg: (a) => `${a} jugadas importadas.`,
+    importedSection: "Importadas",
     importErrTitle: "Error al importar",
     importErrMsg: "El archivo no parece una copia de seguridad de Playbook (.zip).",
   },
@@ -531,7 +533,16 @@ let cardDragJustEnded = false;
 
 function renderHome() {
   playListEl.innerHTML = "";
+  $("exportAllBtn").hidden = plays.length === 0;
+  let importedHeader = false;
   for (const p of plays) {
+    if (p.imported && !importedHeader) {
+      importedHeader = true;
+      const lbl = document.createElement("div");
+      lbl.className = "list-section";
+      lbl.textContent = t("importedSection");
+      playListEl.appendChild(lbl);
+    }
     const card = document.createElement("div");
     card.className = "play-card";
     card.dataset.id = p.id;
@@ -619,6 +630,8 @@ function attachCardReorder(grip, card) {
       if (oldIdx >= 0 && newIdx !== oldIdx) {
         const [p] = plays.splice(oldIdx, 1);
         plays.splice(newIdx, 0, p);
+        // own plays stay before the imported section (stable within groups)
+        plays = [...plays.filter((x) => !x.imported), ...plays.filter((x) => x.imported)];
         save();
       }
       renderHome();

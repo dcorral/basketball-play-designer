@@ -793,7 +793,56 @@ function renderStepChips() {
   reset.title = t("ttResetAll");
   reset.addEventListener("click", resetAllPlay);
   stepChipsEl.appendChild(reset);
+
+  // keep the active chip visible in the carousel
+  const active = stepChipsEl.querySelector(".step-chip.active");
+  if (active) {
+    const margin = 24;
+    if (active.offsetLeft < stepChipsEl.scrollLeft + margin) {
+      stepChipsEl.scrollLeft = active.offsetLeft - margin;
+    } else if (active.offsetLeft + active.offsetWidth > stepChipsEl.scrollLeft + stepChipsEl.clientWidth - margin) {
+      stepChipsEl.scrollLeft = active.offsetLeft + active.offsetWidth - stepChipsEl.clientWidth + margin;
+    }
+  }
 }
+
+/* ---- step carousel: drag left/right to scroll ---- */
+
+let suppressChipClick = false;
+
+stepChipsEl.addEventListener("pointerdown", (e) => {
+  const startX = e.clientX;
+  const startScroll = stepChipsEl.scrollLeft;
+  let moved = false;
+  try { stepChipsEl.setPointerCapture(e.pointerId); } catch (_) {}
+
+  const move = (ev) => {
+    const dx = ev.clientX - startX;
+    if (!moved && Math.abs(dx) > 6) {
+      moved = true;
+      stepChipsEl.classList.add("dragging");
+    }
+    if (moved) stepChipsEl.scrollLeft = startScroll - dx;
+  };
+  const up = () => {
+    stepChipsEl.removeEventListener("pointermove", move);
+    stepChipsEl.removeEventListener("pointerup", up);
+    stepChipsEl.removeEventListener("pointercancel", up);
+    stepChipsEl.classList.remove("dragging");
+    if (moved) suppressChipClick = true; // swallow the click that follows a drag
+  };
+  stepChipsEl.addEventListener("pointermove", move);
+  stepChipsEl.addEventListener("pointerup", up);
+  stepChipsEl.addEventListener("pointercancel", up);
+});
+
+stepChipsEl.addEventListener("click", (e) => {
+  if (suppressChipClick) {
+    suppressChipClick = false;
+    e.stopPropagation();
+    e.preventDefault();
+  }
+}, true);
 
 function buildTokens() {
   tokensEl.innerHTML = "";

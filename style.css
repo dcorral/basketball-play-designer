@@ -307,7 +307,11 @@ select:hover, .btn:hover { border-color: #556072; }
   padding: 9px 9px 3px 2px;
   scrollbar-width: thin;
   scrollbar-color: #3a4250 transparent;
+  cursor: grab;
+  touch-action: none;
 }
+
+.step-chips.dragging { cursor: grabbing; }
 
 .step-chips::-webkit-scrollbar { height: 5px; width: 5px; }
 .step-chips::-webkit-scrollbar-track { background: transparent; }
@@ -728,16 +732,15 @@ body[data-tool="eraser"] .screen-cap {
   .topbar .btn { padding: 5px 8px; font-size: 12px; border-radius: 7px; }
   .play-name { font-size: 15px; padding: 3px 4px; max-width: 40vw; }
   .lang-select { padding: 4px 6px; font-size: 12px; }
-  /* steps as a wrapping list — every step visible, no horizontal scrolling */
+  /* steps as a swipeable carousel — single row, no visible scrollbar */
   .step-chips {
-    flex-wrap: wrap;
-    overflow-x: visible;
-    overflow-y: auto;
-    max-height: 96px;
+    max-width: 100%;
     width: 100%;
     padding-top: 8px;
     gap: 5px;
+    scrollbar-width: none;
   }
+  .step-chips::-webkit-scrollbar { display: none; }
   .step-chip { padding: 5px 9px; font-size: 12px; }
 
   .stage-wrap { padding: 8px; }

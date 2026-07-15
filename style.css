@@ -265,6 +265,33 @@ body {
   gap: 10px;
 }
 
+.modal-check {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+
+.modal-check input { accent-color: var(--accent); width: 16px; height: 16px; }
+
+/* ---------- View-only mode ---------- */
+#viewEditBtn { display: none; }
+
+body.view-only #toolbar,
+body.view-only .step-actions,
+body.view-only .steps-row,
+body.view-only .delete-row,
+body.view-only #handles,
+body.view-only #renamePencil,
+body.view-only #exportBtn,
+body.view-only #shareBtn { display: none !important; }
+
+body.view-only #viewEditBtn { display: inline-flex; }
+body.view-only .play-name { cursor: default; }
+
 .modal .field {
   display: flex;
   flex-direction: column;

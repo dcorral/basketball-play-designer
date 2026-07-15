@@ -46,6 +46,7 @@ let playhead = 0;      // float position on the timeline (in segments)
 let playing = false;
 let lastFrameTime = null;
 let tool = "select";   // select | arrow | screen | eraser
+let viewPlay = null;   // standalone play shown in the read-only viewer
 
 /* ================= i18n ================= */
 
@@ -96,6 +97,11 @@ const I18N = {
     ttZoomReset: "Reset zoom (or double-click the court)",
     ttReorder: "Drag to reorder",
     ttShare: "Share play as a link",
+    shareTitle: "Share play",
+    shareModalMsg: "The link opens a view-only player of this play.",
+    shareAllowEdit: "Allow editing (they can add it to their plays)",
+    shareGo: "Share",
+    viewEdit: "Edit",
     shareCopiedTitle: "Link copied",
     shareCopiedMsg: "The share link is in your clipboard — send it to anyone.",
     shareLinkTitle: "Share link",
@@ -161,6 +167,11 @@ const I18N = {
     ttZoomReset: "Restablecer zoom (o doble clic en la pista)",
     ttReorder: "Arrastra para reordenar",
     ttShare: "Compartir la jugada con un enlace",
+    shareTitle: "Compartir jugada",
+    shareModalMsg: "El enlace abre un visor de solo lectura de esta jugada.",
+    shareAllowEdit: "Permitir edición (podrán añadirla a sus jugadas)",
+    shareGo: "Compartir",
+    viewEdit: "Editar",
     shareCopiedTitle: "Enlace copiado",
     shareCopiedMsg: "El enlace está en tu portapapeles — envíaselo a quien quieras.",
     shareLinkTitle: "Enlace para compartir",
@@ -223,7 +234,7 @@ function applyLang() {
 
   const texts = {
     createNewBtn: "createNew", backBtn: "back",
-    deletePlayLabel: "deletePlay",
+    deletePlayLabel: "deletePlay", viewEditLabel: "viewEdit",
     modalCancel: "cancel", exportCancel: "cancel", exportGo: "exportGo",
     exportTitle: "exportTitle", exportFormatLabel: "formatLabel",
     exportMoveLabel: "moveDur", exportPauseLabel: "pauseDur",
@@ -291,12 +302,17 @@ $("toastClose").addEventListener("click", hideToast);
 
 // openModal resolves with the input text (or true when there is no input),
 // or null if cancelled.
-function openModal({ title, message = "", input = false, value = "", confirmLabel = "OK", danger = false, noCancel = false }) {
+function openModal({ title, message = "", input = false, value = "", confirmLabel = "OK", danger = false, noCancel = false, checkboxLabel = null }) {
   return new Promise((resolve) => {
     $("modalTitle").textContent = title;
     $("modalMsg").textContent = message;
     $("modalMsg").hidden = !message;
     $("modalCancel").hidden = noCancel;
+    $("modalCheckWrap").hidden = !checkboxLabel;
+    if (checkboxLabel) {
+      $("modalCheckLabel").textContent = checkboxLabel;
+      $("modalCheck").checked = false;
+    }
     const inputEl = $("modalInput");
     inputEl.hidden = !input;
     inputEl.value = value;
@@ -315,7 +331,11 @@ function openModal({ title, message = "", input = false, value = "", confirmLabe
       document.removeEventListener("keydown", onKey, true);
       resolve(result);
     };
-    const onOk = () => close(input ? inputEl.value : true);
+    const onOk = () => close(
+      input ? inputEl.value
+      : checkboxLabel ? { ok: true, checked: $("modalCheck").checked }
+      : true
+    );
     const onCancel = () => close(null);
     const onKey = (e) => {
       if (e.code === "Escape") { e.stopPropagation(); onCancel(); }
@@ -402,7 +422,9 @@ function load() {
 
 function showHome() {
   playing = false;
-  document.body.classList.remove("playing");
+  viewPlay = null;
+  document.body.classList.remove("playing", "view-only");
+  playNameEl.readOnly = false;
   editorEl.hidden = true;
   homeEl.hidden = false;
   renderHome();
@@ -410,6 +432,9 @@ function showHome() {
 
 function openPlay(id) {
   currentPlayId = id;
+  viewPlay = null;
+  document.body.classList.remove("view-only");
+  playNameEl.readOnly = false;
   currentStep = 0;
   playhead = 0;
   playing = false;
@@ -420,6 +445,22 @@ function openPlay(id) {
   setTool("select");
   renderAll();
   applyToolbarPos();
+  resetZoom();
+}
+
+// Read-only viewer for a shared play: court, name and playback only.
+function openViewer(play) {
+  viewPlay = play;
+  document.body.classList.add("view-only");
+  playNameEl.readOnly = true;
+  currentStep = 0;
+  playhead = 0;
+  playing = false;
+  clearHistory();
+  homeEl.hidden = true;
+  editorEl.hidden = false;
+  setTool("select");
+  renderAll();
   resetZoom();
 }
 
@@ -548,7 +589,7 @@ function createPlay(name) {
 }
 
 function currentPlay() {
-  return plays.find((p) => p.id === currentPlayId);
+  return viewPlay || plays.find((p) => p.id === currentPlayId);
 }
 
 // Play names are unique: collisions get a -N suffix (first free number).
@@ -1142,7 +1183,7 @@ function hasArrow(step, tokenId) {
 // paused on a step (the eraser deletes the arrow instead).
 function renderHandles() {
   handlesEl.innerHTML = "";
-  if (playing || playhead !== currentStep) return;
+  if (playing || viewPlay || playhead !== currentStep) return;
   const step = currentPlay().steps[currentStep];
   for (const d of TOKEN_DEFS) {
     if (!hasArrow(step, d.id)) continue;
@@ -1415,7 +1456,7 @@ function eraseMove(tokenId) {
 
 function attachTokenPointer(el, tokenId) {
   el.addEventListener("pointerdown", (e) => {
-    if (playing) return;
+    if (playing || viewPlay) return;
     // Editing always happens on an exact step.
     playhead = currentStep;
     e.preventDefault();
@@ -1667,6 +1708,10 @@ function sizeNameInput() {
 function commitRename() {
   const p = currentPlay();
   if (!p) return;
+  if (viewPlay) {
+    playNameEl.value = p.name;
+    return;
+  }
   const desired = playNameEl.value.trim() || p.name;
   const newName = uniquePlayName(desired, p.id);
   if (newName !== p.name) {
@@ -1816,6 +1861,8 @@ document.addEventListener("keydown", (e) => {
   if (!modalEl.hidden || !$("exportModal").hidden) return;
   if (editorEl.hidden) return;
   if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
+  // viewer: playback keys only
+  if (viewPlay && !["Space", "ArrowLeft", "ArrowRight"].includes(e.code)) return;
   if ((e.ctrlKey || e.metaKey) && e.code === "KeyZ") {
     e.preventDefault();
     e.shiftKey ? doRedo() : doUndo();
@@ -1877,52 +1924,73 @@ async function decodeSharePlay(s) {
 }
 
 $("shareBtn").addEventListener("click", async () => {
-  const url = location.origin + location.pathname + "#p=" + await encodeSharePlay(currentPlay());
+  const res = await openModal({
+    title: t("shareTitle"),
+    message: t("shareModalMsg"),
+    checkboxLabel: t("shareAllowEdit"),
+    confirmLabel: t("shareGo"),
+  });
+  if (!res) return;
+  const frag = (res.checked ? "#p=" : "#v=") + await encodeSharePlay(currentPlay());
+  const url = location.origin + location.pathname + frag;
   if (navigator.share) {
     try { await navigator.share({ title: currentPlay().name, url }); } catch (_) { /* cancelled */ }
     return;
   }
   try {
     await navigator.clipboard.writeText(url);
-    openModal({ title: t("shareCopiedTitle"), message: t("shareCopiedMsg"), confirmLabel: "OK", noCancel: true });
+    showToast(t("shareCopiedMsg"));
   } catch (_) {
     // clipboard unavailable — show the link for manual copy
     openModal({ title: t("shareLinkTitle"), input: true, value: url, confirmLabel: "OK", noCancel: true });
   }
 });
 
-// Opening a share link: offer to add the play to this device.
+// Add a shared play to the collection (with a duplicate check).
+async function addSharedPlay(p) {
+  const incoming = JSON.stringify(p.steps);
+  const existing = plays.find((x) => JSON.stringify(x.steps) === incoming);
+  if (existing) {
+    const ok = await openModal({
+      title: t("sharedTitle"),
+      message: t("sharedExistsMsg", existing.name),
+      confirmLabel: t("sharedAddAnyway"),
+    });
+    if (!ok) return false;
+  }
+  const desired = p.name;
+  p.name = uniquePlayName(desired);
+  plays.push(p);
+  save();
+  openPlay(p.id);
+  showToast(p.name !== desired ? t("renamedToast", p.name) : t("sharedAddedToast", p.name));
+  return true;
+}
+
+// Opening a share link: #v= opens the read-only viewer, #p= adds directly.
 async function importFromLink() {
-  const m = location.hash.match(/^#p=(.+)$/);
+  const m = location.hash.match(/^#(p|v)=(.+)$/);
   if (!m) return;
   history.replaceState(null, "", location.pathname + location.search);
   try {
-    const raw = await decodeSharePlay(m[1]);
+    const raw = await decodeSharePlay(m[2]);
     if (!raw || !raw.name || !Array.isArray(raw.steps) || !raw.steps.length) throw new Error("bad");
     const p = migrateBall(migratePlay(raw));
     p.id = "play-" + Math.random().toString(36).slice(2, 10); // always a fresh copy
-    // identical content already in the list (regardless of name) —
-    // let the user decide whether to add a duplicate copy
-    const incoming = JSON.stringify(p.steps);
-    const existing = plays.find((x) => JSON.stringify(x.steps) === incoming);
-    if (existing) {
-      const ok = await openModal({
-        title: t("sharedTitle"),
-        message: t("sharedExistsMsg", existing.name),
-        confirmLabel: t("sharedAddAnyway"),
-      });
-      if (!ok) return;
-    }
-    const desired = p.name;
-    p.name = uniquePlayName(desired);
-    plays.push(p);
-    save();
-    openPlay(p.id);
-    showToast(p.name !== desired ? t("renamedToast", p.name) : t("sharedAddedToast", p.name));
+    if (m[1] === "v") openViewer(p);
+    else await addSharedPlay(p);
   } catch (_) {
     openModal({ title: t("importErrTitle"), message: t("sharedErrMsg"), confirmLabel: "OK", noCancel: true });
   }
 }
+
+// The viewer's Edit button hands the play over to the normal add flow.
+$("viewEditBtn").addEventListener("click", async () => {
+  if (!viewPlay) return;
+  const p = viewPlay;
+  const added = await addSharedPlay(p);
+  if (!added) return; // cancelled — stay in the viewer
+});
 
 /* ================= Boot ================= */
 

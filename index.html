@@ -50,6 +50,12 @@
           <path d="M8.4 10.9 L15.6 6.3 M8.4 13.1 L15.6 17.7"/>
         </svg>
       </button>
+      <button id="viewEditBtn" class="btn btn-primary icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+        </svg>
+        <span id="viewEditLabel">Edit</span>
+      </button>
       <select id="langEditor" class="lang-select" title="Language / Idioma">
         <option value="en">🇬🇧 EN</option>
         <option value="es">🇪🇸 ES</option>
@@ -216,6 +222,10 @@
     <div class="modal">
       <h2 id="modalTitle"></h2>
       <p id="modalMsg"></p>
+      <label id="modalCheckWrap" class="modal-check" hidden>
+        <input type="checkbox" id="modalCheck">
+        <span id="modalCheckLabel"></span>
+      </label>
       <input id="modalInput" type="text" autocomplete="off">
       <div class="modal-actions">
         <button id="modalCancel" class="btn">Cancel</button>

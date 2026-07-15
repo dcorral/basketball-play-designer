@@ -763,11 +763,11 @@ body[data-tool="eraser"] .screen-cap {
   .tool .knum { display: none; }
   .tool-sep { margin: 4px 2px; }
 
-  .player-bar { padding: 8px 10px; gap: 8px; }
-  .pbtn { font-size: 14px; padding: 4px 5px; }
-  .pbtn-main { width: 36px; height: 36px; font-size: 17px; }
-  .step-indicator { display: none; }
-  .speed-select { padding: 4px 5px; font-size: 12px; }
+  /* narrow screens: only prev / play / next — no progress bar */
+  .player-bar { padding: 8px 10px; gap: 30px; justify-content: center; }
+  .timeline-wrap, .step-indicator, .speed-select { display: none; }
+  .pbtn { font-size: 18px; padding: 6px 8px; }
+  .pbtn-main { width: 46px; height: 46px; font-size: 20px; }
 
   .home { gap: 22px; }
   .home h1 { font-size: 30px; }

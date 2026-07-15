@@ -54,7 +54,7 @@ const I18N = {
     appTitle: "Cejudo's Playbook",
     createNew: "＋ CREATE NEW",
     stepSingular: "step", stepPlural: "steps",
-    back: "← Plays", rename: "✎ Rename", exportBtn: "⤓ Export", deletePlay: "✕ Delete",
+    back: "← Plays", rename: "✎ Rename", deletePlay: "Delete",
     nextStep: "Next step ＋", deleteStep: "Delete step", resetAll: "Reset all",
     step: "Step", stepLower: "step",
     cancel: "Cancel", create: "Create", renameConfirm: "Rename",
@@ -101,10 +101,10 @@ const I18N = {
     importErrMsg: "That file doesn't look like a Playbook backup (.zip).",
   },
   es: {
-    appTitle: "Playbook de Cejudos",
+    appTitle: "Cejudo's Playbook",
     createNew: "＋ CREAR NUEVA",
     stepSingular: "paso", stepPlural: "pasos",
-    back: "← Jugadas", rename: "✎ Renombrar", exportBtn: "⤓ Exportar", deletePlay: "✕ Eliminar",
+    back: "← Jugadas", rename: "✎ Renombrar", deletePlay: "Eliminar",
     nextStep: "Siguiente paso ＋", deleteStep: "Eliminar paso", resetAll: "Reiniciar todo",
     step: "Paso", stepLower: "paso",
     cancel: "Cancelar", create: "Crear", renameConfirm: "Renombrar",
@@ -193,7 +193,7 @@ function applyLang() {
 
   const texts = {
     createNewBtn: "createNew", backBtn: "back",
-    exportBtn: "exportBtn", deletePlayBtn: "deletePlay",
+    deletePlayLabel: "deletePlay",
     modalCancel: "cancel", exportCancel: "cancel", exportGo: "exportGo",
     exportTitle: "exportTitle", exportFormatLabel: "formatLabel",
     exportMoveLabel: "moveDur", exportPauseLabel: "pauseDur",

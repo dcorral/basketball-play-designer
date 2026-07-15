@@ -32,13 +32,24 @@
         <input id="playName" class="play-name" spellcheck="false" autocomplete="off">
         <button id="renamePencil" class="pencil-btn" title="Rename current play">✎</button>
       </div>
-      <button id="exportBtn" class="btn" title="Export as GIF, video or PDF">⤓ Export</button>
-      <button id="deletePlayBtn" class="btn btn-danger" title="Delete current play">✕ Delete</button>
+      <button id="exportBtn" class="btn icon-btn" title="Export as GIF, video or PDF">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+      </button>
       <div class="step-controls">
         <div id="stepChips" class="step-chips"></div>
         <button id="addStepBtn" class="step-chip step-add" title="Next step">＋</button>
         <button id="resetAllBtn" class="step-chip step-reset" title="Reset all">↺</button>
       </div>
+      <button id="deletePlayBtn" class="btn btn-danger-solid icon-btn" title="Delete current play">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7 H20 M10 4 H14 M6.5 7 L7.5 20 H16.5 L17.5 7 M10 11 V16 M14 11 V16"/>
+        </svg>
+        <span id="deletePlayLabel">Delete</span>
+      </button>
       <select id="langEditor" class="lang-select" title="Language / Idioma">
         <option value="en">🇬🇧 EN</option>
         <option value="es">🇪🇸 ES</option>

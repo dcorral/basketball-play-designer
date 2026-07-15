@@ -103,6 +103,7 @@ const I18N = {
     sharedMsg: (n) => `Add "${n}" to your plays?`,
     sharedAdd: "Add",
     sharedErrMsg: "This share link is not valid.",
+    renamedToast: (n) => `That name was already in use — this play is now called "${n}".`,
     exportAll: "⤓ Export all (.zip)", importAll: "⤒ Import (.zip)",
     ttExportAll: "Download every play as a .zip backup",
     ttImportAll: "Import plays from a .zip backup",
@@ -164,6 +165,7 @@ const I18N = {
     sharedMsg: (n) => `¿Añadir "${n}" a tus jugadas?`,
     sharedAdd: "Añadir",
     sharedErrMsg: "El enlace no es válido.",
+    renamedToast: (n) => `Ese nombre ya existía — la jugada ahora se llama "${n}".`,
     exportAll: "⤓ Exportar todo (.zip)", importAll: "⤒ Importar (.zip)",
     ttExportAll: "Descargar todas las jugadas como copia de seguridad .zip",
     ttImportAll: "Importar jugadas desde una copia de seguridad .zip",
@@ -256,6 +258,28 @@ for (const id of ["langHome", "langEditor"]) {
     applyLang();
   });
 }
+
+/* ================= Toast ================= */
+
+let toastTimer = null;
+
+function showToast(msg) {
+  const el = $("toast");
+  $("toastMsg").textContent = msg;
+  clearTimeout(toastTimer);
+  el.hidden = false;
+  requestAnimationFrame(() => el.classList.add("show"));
+  toastTimer = setTimeout(hideToast, 5000);
+}
+
+function hideToast() {
+  const el = $("toast");
+  el.classList.remove("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.hidden = true; }, 300);
+}
+
+$("toastClose").addEventListener("click", hideToast);
 
 /* ================= Modal ================= */
 
@@ -519,6 +543,15 @@ function createPlay(name) {
 
 function currentPlay() {
   return plays.find((p) => p.id === currentPlayId);
+}
+
+// Play names are unique: collisions get a -N suffix (first free number).
+function uniquePlayName(desired, excludeId) {
+  const taken = (n) => plays.some((p) => p.id !== excludeId && p.name === n);
+  if (!taken(desired)) return desired;
+  let n = 1;
+  while (taken(`${desired}-${n}`)) n++;
+  return `${desired}-${n}`;
 }
 
 /* ================= Geometry ================= */
@@ -1610,8 +1643,11 @@ function tick(now) {
 /* ================= Wiring ================= */
 
 $("createNewBtn").addEventListener("click", () => {
-  const play = createPlay(t("playDefault") + " " + (plays.length + 1));
+  const base = t("playDefault") + " " + (plays.length + 1);
+  const name = uniquePlayName(base);
+  const play = createPlay(name);
   openPlay(play.id);
+  if (name !== base) showToast(t("renamedToast", name));
 });
 
 $("backBtn").addEventListener("click", showHome);
@@ -1625,12 +1661,14 @@ function sizeNameInput() {
 function commitRename() {
   const p = currentPlay();
   if (!p) return;
-  const newName = playNameEl.value.trim() || p.name;
+  const desired = playNameEl.value.trim() || p.name;
+  const newName = uniquePlayName(desired, p.id);
   if (newName !== p.name) {
     pushUndo();
     p.name = newName;
     save();
   }
+  if (newName !== desired) showToast(t("renamedToast", newName));
   playNameEl.value = p.name;
   sizeNameInput();
 }
@@ -1863,9 +1901,12 @@ async function importFromLink() {
       confirmLabel: t("sharedAdd"),
     });
     if (!ok) return;
+    const desired = p.name;
+    p.name = uniquePlayName(desired);
     plays.push(p);
     save();
     openPlay(p.id);
+    if (p.name !== desired) showToast(t("renamedToast", p.name));
   } catch (_) {
     openModal({ title: t("importErrTitle"), message: t("sharedErrMsg"), confirmLabel: "OK", noCancel: true });
   }

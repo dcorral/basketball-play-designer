@@ -181,6 +181,45 @@ body {
   min-height: 0;
 }
 
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(480px, 92vw);
+  padding: 11px 14px;
+  background: var(--panel-2);
+  border: 1px solid #4a4a52;
+  border-radius: 11px;
+  box-shadow: 0 10px 34px #000b;
+  font-size: 14px;
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+#toastClose {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px 4px;
+  border-radius: 6px;
+  flex: none;
+}
+
+#toastClose:hover { color: var(--text); background: #37373e; }
+
 /* ---------- Modal ---------- */
 .modal-overlay {
   position: fixed;

@@ -1430,7 +1430,9 @@ zoomLabelEl.addEventListener("click", resetZoom);
 const stagePointers = new Map();
 
 stageEl.addEventListener("pointerdown", (e) => {
-  if (e.target.closest(".token, .handle")) return;
+  // order lines keep their own dblclick/long-press — capturing here would
+  // retarget those events to the stage and swallow them
+  if (e.target.closest(".token, .handle, .order-line")) return;
   stagePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   try { stageEl.setPointerCapture(e.pointerId); } catch (_) {}
 });

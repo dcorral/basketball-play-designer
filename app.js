@@ -95,6 +95,14 @@ const I18N = {
     ttZoomIn: "Zoom in", ttZoomOut: "Zoom out",
     ttZoomReset: "Reset zoom (or double-click the court)",
     ttReorder: "Drag to reorder",
+    ttShare: "Share play as a link",
+    shareCopiedTitle: "Link copied",
+    shareCopiedMsg: "The share link is in your clipboard — send it to anyone.",
+    shareLinkTitle: "Share link",
+    sharedTitle: "Shared play",
+    sharedMsg: (n) => `Add "${n}" to your plays?`,
+    sharedAdd: "Add",
+    sharedErrMsg: "This share link is not valid.",
     exportAll: "⤓ Export all (.zip)", importAll: "⤒ Import (.zip)",
     ttExportAll: "Download every play as a .zip backup",
     ttImportAll: "Import plays from a .zip backup",
@@ -148,6 +156,14 @@ const I18N = {
     ttZoomIn: "Acercar", ttZoomOut: "Alejar",
     ttZoomReset: "Restablecer zoom (o doble clic en la pista)",
     ttReorder: "Arrastra para reordenar",
+    ttShare: "Compartir la jugada con un enlace",
+    shareCopiedTitle: "Enlace copiado",
+    shareCopiedMsg: "El enlace está en tu portapapeles — envíaselo a quien quieras.",
+    shareLinkTitle: "Enlace para compartir",
+    sharedTitle: "Jugada compartida",
+    sharedMsg: (n) => `¿Añadir "${n}" a tus jugadas?`,
+    sharedAdd: "Añadir",
+    sharedErrMsg: "El enlace no es válido.",
     exportAll: "⤓ Exportar todo (.zip)", importAll: "⤒ Importar (.zip)",
     ttExportAll: "Descargar todas las jugadas como copia de seguridad .zip",
     ttImportAll: "Importar jugadas desde una copia de seguridad .zip",
@@ -209,6 +225,7 @@ function applyLang() {
 
   const titles = {
     backBtn: "ttBack", renamePencil: "ttRename", exportBtn: "ttExport",
+    shareBtn: "ttShare",
     deletePlayBtn: "ttDelete",
     prevBtn: "ttPrev", nextBtn: "ttNext",
     playBtn: "ttPlay", speedSelect: "ttSpeed",
@@ -1792,6 +1809,75 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+/* ================= Share via link =================
+The play travels inside the URL fragment: compressed JSON, base64url.
+Prefix "c" = deflate-compressed, "j" = plain (no CompressionStream).
+*/
+
+async function encodeSharePlay(play) {
+  const json = JSON.stringify(play);
+  if (typeof CompressionStream === "undefined") {
+    return "j" + btoa(unescape(encodeURIComponent(json)))
+      .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  const stream = new Blob([json]).stream().pipeThrough(new CompressionStream("deflate-raw"));
+  const buf = new Uint8Array(await new Response(stream).arrayBuffer());
+  let bin = "";
+  for (const b of buf) bin += String.fromCharCode(b);
+  return "c" + btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+async function decodeSharePlay(s) {
+  const kind = s[0];
+  const b64 = s.slice(1).replace(/-/g, "+").replace(/_/g, "/");
+  const bin = atob(b64);
+  if (kind === "j") {
+    return JSON.parse(decodeURIComponent(escape(bin)));
+  }
+  const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+  return JSON.parse(await new Response(stream).text());
+}
+
+$("shareBtn").addEventListener("click", async () => {
+  const url = location.origin + location.pathname + "#p=" + await encodeSharePlay(currentPlay());
+  if (navigator.share) {
+    try { await navigator.share({ title: currentPlay().name, url }); } catch (_) { /* cancelled */ }
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    openModal({ title: t("shareCopiedTitle"), message: t("shareCopiedMsg"), confirmLabel: "OK", noCancel: true });
+  } catch (_) {
+    // clipboard unavailable — show the link for manual copy
+    openModal({ title: t("shareLinkTitle"), input: true, value: url, confirmLabel: "OK", noCancel: true });
+  }
+});
+
+// Opening a share link: offer to add the play to this device.
+async function importFromLink() {
+  const m = location.hash.match(/^#p=(.+)$/);
+  if (!m) return;
+  history.replaceState(null, "", location.pathname + location.search);
+  try {
+    const raw = await decodeSharePlay(m[1]);
+    if (!raw || !raw.name || !Array.isArray(raw.steps) || !raw.steps.length) throw new Error("bad");
+    const p = migrateBall(migratePlay(raw));
+    p.id = "play-" + Math.random().toString(36).slice(2, 10); // always a fresh copy
+    const ok = await openModal({
+      title: t("sharedTitle"),
+      message: t("sharedMsg", p.name),
+      confirmLabel: t("sharedAdd"),
+    });
+    if (!ok) return;
+    plays.push(p);
+    save();
+    openPlay(p.id);
+  } catch (_) {
+    openModal({ title: t("importErrTitle"), message: t("sharedErrMsg"), confirmLabel: "OK", noCancel: true });
+  }
+}
+
 /* ================= Boot ================= */
 
 // Team logo: inline as a data URI so the SVG serialization used by the
@@ -1817,3 +1903,4 @@ document.addEventListener("keydown", (e) => {
 load();
 applyLang();
 showHome();
+importFromLink();

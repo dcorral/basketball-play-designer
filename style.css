@@ -561,7 +561,7 @@ select:hover, .btn:hover { border-color: #5a5a63; }
 /* ---------- Tokens ---------- */
 .token {
   position: absolute;
-  width: 5.2%;
+  width: 5.8%;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   border-radius: 50%;

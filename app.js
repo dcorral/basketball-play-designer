@@ -52,7 +52,7 @@ let tool = "select";   // select | arrow | screen | eraser
 const I18N = {
   en: {
     appTitle: "Cejudo's Playbook",
-    createNew: "＋ CREATE NEW",
+    createNew: "＋ CREATE PLAY",
     stepSingular: "step", stepPlural: "steps",
     back: "← Plays", rename: "✎ Rename", deletePlay: "Delete",
     nextStep: "Next step ＋", deleteStep: "Delete step", resetAll: "Reset all",
@@ -117,7 +117,7 @@ const I18N = {
   },
   es: {
     appTitle: "Cejudo's Playbook",
-    createNew: "＋ CREAR NUEVA",
+    createNew: "＋ CREAR JUGADA",
     stepSingular: "paso", stepPlural: "pasos",
     back: "← Jugadas", rename: "✎ Renombrar", deletePlay: "Eliminar",
     nextStep: "Siguiente paso ＋", deleteStep: "Eliminar paso", resetAll: "Reiniciar todo",

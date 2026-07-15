@@ -270,6 +270,8 @@ body {
 
 .help-content h3:first-child { margin-top: 0; }
 
+.help-tour-btn { margin: 2px 0 6px; align-self: flex-start; }
+
 .help-content p {
   font-size: 13.5px;
   color: var(--muted);

@@ -111,6 +111,9 @@ const I18N = {
     sharedErrMsg: "This share link is not valid.",
     renamedToast: (n) => `That name was already in use — this play is now called "${n}".`,
     helpTitle: "How Cejudo's Playbook works",
+    helpTourTitle: "Guided tour",
+    helpTourBody: "New here, or want a refresher? Replay the interactive tour that walks you through creating and animating a play, step by step.",
+    helpTourBtn: "Restart the tour",
     tourSkip: "Skip tour", tourNext: "Next", tourDone: "Done!",
     tourTexts: [
       "Welcome! Let's build your first play — click the highlighted button.",
@@ -206,6 +209,9 @@ const I18N = {
     sharedErrMsg: "El enlace no es válido.",
     renamedToast: (n) => `Ese nombre ya existía — la jugada ahora se llama "${n}".`,
     helpTitle: "Cómo funciona Cejudo's Playbook",
+    helpTourTitle: "Tour guiado",
+    helpTourBody: "¿Nuevo por aquí o quieres un repaso? Vuelve a ver el tour interactivo que te guía al crear y animar una jugada, paso a paso.",
+    helpTourBtn: "Reiniciar el tour",
     tourSkip: "Saltar tour", tourNext: "Siguiente", tourDone: "¡Listo!",
     tourTexts: [
       "¡Bienvenido! Vamos a crear tu primera jugada — pulsa el botón resaltado.",
@@ -2248,6 +2254,20 @@ function openHelp() {
   $("helpTitle").textContent = t("helpTitle");
   const c = $("helpContent");
   c.innerHTML = "";
+  // guided tour section first, with a restart button
+  const th = document.createElement("h3");
+  th.textContent = t("helpTourTitle");
+  const tp = document.createElement("p");
+  tp.textContent = t("helpTourBody");
+  const tb = document.createElement("button");
+  tb.className = "btn btn-primary help-tour-btn";
+  tb.textContent = t("helpTourBtn");
+  tb.addEventListener("click", () => {
+    $("helpModal").hidden = true;
+    showHome();
+    startTour();
+  });
+  c.append(th, tp, tb);
   for (const sec of t("helpSections")) {
     const h = document.createElement("h3");
     h.textContent = sec.h;

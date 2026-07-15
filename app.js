@@ -1201,25 +1201,46 @@ function renderArrows() {
   const dual = !!(step.pass && ownerMove);
   const passOrder = dual ? passOrderOf(step) : 1;
   const addOrderHandlers = (els, passFirst) => {
-    for (const el of els) {
+    const attach = (el) => {
       el.classList.add("order-line");
       el.addEventListener("dblclick", (e) => {
         e.stopPropagation();
         preferOrder(passFirst);
       });
+      // long-press on touch (with a jitter threshold), right-click on desktop
+      el.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        preferOrder(passFirst);
+      });
       el.addEventListener("pointerdown", (e) => {
         if (tool === "eraser" || playing || viewPlay) return;
-        const timer = setTimeout(() => preferOrder(passFirst), 550); // long press
+        const sx = e.clientX, sy = e.clientY;
+        const timer = setTimeout(() => preferOrder(passFirst), 450);
         const cancel = () => {
           clearTimeout(timer);
-          el.removeEventListener("pointermove", cancel);
-          el.removeEventListener("pointerup", cancel);
-          el.removeEventListener("pointercancel", cancel);
+          window.removeEventListener("pointermove", onMove);
+          window.removeEventListener("pointerup", cancel);
+          window.removeEventListener("pointercancel", cancel);
         };
-        el.addEventListener("pointermove", cancel);
-        el.addEventListener("pointerup", cancel);
-        el.addEventListener("pointercancel", cancel);
+        const onMove = (ev) => {
+          if (Math.hypot(ev.clientX - sx, ev.clientY - sy) > 10) cancel();
+        };
+        window.addEventListener("pointermove", onMove);
+        window.addEventListener("pointerup", cancel);
+        window.addEventListener("pointercancel", cancel);
       });
+    };
+    for (const el of els) {
+      attach(el);
+      // a wide invisible twin makes the thin line easy to hit
+      if (el.tagName === "path") {
+        const hit = document.createElementNS(SVG_NS, "path");
+        hit.setAttribute("d", el.getAttribute("d"));
+        hit.setAttribute("class", "order-hit");
+        hit.dataset.token = el.dataset.token;
+        addEls([hit]); // keeps the eraser working on it too
+        attach(hit);
+      }
     }
   };
 

@@ -880,6 +880,21 @@ body[data-tool="eraser"] .screen-cap {
   pointer-events: stroke;
   cursor: pointer;
 }
+
+/* invisible wide twin of an order line — a comfortable touch target */
+.order-hit {
+  stroke: #ffffff;
+  stroke-opacity: 0;
+  stroke-width: 3;
+  fill: none;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+#arrowsSvg {
+  -webkit-touch-callout: none;
+  user-select: none;
+}
 .arrow-path.preview, .screen-cap.preview { opacity: 0.7; }
 
 /* ---------- Handles ---------- */

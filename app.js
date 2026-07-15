@@ -3,8 +3,8 @@
 /* ================= Constants ================= */
 
 // Court coordinate system = SVG viewBox units (feet).
-const VB = { minX: -6, minY: -6, w: 62, h: 59 };
-const CLAMP = { minX: -5.5, maxX: 55.5, minY: -5.5, maxY: 52.5 };
+const VB = { minX: -6, minY: -6, w: 62, h: 62 };
+const CLAMP = { minX: -5.5, maxX: 55.5, minY: -5.5, maxY: 55 };
 // Each sequential action (screen wave, pass, cut wave) gets this long, so a
 // busy step lasts proportionally longer than a simple one.
 const SECONDS_PER_PHASE = 1.8;
@@ -481,10 +481,10 @@ function attachCardReorder(grip, card) {
 /* ================= Play management ================= */
 
 function defaultStep() {
-  // Players lined up out of bounds on the left sideline, ball with player 1.
+  // Players lined up out of bounds above the baseline, ball with player 1.
   const pos = {};
   PLAYER_IDS.forEach((id, i) => {
-    pos[id] = { x: -3, y: 8 + i * 8 };
+    pos[id] = { x: 9 + i * 8, y: -3 };
   });
   return { pos, moves: {}, ball: "P1", pass: null };
 }
@@ -1278,9 +1278,9 @@ function applyToolbarPos() {
     if (p) { x = p.x * window.innerWidth; y = p.y * window.innerHeight; }
   } catch (_) { /* ignore bad stored value */ }
   if (x === null) {
-    const st = stageEl.getBoundingClientRect();
-    x = st.left + st.width / 2 - tb.width / 2;
-    y = st.top + 10;
+    const wr = stageWrapEl.getBoundingClientRect();
+    x = wr.left + 12;
+    y = wr.top + wr.height / 2 - tb.height / 2;
   }
   toolbar.style.left = Math.min(Math.max(x, 0), window.innerWidth - tb.width) + "px";
   toolbar.style.top = Math.min(Math.max(y, 0), window.innerHeight - tb.height) + "px";

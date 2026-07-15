@@ -59,7 +59,7 @@
     <main class="stage-wrap">
       <div id="stage" class="stage">
         <!-- Court background -->
-        <svg id="courtSvg" viewBox="-6 -6 62 59" preserveAspectRatio="xMidYMid meet">
+        <svg id="courtSvg" viewBox="-6 -6 62 62" preserveAspectRatio="xMidYMid meet">
           <defs>
             <linearGradient id="woodOut" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stop-color="#8a5a2b"/>
@@ -69,22 +69,23 @@
               <stop offset="0" stop-color="#c98d4b"/>
               <stop offset="1" stop-color="#b87c3c"/>
             </linearGradient>
-            <pattern id="planks" width="4" height="59" patternUnits="userSpaceOnUse" x="-6" y="-6">
-              <rect width="4" height="59" fill="none"/>
-              <line x1="0" y1="0" x2="0" y2="59" stroke="rgba(0,0,0,0.07)" stroke-width="0.15"/>
+            <pattern id="planks" width="4" height="62" patternUnits="userSpaceOnUse" x="-6" y="-6">
+              <rect width="4" height="62" fill="none"/>
+              <line x1="0" y1="0" x2="0" y2="62" stroke="rgba(0,0,0,0.07)" stroke-width="0.15"/>
             </pattern>
           </defs>
 
           <!-- out of bounds floor -->
-          <rect x="-6" y="-6" width="62" height="59" fill="url(#woodOut)"/>
-          <rect x="-6" y="-6" width="62" height="59" fill="url(#planks)"/>
+          <rect x="-6" y="-6" width="62" height="62" fill="url(#woodOut)"/>
+          <rect x="-6" y="-6" width="62" height="62" fill="url(#planks)"/>
 
           <!-- court floor -->
-          <rect x="0" y="0" width="50" height="47" fill="url(#woodIn)"/>
-          <rect x="0" y="0" width="50" height="47" fill="url(#planks)"/>
+          <rect x="0" y="0" width="50" height="54" fill="url(#woodIn)"/>
+          <rect x="0" y="0" width="50" height="54" fill="url(#planks)"/>
 
-          <!-- team logo painted on the floor (href injected at runtime) -->
-          <image id="teamLogo" x="19.15" y="26" width="11.7" height="13" opacity="0.9"
+          <!-- team logo at centre court, in place of the centre circle
+               (href injected at runtime) -->
+          <image id="teamLogo" x="19.6" y="41" width="10.8" height="12" opacity="0.9"
                  preserveAspectRatio="xMidYMid meet"/>
 
           <g stroke="#f6f0e8" stroke-width="0.35" fill="none" stroke-linecap="round">
@@ -98,8 +99,9 @@
             <path d="M 21 5.25 A 4 4 0 0 0 29 5.25"/>
             <!-- 3pt line -->
             <path d="M 3 0 L 3 14.2 A 23.75 23.75 0 0 0 47 14.2 L 47 0"/>
-            <!-- half court circle -->
-            <path d="M 19 47 A 6 6 0 0 1 31 47"/>
+            <!-- sidelines continuing into the other half -->
+            <line x1="0" y1="47" x2="0" y2="54"/>
+            <line x1="50" y1="47" x2="50" y2="54"/>
             <!-- backboard -->
             <line x1="22" y1="4" x2="28" y2="4" stroke-width="0.5"/>
           </g>
@@ -108,7 +110,7 @@
         </svg>
 
         <!-- Arrows overlay -->
-        <svg id="arrowsSvg" viewBox="-6 -6 62 59" preserveAspectRatio="xMidYMid meet">
+        <svg id="arrowsSvg" viewBox="-6 -6 62 62" preserveAspectRatio="xMidYMid meet">
           <defs>
             <marker id="arrowHead" viewBox="0 0 10 10" refX="8" refY="5"
                     markerWidth="5" markerHeight="5" orient="auto-start-reverse">

@@ -611,14 +611,18 @@ select:hover, .btn:hover { border-color: #5a5a63; }
 
 #arrowsSvg { pointer-events: none; }
 
+/* the container must not swallow clicks meant for the arrows beneath it —
+   only the tokens themselves are interactive */
 #tokens {
   position: absolute;
   inset: 0;
+  pointer-events: none;
 }
 
 /* ---------- Tokens ---------- */
 .token {
   position: absolute;
+  pointer-events: auto;
   width: 5.8%;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
@@ -855,7 +859,7 @@ body[data-tool="eraser"] .screen-cap {
 
 /* ---------- Arrows & screens ---------- */
 .arrow-path {
-  stroke: rgba(255,255,255,0.9);
+  stroke: #1a1a1a;
   stroke-width: 0.45;
   fill: none;
   stroke-linecap: round;

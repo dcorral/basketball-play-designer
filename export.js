@@ -48,7 +48,7 @@ function exDrawArrow(ctx, W, H, a, m, isBall, ghost) {
 
   ctx.save();
   ctx.globalAlpha = ghost ? 0.45 : 0.92;
-  ctx.strokeStyle = m.type === "screen" ? "#ffd166" : "#ffffff";
+  ctx.strokeStyle = m.type === "screen" ? "#ffd166" : "#1a1a1a";
   ctx.fillStyle = ctx.strokeStyle;
   ctx.lineWidth = W * 0.007;
   ctx.lineCap = "round";

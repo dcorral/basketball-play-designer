@@ -111,13 +111,15 @@ const I18N = {
     sharedErrMsg: "This share link is not valid.",
     renamedToast: (n) => `That name was already in use — this play is now called "${n}".`,
     helpTitle: "How Cejudo's Playbook works",
-    wizNext: "Next", wizBack: "Back", wizSkip: "Skip", wizDone: "Let's go!",
-    wizPages: [
-      { h: "Welcome to Cejudo's Playbook!", b: "Design basketball plays step by step and watch them come alive. This quick tour shows you the basics — you can reopen it anytime from the ? button." },
-      { h: "Create your play", b: "Hit CREATE PLAY and drag the five players into their starting spots — even out of bounds. The ball always belongs to a player: drag it onto a teammate to hand it over." },
-      { h: "Draw the actions", b: "Use the floating toolbar: the arrow tool for cuts, the screen tool for blocks (its red bar can be rotated), and drag from the ball to throw a pass. Bend a cut with its round handle; remove anything with the eraser." },
-      { h: "Steps and playback", b: "The green + turns your arrows into the next step. Jump between steps with the chips, then press play — cuts, screens and passes animate in order. Zoom the court with the wheel or a pinch." },
-      { h: "Share and export", b: "Share any play as a link (view-only by default), export it as GIF, video or PDF, and back up all your plays as a .zip. Vamos Cejudos!" },
+    tourSkip: "Skip tour", tourNext: "Next", tourDone: "Done!",
+    tourTexts: [
+      "Welcome! Let's build your first play — click the highlighted button.",
+      "This is your court. Drag the players and the ball to their starting spots (out of bounds works too).",
+      "Your toolbar: movement arrows, screens and the eraser. Drag from a player to draw their cut, or from the ball to pass. Drag the grip to move the toolbar anywhere.",
+      "Once you've drawn arrows, the green + turns them into the next step of the play.",
+      "Press play to watch the whole play animate, step by step.",
+      "Share any play as a link — view-only by default.",
+      "Any questions later? The full guide lives behind this ? button. Enjoy!",
     ],
     helpSections: [
       { h: "Plays", b: "The home screen lists your plays: tap one to open it, drag the dots to reorder, use the bin to delete. Rename a play by clicking its name in the editor." },
@@ -204,13 +206,15 @@ const I18N = {
     sharedErrMsg: "El enlace no es válido.",
     renamedToast: (n) => `Ese nombre ya existía — la jugada ahora se llama "${n}".`,
     helpTitle: "Cómo funciona Cejudo's Playbook",
-    wizNext: "Siguiente", wizBack: "Atrás", wizSkip: "Saltar", wizDone: "¡Vamos!",
-    wizPages: [
-      { h: "¡Bienvenido a Cejudo's Playbook!", b: "Diseña jugadas de baloncesto paso a paso y míralas cobrar vida. Este tour rápido te enseña lo básico — puedes reabrirlo cuando quieras desde el botón ?." },
-      { h: "Crea tu jugada", b: "Pulsa CREAR JUGADA y arrastra a los cinco jugadores a sus posiciones iniciales — incluso fuera de la pista. El balón siempre pertenece a un jugador: arrástralo sobre un compañero para dárselo." },
-      { h: "Dibuja las acciones", b: "Usa la barra flotante: la flecha para cortes, la herramienta de bloqueo (su barra roja se puede girar) y arrastra desde el balón para pasar. Curva un corte con su tirador redondo; borra lo que sea con el borrador." },
-      { h: "Pasos y reproducción", b: "El + verde convierte tus flechas en el siguiente paso. Navega con las fichas y pulsa play — cortes, bloqueos y pases se animan en orden. Haz zoom con la rueda o con un gesto de pellizco." },
-      { h: "Comparte y exporta", b: "Comparte cualquier jugada con un enlace (solo lectura por defecto), expórtala como GIF, vídeo o PDF, y haz copia de todas tus jugadas en un .zip. ¡Vamos Cejudos!" },
+    tourSkip: "Saltar tour", tourNext: "Siguiente", tourDone: "¡Listo!",
+    tourTexts: [
+      "¡Bienvenido! Vamos a crear tu primera jugada — pulsa el botón resaltado.",
+      "Esta es tu pista. Arrastra a los jugadores y el balón a sus posiciones iniciales (también vale fuera de la pista).",
+      "Tu barra de herramientas: flechas de movimiento, bloqueos y el borrador. Arrastra desde un jugador para dibujar su corte, o desde el balón para pasar. Muévela arrastrando su agarre.",
+      "Cuando hayas dibujado flechas, el + verde las convierte en el siguiente paso de la jugada.",
+      "Pulsa play para ver la jugada completa animada, paso a paso.",
+      "Comparte cualquier jugada con un enlace — solo lectura por defecto.",
+      "¿Dudas más adelante? La guía completa está tras este botón ?. ¡A disfrutar!",
     ],
     helpSections: [
       { h: "Jugadas", b: "La pantalla de inicio lista tus jugadas: toca una para abrirla, arrastra los puntos para reordenar y usa la papelera para borrar. Renombra una jugada pulsando su nombre en el editor." },
@@ -239,8 +243,7 @@ const I18N = {
   },
 };
 
-let lang = localStorage.getItem("playbook-lang") ||
-  ((navigator.language || "en").startsWith("es") ? "es" : "en");
+let lang = localStorage.getItem("playbook-lang") || "es";
 
 function t(key, ...args) {
   const v = (I18N[lang] && I18N[lang][key]) ?? I18N.en[key];
@@ -2013,7 +2016,7 @@ function deleteStepAt(i) {
 speedSelect.addEventListener("change", () => speedSelect.blur());
 
 document.addEventListener("keydown", (e) => {
-  if (!modalEl.hidden || !$("exportModal").hidden || !$("wizard").hidden || !$("helpModal").hidden) return;
+  if (!modalEl.hidden || !$("exportModal").hidden || !$("tour").hidden || !$("helpModal").hidden) return;
   if (editorEl.hidden) return;
   if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
   // viewer: playback keys only
@@ -2147,50 +2150,99 @@ $("viewEditBtn").addEventListener("click", async () => {
   if (!added) return; // cancelled — stay in the viewer
 });
 
-/* ================= Welcome wizard & help ================= */
+/* ================= Interactive tour & help ================= */
 
 const WIZ_FLAG = "playbook-welcomed";
-let wizPage = 0;
 
-function renderWizard() {
-  const pages = t("wizPages");
-  const pg = pages[wizPage];
-  $("wizTitle").textContent = pg.h;
-  $("wizBody").textContent = pg.b;
-  $("wizDots").innerHTML = pages
-    .map((_, i) => `<span class="dot${i === wizPage ? " on" : ""}"></span>`) 
-    .join("");
-  $("wizBack").hidden = wizPage === 0;
-  $("wizSkip").hidden = wizPage === pages.length - 1;
-  $("wizNext").textContent = wizPage === pages.length - 1 ? t("wizDone") : t("wizNext");
-  $("wizBack").textContent = t("wizBack");
-  $("wizSkip").textContent = t("wizSkip");
+// Each stop highlights a real element; `action` stops advance when the
+// user clicks the element itself.
+const tourDefs = [
+  { sel: "#createNewBtn", action: true },
+  { sel: "#stage" },
+  { sel: "#toolbar" },
+  { sel: "#addStepBtn" },
+  { sel: "#playBtn" },
+  { sel: "#shareBtn" },
+  { sel: "#helpEditor", last: true },
+];
+let tourIdx = -1;
+
+function tourPlace() {
+  const def = tourDefs[tourIdx];
+  const el = document.querySelector(def.sel);
+  if (!el || el.offsetParent === null && def.sel !== "#toolbar") {
+    // target missing — move on
+    nextTour();
+    return;
+  }
+  const r = el.getBoundingClientRect();
+  const pad = 8;
+  const hx = Math.max(r.left - pad, 0);
+  const hy = Math.max(r.top - pad, 0);
+  const hw = Math.min(r.width + pad * 2, window.innerWidth - hx);
+  const hh = Math.min(r.height + pad * 2, window.innerHeight - hy);
+  const hole = $("tourHole");
+  hole.style.left = hx + "px";
+  hole.style.top = hy + "px";
+  hole.style.width = hw + "px";
+  hole.style.height = hh + "px";
+  const set = (id, l, tp, w, h) => {
+    const d = $(id);
+    d.style.left = l + "px"; d.style.top = tp + "px";
+    d.style.width = w + "px"; d.style.height = h + "px";
+  };
+  set("tourShadeT", 0, 0, window.innerWidth, hy);
+  set("tourShadeB", 0, hy + hh, window.innerWidth, window.innerHeight - hy - hh);
+  set("tourShadeL", 0, hy, hx, hh);
+  set("tourShadeR", hx + hw, hy, window.innerWidth - hx - hw, hh);
+
+  $("tourText").textContent = t("tourTexts")[tourIdx];
+  $("tourCount").textContent = (tourIdx + 1) + "/" + tourDefs.length;
+  $("tourSkip").textContent = t("tourSkip");
+  $("tourNext").textContent = def.last ? t("tourDone") : t("tourNext");
+  $("tourNext").hidden = !!def.action;
+
+  // tip below the hole when there's room, else above
+  const tip = $("tourTip");
+  tip.style.visibility = "hidden";
+  tip.style.left = "0px"; tip.style.top = "0px";
+  requestAnimationFrame(() => {
+    const tr = tip.getBoundingClientRect();
+    let tx = Math.min(Math.max(hx + hw / 2 - tr.width / 2, 12), window.innerWidth - tr.width - 12);
+    let ty = hy + hh + 14;
+    if (ty + tr.height > window.innerHeight - 12) ty = Math.max(hy - tr.height - 14, 12);
+    tip.style.left = tx + "px";
+    tip.style.top = ty + "px";
+    tip.style.visibility = "visible";
+  });
 }
 
-function openWizard() {
-  wizPage = 0;
-  renderWizard();
-  $("wizard").hidden = false;
+function startTour() {
+  tourIdx = 0;
+  $("tour").hidden = false;
+  tourPlace();
+  // the first stop advances when the user actually creates a play
+  $("createNewBtn").addEventListener("click", () => {
+    if (!$("tour").hidden && tourIdx === 0) setTimeout(nextTour, 400);
+  }, { once: true });
 }
 
-function closeWizard() {
-  $("wizard").hidden = true;
+function endTour() {
+  $("tour").hidden = true;
   localStorage.setItem(WIZ_FLAG, "1");
 }
 
-$("wizNext").addEventListener("click", () => {
-  if (wizPage < t("wizPages").length - 1) {
-    wizPage += 1;
-    renderWizard();
-  } else {
-    closeWizard();
-  }
+function nextTour() {
+  tourIdx += 1;
+  if (tourIdx >= tourDefs.length) endTour();
+  else tourPlace();
+}
+
+$("tourNext").addEventListener("click", nextTour);
+$("tourSkip").addEventListener("click", endTour);
+window.addEventListener("resize", () => {
+  if (!$("tour").hidden && tourIdx >= 0) tourPlace();
 });
-$("wizBack").addEventListener("click", () => {
-  wizPage = Math.max(0, wizPage - 1);
-  renderWizard();
-});
-$("wizSkip").addEventListener("click", closeWizard);
 
 function openHelp() {
   $("helpTitle").textContent = t("helpTitle");
@@ -2213,7 +2265,7 @@ $("helpClose").addEventListener("click", () => { $("helpModal").hidden = true; }
 document.addEventListener("keydown", (e) => {
   if (e.code !== "Escape") return;
   if (!$("helpModal").hidden) $("helpModal").hidden = true;
-  else if (!$("wizard").hidden) closeWizard();
+  else if (!$("tour").hidden) endTour();
 });
 
 /* ================= Boot ================= */
@@ -2243,4 +2295,4 @@ applyLang();
 showHome();
 const arrivedViaShareLink = /^#(p|v)=/.test(location.hash);
 importFromLink();
-if (!arrivedViaShareLink && !localStorage.getItem(WIZ_FLAG)) openWizard();
+if (!arrivedViaShareLink && !localStorage.getItem(WIZ_FLAG)) startTour();

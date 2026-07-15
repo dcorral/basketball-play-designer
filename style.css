@@ -204,29 +204,53 @@ body {
   right: 100px;
 }
 
-.wizard {
+/* spotlight tour — the container passes clicks through; only the shades
+   and the tip are solid, so the highlighted element stays clickable */
+#tour { position: fixed; inset: 0; z-index: 300; pointer-events: none; }
+
+.tour-shade {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.68);
+  pointer-events: auto;
+}
+
+.tour-tip { pointer-events: auto; }
+
+.tour-hole {
+  position: fixed;
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  box-shadow: 0 0 0 4px #d92a2440, 0 0 26px #d92a2488;
+  pointer-events: none;
+  transition: left 0.25s ease, top 0.25s ease, width 0.25s ease, height 0.25s ease;
+}
+
+.tour-tip {
+  position: fixed;
+  width: min(320px, calc(100vw - 24px));
+  background: var(--panel);
+  border: 1px solid #3c3c42;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 16px 50px #000c;
+  transition: left 0.25s ease, top 0.25s ease;
+}
+
+.tour-tip p { font-size: 14px; line-height: 1.5; margin-bottom: 12px; }
+
+.tour-actions {
+  display: flex;
   align-items: center;
-  text-align: center;
+  gap: 8px;
+  justify-content: flex-end;
 }
 
-.wiz-logo { width: 92px; height: auto; }
-
-.wizard p { min-height: 84px; }
-
-.wiz-dots { display: flex; gap: 7px; justify-content: center; }
-
-.wiz-dots .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #47474e;
+.tour-count {
+  margin-right: auto;
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
 }
-
-.wiz-dots .dot.on { background: var(--accent); }
-
-.wiz-actions { width: 100%; align-items: center; }
-
-.wiz-spacer { flex: 1; }
 
 .help-modal { max-height: 84vh; }
 

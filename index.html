@@ -212,18 +212,19 @@
     </div>
   </div>
 
-  <!-- ============ Welcome wizard ============ -->
-  <div id="wizard" class="modal-overlay" hidden>
-    <div class="modal wizard">
-      <img src="assets/logo.png" class="wiz-logo" alt="">
-      <h2 id="wizTitle"></h2>
-      <p id="wizBody"></p>
-      <div class="wiz-dots" id="wizDots"></div>
-      <div class="modal-actions wiz-actions">
-        <button id="wizSkip" class="btn"></button>
-        <span class="wiz-spacer"></span>
-        <button id="wizBack" class="btn"></button>
-        <button id="wizNext" class="btn btn-primary"></button>
+  <!-- ============ Interactive tour ============ -->
+  <div id="tour" hidden>
+    <div class="tour-shade" id="tourShadeT"></div>
+    <div class="tour-shade" id="tourShadeB"></div>
+    <div class="tour-shade" id="tourShadeL"></div>
+    <div class="tour-shade" id="tourShadeR"></div>
+    <div class="tour-hole" id="tourHole"></div>
+    <div class="tour-tip" id="tourTip">
+      <p id="tourText"></p>
+      <div class="tour-actions">
+        <span id="tourCount" class="tour-count"></span>
+        <button id="tourSkip" class="btn"></button>
+        <button id="tourNext" class="btn btn-primary"></button>
       </div>
     </div>
   </div>

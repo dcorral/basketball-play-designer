@@ -299,6 +299,7 @@ select:hover, .btn:hover { border-color: #556072; }
 
 /* ---------- Step chips ---------- */
 .step-chips {
+  position: relative; /* offsetParent for the chips' scroll math */
   display: flex;
   align-items: center;
   gap: 6px;
@@ -312,6 +313,18 @@ select:hover, .btn:hover { border-color: #556072; }
 }
 
 .step-chips.dragging { cursor: grabbing; }
+
+/* scrolled-away chips fade in from the left edge */
+.step-chips.faded-left {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 42px);
+  mask-image: linear-gradient(to right, transparent 0, #000 42px);
+}
+
+.step-controls > .step-add,
+.step-controls > .step-reset {
+  flex: 0 0 auto;
+  margin-top: 4px;
+}
 
 .step-chips::-webkit-scrollbar { height: 5px; width: 5px; }
 .step-chips::-webkit-scrollbar-track { background: transparent; }

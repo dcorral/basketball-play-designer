@@ -35,6 +35,8 @@
       <button id="deletePlayBtn" class="btn btn-danger" title="Delete current play">✕ Delete</button>
       <div class="step-controls">
         <div id="stepChips" class="step-chips"></div>
+        <button id="addStepBtn" class="step-chip step-add" title="Next step">＋</button>
+        <button id="resetAllBtn" class="step-chip step-reset" title="Reset all">↺</button>
       </div>
       <select id="langEditor" class="lang-select" title="Language / Idioma">
         <option value="en">🇬🇧 EN</option>
@@ -194,7 +196,7 @@
       <div id="exportTiming">
         <label class="field">
           <span id="exportMoveLabel">Movement duration (seconds)</span>
-          <input id="exportMove" type="number" min="0.3" max="8" step="0.1" value="2.4">
+          <input id="exportMove" type="number" min="0.3" max="8" step="0.1" value="1.8">
         </label>
         <label class="field">
           <span id="exportPauseLabel">Pause between steps (seconds)</span>

@@ -5,7 +5,9 @@
 // Court coordinate system = SVG viewBox units (feet).
 const VB = { minX: -6, minY: -6, w: 62, h: 59 };
 const CLAMP = { minX: -5.5, maxX: 55.5, minY: -5.5, maxY: 52.5 };
-const SECONDS_PER_STEP = 2.4;
+// Each sequential action (screen wave, pass, cut wave) gets this long, so a
+// busy step lasts proportionally longer than a simple one.
+const SECONDS_PER_PHASE = 1.8;
 const STORAGE_KEY = "playbook-plays-v1";
 const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -202,6 +204,7 @@ function applyLang() {
     playBtn: "ttPlay", speedSelect: "ttSpeed",
     undoBtn: "ttUndo", redoBtn: "ttRedo", toolGrip: "ttGrip",
     exportAllBtn: "ttExportAll", importAllBtn: "ttImportAll",
+    addStepBtn: "nextStep", resetAllBtn: "ttResetAll",
   };
   for (const [id, key] of Object.entries(titles)) $(id).title = t(key);
 
@@ -531,6 +534,12 @@ function segmentCount(play) {
   return n - 1 + (hasMoves(play.steps[n - 1]) ? 1 : 0);
 }
 
+// Playback duration of a segment at 1x: one slot per sequential phase.
+function segmentDuration(play, i) {
+  const step = play.steps[Math.min(i, play.steps.length - 1)];
+  return Math.max(segmentPhases(step).phases.length, 1) * SECONDS_PER_PHASE;
+}
+
 // Where everyone ends up after the segment starting at stepIdx.
 function segmentTargetPos(play, stepIdx) {
   if (stepIdx + 1 < play.steps.length) return play.steps[stepIdx + 1].pos;
@@ -780,20 +789,6 @@ function renderStepChips() {
     stepChipsEl.appendChild(chip);
   });
 
-  const add = document.createElement("button");
-  add.className = "step-chip step-add";
-  add.textContent = "＋";
-  add.title = t("nextStep");
-  add.addEventListener("click", addStep);
-  stepChipsEl.appendChild(add);
-
-  const reset = document.createElement("button");
-  reset.className = "step-chip step-reset";
-  reset.textContent = "↺";
-  reset.title = t("ttResetAll");
-  reset.addEventListener("click", resetAllPlay);
-  stepChipsEl.appendChild(reset);
-
   // keep the active chip visible in the carousel
   const active = stepChipsEl.querySelector(".step-chip.active");
   if (active) {
@@ -804,7 +799,17 @@ function renderStepChips() {
       stepChipsEl.scrollLeft = active.offsetLeft + active.offsetWidth - stepChipsEl.clientWidth + margin;
     }
   }
+  updateChipsFade();
 }
+
+// left-edge fade: scrolled-away chips fade in from the left
+function updateChipsFade() {
+  stepChipsEl.classList.toggle("faded-left", stepChipsEl.scrollLeft > 2);
+}
+
+stepChipsEl.addEventListener("scroll", updateChipsFade);
+$("addStepBtn").addEventListener("click", addStep);
+$("resetAllBtn").addEventListener("click", resetAllPlay);
 
 /* ---- step carousel: drag left/right to scroll ---- */
 
@@ -822,7 +827,10 @@ stepChipsEl.addEventListener("pointerdown", (e) => {
       moved = true;
       stepChipsEl.classList.add("dragging");
     }
-    if (moved) stepChipsEl.scrollLeft = startScroll - dx;
+    if (moved) {
+      stepChipsEl.scrollLeft = startScroll - dx;
+      updateChipsFade();
+    }
   };
   const up = () => {
     stepChipsEl.removeEventListener("pointermove", move);
@@ -1362,9 +1370,11 @@ function tick(now) {
   lastFrameTime = now;
 
   const speed = parseFloat(speedSelect.value);
-  const maxT = segmentCount(currentPlay());
+  const play = currentPlay();
+  const maxT = segmentCount(play);
   const prevSeg = Math.floor(playhead);
-  playhead = Math.min(playhead + (dt * speed) / SECONDS_PER_STEP, maxT);
+  const segDur = segmentDuration(play, Math.min(prevSeg, maxT - 1));
+  playhead = Math.min(playhead + (dt * speed) / segDur, maxT);
 
   renderPositions(positionsAt(playhead));
   if (Math.floor(playhead) !== prevSeg) renderArrows();

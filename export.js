@@ -163,26 +163,35 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label) {
 
 /* ---------------- Animation timeline ----------------
 Pattern: pause → move → pause → move → ... → pause
+Each segment's duration scales with how many sequential actions it has,
+so every individual movement/pass/screen plays at the same fixed pace.
 */
 
-function exTimelineTotal(opts, segs) {
-  return opts.pause + segs * (opts.move + opts.pause);
-}
-
-function exStateAt(t, opts, segs) {
-  if (segs === 0) return { ph: 0, moving: false };
-  if (t <= opts.pause) return { ph: 0, moving: false };
-  const block = opts.move + opts.pause;
-  const t2 = t - opts.pause;
-  const i = Math.min(Math.floor(t2 / block), segs - 1);
-  const tt = t2 - i * block;
-  if (tt < opts.move) return { ph: i + tt / opts.move, moving: true };
-  return { ph: i + 1, moving: false };
-}
-
-function exDrawTimelineFrame(ctx, W, H, courtImg, time, opts, segs) {
+function exTimeline(opts, segs) {
   const play = currentPlay();
-  const { ph, moving } = exStateAt(time, opts, segs);
+  const durs = Array.from({ length: segs }, (_, i) =>
+    Math.max(segmentPhases(play.steps[Math.min(i, play.steps.length - 1)]).phases.length, 1) * opts.move
+  );
+  const total = Math.max(opts.pause + durs.reduce((a, d) => a + d + opts.pause, 0), 1);
+  return { segs, durs, pause: opts.pause, total };
+}
+
+function exStateAt(t, tl) {
+  if (tl.segs === 0 || t <= tl.pause) return { ph: 0, moving: false };
+  let t2 = t - tl.pause;
+  for (let i = 0; i < tl.segs; i++) {
+    if (t2 < tl.durs[i]) return { ph: i + t2 / tl.durs[i], moving: true };
+    t2 -= tl.durs[i];
+    if (t2 < tl.pause) return { ph: i + 1, moving: false };
+    t2 -= tl.pause;
+  }
+  return { ph: tl.segs, moving: false };
+}
+
+function exDrawTimelineFrame(ctx, W, H, courtImg, time, tl) {
+  const play = currentPlay();
+  const segs = tl.segs;
+  const { ph, moving } = exStateAt(time, tl);
   const posMap = positionsAt(ph);
   let arrowsStep = null;
   if (ph < segs) {
@@ -216,10 +225,9 @@ function exStatus(msg) {
 
 async function exportGif(opts) {
   const W = 720, H = Math.round(W * VB.h / VB.w);
-  const segs = segmentCount(currentPlay());
-  const total = Math.max(exTimelineTotal(opts, segs), 1);
+  const tl = exTimeline(opts, segmentCount(currentPlay()));
   const fps = 15;
-  const frames = Math.max(Math.round(total * fps), 1);
+  const frames = Math.max(Math.round(tl.total * fps), 1);
 
   const canvas = document.createElement("canvas");
   canvas.width = W; canvas.height = H;
@@ -236,7 +244,7 @@ async function exportGif(opts) {
 
   for (let f = 0; f < frames; f++) {
     if (exportAborted) { gif.abort(); return; }
-    exDrawTimelineFrame(ctx, W, H, courtImg, f / fps, opts, segs);
+    exDrawTimelineFrame(ctx, W, H, courtImg, f / fps, tl);
     gif.addFrame(ctx, { copy: true, delay: 1000 / fps });
     if (f % 10 === 0) {
       exStatus(t("renderingFrames", f + 1, frames));
@@ -275,8 +283,8 @@ async function exportVideo(opts) {
   const W = 960;
   let H = Math.round(W * VB.h / VB.w);
   if (H % 2) H += 1; // even dimensions for h264
-  const segs = segmentCount(currentPlay());
-  const total = Math.max(exTimelineTotal(opts, segs), 1);
+  const tl = exTimeline(opts, segmentCount(currentPlay()));
+  const total = tl.total;
 
   const canvas = document.createElement("canvas");
   canvas.width = W; canvas.height = H;
@@ -292,7 +300,7 @@ async function exportVideo(opts) {
     rec.onstop = () => resolve(new Blob(chunks, { type: mime.split(";")[0] }));
   });
 
-  exDrawTimelineFrame(ctx, W, H, courtImg, 0, opts, segs);
+  exDrawTimelineFrame(ctx, W, H, courtImg, 0, tl);
   rec.start(200);
   const t0 = performance.now();
 
@@ -300,7 +308,7 @@ async function exportVideo(opts) {
     const frame = (now) => {
       const elapsed = (now - t0) / 1000;
       if (exportAborted) { resolve(); return; }
-      exDrawTimelineFrame(ctx, W, H, courtImg, Math.min(elapsed, total), opts, segs);
+      exDrawTimelineFrame(ctx, W, H, courtImg, Math.min(elapsed, total), tl);
       exStatus(t("recording", Math.min(elapsed, total).toFixed(1), total.toFixed(1)));
       if (elapsed < total + 0.3) requestAnimationFrame(frame);
       else resolve();
@@ -486,7 +494,7 @@ exportGoBtn.addEventListener("click", async () => {
   exportAborted = false;
   exportGoBtn.disabled = true;
   const opts = {
-    move: Math.min(Math.max(parseFloat($("exportMove").value) || 2.4, 0.3), 8),
+    move: Math.min(Math.max(parseFloat($("exportMove").value) || 1.8, 0.3), 8),
     pause: Math.min(Math.max(parseFloat($("exportPause").value) || 0, 0), 10),
   };
   try {

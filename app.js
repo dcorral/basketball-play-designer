@@ -92,6 +92,8 @@ const I18N = {
     ttSpeed: "Playback speed",
     ttUndo: "Undo (Ctrl+Z)", ttRedo: "Redo (Ctrl+Y / Ctrl+Shift+Z)",
     ttGrip: "Drag to move the toolbar (double-click to reset)",
+    ttZoomIn: "Zoom in", ttZoomOut: "Zoom out",
+    ttZoomReset: "Reset zoom (or double-click the court)",
     exportAll: "⤓ Export all (.zip)", importAll: "⤒ Import (.zip)",
     ttExportAll: "Download every play as a .zip backup",
     ttImportAll: "Import plays from a .zip backup",
@@ -142,6 +144,8 @@ const I18N = {
     ttSpeed: "Velocidad de reproducción",
     ttUndo: "Deshacer (Ctrl+Z)", ttRedo: "Rehacer (Ctrl+Y / Ctrl+Mayús+Z)",
     ttGrip: "Arrastra para mover la barra (doble clic para restablecer)",
+    ttZoomIn: "Acercar", ttZoomOut: "Alejar",
+    ttZoomReset: "Restablecer zoom (o doble clic en la pista)",
     exportAll: "⤓ Exportar todo (.zip)", importAll: "⤒ Importar (.zip)",
     ttExportAll: "Descargar todas las jugadas como copia de seguridad .zip",
     ttImportAll: "Importar jugadas desde una copia de seguridad .zip",
@@ -209,6 +213,7 @@ function applyLang() {
     undoBtn: "ttUndo", redoBtn: "ttRedo", toolGrip: "ttGrip",
     exportAllBtn: "ttExportAll", importAllBtn: "ttImportAll",
     addStepBtn: "nextStep", resetAllBtn: "ttResetAll",
+    zoomIn: "ttZoomIn", zoomOut: "ttZoomOut", zoomLabel: "ttZoomReset",
   };
   for (const [id, key] of Object.entries(titles)) $(id).title = t(key);
 
@@ -366,6 +371,7 @@ function openPlay(id) {
   setTool("select");
   renderAll();
   applyToolbarPos();
+  resetZoom();
 }
 
 function renderHome() {
@@ -1078,6 +1084,95 @@ function updateToolAvailability() {
 toolbar.addEventListener("click", (e) => {
   const btn = e.target.closest(".tool");
   if (btn && btn.dataset.tool && !btn.disabled) setTool(btn.dataset.tool);
+});
+
+/* ---- court zoom & pan ---- */
+
+const ZOOM_MAX = 4;
+let zoom = 1, panX = 0, panY = 0;
+const zoomLabelEl = $("zoomLabel");
+
+function applyZoomTransform() {
+  const maxX = ((zoom - 1) * stageEl.offsetWidth) / 2;
+  const maxY = ((zoom - 1) * stageEl.offsetHeight) / 2;
+  panX = Math.min(Math.max(panX, -maxX), maxX);
+  panY = Math.min(Math.max(panY, -maxY), maxY);
+  stageEl.style.transform = zoom === 1 ? "" : `translate(${panX}px, ${panY}px) scale(${zoom})`;
+  zoomLabelEl.textContent = Math.round(zoom * 100) + "%";
+}
+
+// Zoom keeping the screen point (cx, cy) fixed.
+function setZoom(nz, cx, cy) {
+  nz = Math.min(Math.max(nz, 1), ZOOM_MAX);
+  if (nz === zoom) return;
+  const r = stageEl.getBoundingClientRect();
+  const rcx = r.left + r.width / 2;
+  const rcy = r.top + r.height / 2;
+  const c0x = rcx - panX, c0y = rcy - panY; // untransformed layout centre
+  if (cx === undefined) { cx = rcx; cy = rcy; }
+  const k = nz / zoom;
+  panX = cx - c0x - (cx - c0x - panX) * k;
+  panY = cy - c0y - (cy - c0y - panY) * k;
+  zoom = nz;
+  applyZoomTransform();
+}
+
+function resetZoom() {
+  zoom = 1;
+  panX = 0;
+  panY = 0;
+  applyZoomTransform();
+}
+
+stageWrapEl.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  setZoom(zoom * Math.exp(-e.deltaY * 0.0015), e.clientX, e.clientY);
+}, { passive: false });
+
+$("zoomIn").addEventListener("click", () => setZoom(zoom * 1.3));
+$("zoomOut").addEventListener("click", () => setZoom(zoom / 1.3));
+zoomLabelEl.addEventListener("click", resetZoom);
+
+// Pan (one pointer, zoomed in) and pinch-zoom (two pointers) on the court
+// background — tokens, handles and arrows keep their own interactions.
+const stagePointers = new Map();
+
+stageEl.addEventListener("pointerdown", (e) => {
+  if (e.target.closest(".token, .handle")) return;
+  stagePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  try { stageEl.setPointerCapture(e.pointerId); } catch (_) {}
+});
+
+stageEl.addEventListener("pointermove", (e) => {
+  if (!stagePointers.has(e.pointerId)) return;
+  const prev = stagePointers.get(e.pointerId);
+  const cur = { x: e.clientX, y: e.clientY };
+  if (stagePointers.size === 2) {
+    const [idA, idB] = [...stagePointers.keys()];
+    const otherId = idA === e.pointerId ? idB : idA;
+    const other = stagePointers.get(otherId);
+    const dPrev = Math.hypot(prev.x - other.x, prev.y - other.y);
+    const dCur = Math.hypot(cur.x - other.x, cur.y - other.y);
+    const midX = (cur.x + other.x) / 2, midY = (cur.y + other.y) / 2;
+    if (dPrev > 0) setZoom(zoom * (dCur / dPrev), midX, midY);
+    panX += (cur.x - prev.x) / 2;
+    panY += (cur.y - prev.y) / 2;
+    applyZoomTransform();
+  } else if (zoom > 1) {
+    panX += cur.x - prev.x;
+    panY += cur.y - prev.y;
+    applyZoomTransform();
+  }
+  stagePointers.set(e.pointerId, cur);
+});
+
+const stagePointerEnd = (e) => stagePointers.delete(e.pointerId);
+stageEl.addEventListener("pointerup", stagePointerEnd);
+stageEl.addEventListener("pointercancel", stagePointerEnd);
+
+stageEl.addEventListener("dblclick", (e) => {
+  if (e.target.closest(".token, .handle")) return;
+  resetZoom();
 });
 
 /* ---- draggable toolbar ---- */

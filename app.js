@@ -1609,15 +1609,8 @@ function tick(now) {
 
 /* ================= Wiring ================= */
 
-$("createNewBtn").addEventListener("click", async () => {
-  const name = await openModal({
-    title: t("newPlayTitle"),
-    input: true,
-    value: t("playDefault") + " " + (plays.length + 1),
-    confirmLabel: t("create"),
-  });
-  if (name === null) return;
-  const play = createPlay(name.trim() || t("untitled"));
+$("createNewBtn").addEventListener("click", () => {
+  const play = createPlay(t("playDefault") + " " + (plays.length + 1));
   openPlay(play.id);
 });
 

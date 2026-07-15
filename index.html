@@ -12,6 +12,7 @@
 <body>
   <!-- ============ Home screen ============ -->
   <div id="home" class="home">
+    <button id="helpHome" class="btn help-btn" title="Help">?</button>
     <select id="langHome" class="lang-select" title="Language / Idioma">
       <option value="en">🇬🇧 English</option>
       <option value="es">🇪🇸 Español</option>
@@ -55,6 +56,7 @@
         </svg>
         <span id="viewEditLabel">Edit</span>
       </button>
+      <button id="helpEditor" class="btn help-btn" title="Help">?</button>
       <select id="langEditor" class="lang-select" title="Language / Idioma">
         <option value="en">🇬🇧 EN</option>
         <option value="es">🇪🇸 ES</option>
@@ -207,6 +209,33 @@
         </svg>
         <span id="deletePlayLabel">Delete</span>
       </button>
+    </div>
+  </div>
+
+  <!-- ============ Welcome wizard ============ -->
+  <div id="wizard" class="modal-overlay" hidden>
+    <div class="modal wizard">
+      <img src="assets/logo.png" class="wiz-logo" alt="">
+      <h2 id="wizTitle"></h2>
+      <p id="wizBody"></p>
+      <div class="wiz-dots" id="wizDots"></div>
+      <div class="modal-actions wiz-actions">
+        <button id="wizSkip" class="btn"></button>
+        <span class="wiz-spacer"></span>
+        <button id="wizBack" class="btn"></button>
+        <button id="wizNext" class="btn btn-primary"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Help ============ -->
+  <div id="helpModal" class="modal-overlay" hidden>
+    <div class="modal help-modal">
+      <h2 id="helpTitle"></h2>
+      <div id="helpContent" class="help-content"></div>
+      <div class="modal-actions">
+        <button id="helpClose" class="btn btn-primary">OK</button>
+      </div>
     </div>
   </div>
 

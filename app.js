@@ -110,6 +110,28 @@ const I18N = {
     sharedAdd: "Add",
     sharedErrMsg: "This share link is not valid.",
     renamedToast: (n) => `That name was already in use — this play is now called "${n}".`,
+    helpTitle: "How Cejudo's Playbook works",
+    wizNext: "Next", wizBack: "Back", wizSkip: "Skip", wizDone: "Let's go!",
+    wizPages: [
+      { h: "Welcome to Cejudo's Playbook!", b: "Design basketball plays step by step and watch them come alive. This quick tour shows you the basics — you can reopen it anytime from the ? button." },
+      { h: "Create your play", b: "Hit CREATE PLAY and drag the five players into their starting spots — even out of bounds. The ball always belongs to a player: drag it onto a teammate to hand it over." },
+      { h: "Draw the actions", b: "Use the floating toolbar: the arrow tool for cuts, the screen tool for blocks (its red bar can be rotated), and drag from the ball to throw a pass. Bend a cut with its round handle; remove anything with the eraser." },
+      { h: "Steps and playback", b: "The green + turns your arrows into the next step. Jump between steps with the chips, then press play — cuts, screens and passes animate in order. Zoom the court with the wheel or a pinch." },
+      { h: "Share and export", b: "Share any play as a link (view-only by default), export it as GIF, video or PDF, and back up all your plays as a .zip. Vamos Cejudos!" },
+    ],
+    helpSections: [
+      { h: "Plays", b: "The home screen lists your plays: tap one to open it, drag the dots to reorder, use the bin to delete. Rename a play by clicking its name in the editor." },
+      { h: "Players and the ball", b: "On step 1, drag players anywhere (out of bounds too). The ball always belongs to a player — drag it to hand it to someone else." },
+      { h: "Drawing tools", b: "Toolbar (drag its grip to move it anywhere): 1 select, 2 movement arrow, 3 screen, 4 eraser. Drag from a player to draw their cut or screen; drag from the ball to pass. Keyboard 1–4 switches tools." },
+      { h: "Editing arrows", b: "Round handle bends a cut, square handle moves its end, and a screen's red bar rotates with its gold handle. The eraser removes an arrow by clicking it or its player." },
+      { h: "Passes", b: "Passes snap to a teammate and are always straight. If the receiver has a movement, the ball is delivered at the END of that movement. Screeners can never receive, and the ball carrier can never screen." },
+      { h: "Two actions, one player", b: "When the carrier has a pass and a movement, the lighter line happens second. Double-click (or long-press) a line to make it go first — moving first means dribbling there before passing." },
+      { h: "Steps", b: "The green + commits the drawn arrows into a new step; steps without actions (and the last step) can be deleted from their bin bubble. A step lasts as long as its number of sequential actions." },
+      { h: "Playback and zoom", b: "Use the bottom player: play/pause (Space), previous/next (arrow keys), scrubber and speed. Zoom with the wheel, a pinch or the corner control; drag the court to pan; double-click to reset." },
+      { h: "Sharing", b: "The share button creates a link with the play inside it. By default it opens a view-only player with an Edit button; tick the checkbox to share an editable copy directly." },
+      { h: "Exporting and backups", b: "The save button exports the play as a GIF, a video or a step-by-step PDF. On the home screen, Export all downloads every play as a .zip you can import on another device." },
+      { h: "Undo", b: "Ctrl+Z undoes and Ctrl+Shift+Z (or Ctrl+Y) redoes any edit: drags, arrows, steps, renames." },
+    ],
     orderHelp: "This player has two actions — the lighter line happens second. Double-click (or long-press) a line to make it go first.",
     sharedAddedToast: (n) => `Shared play "${n}" added to your plays.`,
     sharedExistsMsg: (n) => `You already have this play — it's called "${n}". Add it anyway?`,
@@ -181,6 +203,28 @@ const I18N = {
     sharedAdd: "Añadir",
     sharedErrMsg: "El enlace no es válido.",
     renamedToast: (n) => `Ese nombre ya existía — la jugada ahora se llama "${n}".`,
+    helpTitle: "Cómo funciona Cejudo's Playbook",
+    wizNext: "Siguiente", wizBack: "Atrás", wizSkip: "Saltar", wizDone: "¡Vamos!",
+    wizPages: [
+      { h: "¡Bienvenido a Cejudo's Playbook!", b: "Diseña jugadas de baloncesto paso a paso y míralas cobrar vida. Este tour rápido te enseña lo básico — puedes reabrirlo cuando quieras desde el botón ?." },
+      { h: "Crea tu jugada", b: "Pulsa CREAR JUGADA y arrastra a los cinco jugadores a sus posiciones iniciales — incluso fuera de la pista. El balón siempre pertenece a un jugador: arrástralo sobre un compañero para dárselo." },
+      { h: "Dibuja las acciones", b: "Usa la barra flotante: la flecha para cortes, la herramienta de bloqueo (su barra roja se puede girar) y arrastra desde el balón para pasar. Curva un corte con su tirador redondo; borra lo que sea con el borrador." },
+      { h: "Pasos y reproducción", b: "El + verde convierte tus flechas en el siguiente paso. Navega con las fichas y pulsa play — cortes, bloqueos y pases se animan en orden. Haz zoom con la rueda o con un gesto de pellizco." },
+      { h: "Comparte y exporta", b: "Comparte cualquier jugada con un enlace (solo lectura por defecto), expórtala como GIF, vídeo o PDF, y haz copia de todas tus jugadas en un .zip. ¡Vamos Cejudos!" },
+    ],
+    helpSections: [
+      { h: "Jugadas", b: "La pantalla de inicio lista tus jugadas: toca una para abrirla, arrastra los puntos para reordenar y usa la papelera para borrar. Renombra una jugada pulsando su nombre en el editor." },
+      { h: "Jugadores y balón", b: "En el paso 1 arrastra a los jugadores a cualquier sitio (también fuera de la pista). El balón siempre pertenece a un jugador — arrástralo para dárselo a otro." },
+      { h: "Herramientas de dibujo", b: "Barra de herramientas (muévela arrastrando su agarre): 1 seleccionar, 2 flecha de movimiento, 3 bloqueo, 4 borrador. Arrastra desde un jugador para dibujar su corte o bloqueo; desde el balón para pasar. Teclas 1–4 cambian de herramienta." },
+      { h: "Editar flechas", b: "El tirador redondo curva un corte, el cuadrado mueve su destino, y la barra roja del bloqueo gira con su tirador dorado. El borrador elimina una flecha pulsándola o pulsando a su jugador." },
+      { h: "Pases", b: "Los pases se ajustan a un compañero y siempre son rectos. Si el receptor tiene un movimiento, el balón le llega al FINAL de ese movimiento. Un bloqueador nunca puede recibir, y el que lleva el balón nunca puede bloquear." },
+      { h: "Dos acciones, un jugador", b: "Cuando el portador tiene pase y movimiento, la línea más tenue ocurre después. Doble clic (o mantener pulsado) sobre una línea hace que vaya primero — moverse primero significa botar hasta allí antes de pasar." },
+      { h: "Pasos", b: "El + verde convierte las flechas dibujadas en un nuevo paso; los pasos sin acciones (y el último) se borran desde su burbuja de papelera. Un paso dura según su número de acciones secuenciales." },
+      { h: "Reproducción y zoom", b: "Usa el reproductor inferior: play/pausa (Espacio), anterior/siguiente (flechas), barra de progreso y velocidad. Zoom con la rueda, pellizco o el control de la esquina; arrastra la pista para desplazarte; doble clic para restablecer." },
+      { h: "Compartir", b: "El botón de compartir crea un enlace con la jugada dentro. Por defecto abre un visor de solo lectura con botón Editar; marca la casilla para compartir una copia editable directamente." },
+      { h: "Exportar y copias", b: "El botón de guardar exporta la jugada como GIF, vídeo o PDF paso a paso. En el inicio, Exportar todo descarga todas tus jugadas en un .zip que puedes importar en otro dispositivo." },
+      { h: "Deshacer", b: "Ctrl+Z deshace y Ctrl+Mayús+Z (o Ctrl+Y) rehace cualquier edición: arrastres, flechas, pasos, renombrados." },
+    ],
     orderHelp: "Este jugador tiene dos acciones — la línea más tenue ocurre después. Doble clic (o mantén pulsado) sobre una línea para que vaya primero.",
     sharedAddedToast: (n) => `Jugada compartida "${n}" añadida a tus jugadas.`,
     sharedExistsMsg: (n) => `Ya tienes esta jugada — se llama "${n}". ¿Añadirla igualmente?`,
@@ -1969,7 +2013,7 @@ function deleteStepAt(i) {
 speedSelect.addEventListener("change", () => speedSelect.blur());
 
 document.addEventListener("keydown", (e) => {
-  if (!modalEl.hidden || !$("exportModal").hidden) return;
+  if (!modalEl.hidden || !$("exportModal").hidden || !$("wizard").hidden || !$("helpModal").hidden) return;
   if (editorEl.hidden) return;
   if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
   // viewer: playback keys only
@@ -2103,6 +2147,75 @@ $("viewEditBtn").addEventListener("click", async () => {
   if (!added) return; // cancelled — stay in the viewer
 });
 
+/* ================= Welcome wizard & help ================= */
+
+const WIZ_FLAG = "playbook-welcomed";
+let wizPage = 0;
+
+function renderWizard() {
+  const pages = t("wizPages");
+  const pg = pages[wizPage];
+  $("wizTitle").textContent = pg.h;
+  $("wizBody").textContent = pg.b;
+  $("wizDots").innerHTML = pages
+    .map((_, i) => `<span class="dot${i === wizPage ? " on" : ""}"></span>`) 
+    .join("");
+  $("wizBack").hidden = wizPage === 0;
+  $("wizSkip").hidden = wizPage === pages.length - 1;
+  $("wizNext").textContent = wizPage === pages.length - 1 ? t("wizDone") : t("wizNext");
+  $("wizBack").textContent = t("wizBack");
+  $("wizSkip").textContent = t("wizSkip");
+}
+
+function openWizard() {
+  wizPage = 0;
+  renderWizard();
+  $("wizard").hidden = false;
+}
+
+function closeWizard() {
+  $("wizard").hidden = true;
+  localStorage.setItem(WIZ_FLAG, "1");
+}
+
+$("wizNext").addEventListener("click", () => {
+  if (wizPage < t("wizPages").length - 1) {
+    wizPage += 1;
+    renderWizard();
+  } else {
+    closeWizard();
+  }
+});
+$("wizBack").addEventListener("click", () => {
+  wizPage = Math.max(0, wizPage - 1);
+  renderWizard();
+});
+$("wizSkip").addEventListener("click", closeWizard);
+
+function openHelp() {
+  $("helpTitle").textContent = t("helpTitle");
+  const c = $("helpContent");
+  c.innerHTML = "";
+  for (const sec of t("helpSections")) {
+    const h = document.createElement("h3");
+    h.textContent = sec.h;
+    const p = document.createElement("p");
+    p.textContent = sec.b;
+    c.append(h, p);
+  }
+  $("helpModal").hidden = false;
+}
+
+$("helpHome").addEventListener("click", openHelp);
+$("helpEditor").addEventListener("click", openHelp);
+$("helpClose").addEventListener("click", () => { $("helpModal").hidden = true; });
+
+document.addEventListener("keydown", (e) => {
+  if (e.code !== "Escape") return;
+  if (!$("helpModal").hidden) $("helpModal").hidden = true;
+  else if (!$("wizard").hidden) closeWizard();
+});
+
 /* ================= Boot ================= */
 
 // Team logo: inline as a data URI so the SVG serialization used by the
@@ -2128,4 +2241,6 @@ $("viewEditBtn").addEventListener("click", async () => {
 load();
 applyLang();
 showHome();
+const arrivedViaShareLink = /^#(p|v)=/.test(location.hash);
 importFromLink();
+if (!arrivedViaShareLink && !localStorage.getItem(WIZ_FLAG)) openWizard();

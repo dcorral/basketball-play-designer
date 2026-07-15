@@ -181,6 +181,77 @@ body {
   min-height: 0;
 }
 
+/* ---------- Help button & wizard ---------- */
+.help-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-weight: 700;
+  font-size: 16px;
+  flex: none;
+}
+
+#helpHome {
+  position: fixed;
+  top: 12px;
+  right: 136px;
+  z-index: 5;
+}
+
+#helpEditor {
+  position: absolute;
+  top: 9px;
+  right: 100px;
+}
+
+.wizard {
+  align-items: center;
+  text-align: center;
+}
+
+.wiz-logo { width: 92px; height: auto; }
+
+.wizard p { min-height: 84px; }
+
+.wiz-dots { display: flex; gap: 7px; justify-content: center; }
+
+.wiz-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #47474e;
+}
+
+.wiz-dots .dot.on { background: var(--accent); }
+
+.wiz-actions { width: 100%; align-items: center; }
+
+.wiz-spacer { flex: 1; }
+
+.help-modal { max-height: 84vh; }
+
+.help-content {
+  overflow-y: auto;
+  max-height: 56vh;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #3c3c42 transparent;
+}
+
+.help-content h3 {
+  font-size: 14px;
+  margin: 12px 0 4px;
+  color: var(--accent-2);
+}
+
+.help-content h3:first-child { margin-top: 0; }
+
+.help-content p {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 /* ---------- Toast ---------- */
 .toast {
   position: fixed;
@@ -338,7 +409,7 @@ body.view-only .play-name { cursor: default; }
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 10px 96px 10px 16px; /* right space reserved for the language select */
+  padding: 10px 150px 10px 16px; /* corner space for help + language */
   background: var(--panel);
   flex-wrap: wrap;
 }
@@ -947,7 +1018,9 @@ body[data-tool="eraser"] .screen-cap {
 
 /* ---------- Phones ---------- */
 @media (max-width: 640px) {
-  .topbar { padding: 6px 76px 6px 8px; gap: 6px; }
+  .topbar { padding: 6px 118px 6px 8px; gap: 6px; }
+  #helpEditor { right: 82px; top: 6px; }
+  #helpHome { right: 118px; }
   #langEditor { top: 6px; right: 8px; }
   .topbar .btn { padding: 5px 8px; font-size: 12px; border-radius: 7px; }
   .play-name { font-size: 15px; padding: 3px 4px; max-width: 40vw; }

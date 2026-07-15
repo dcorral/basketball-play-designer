@@ -327,17 +327,6 @@ body {
 
 .pencil-btn:hover { color: var(--text); }
 
-.step-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.step-controls {
-  margin-left: auto;
-  min-width: 0;
-}
-
 select, .btn {
   background: var(--panel-2);
   color: var(--text);
@@ -382,7 +371,7 @@ select:hover, .btn:hover { border-color: #5a5a63; }
   align-items: center;
   gap: 6px;
   overflow-x: auto;
-  max-width: 46vw;
+  max-width: 100%;
   padding: 9px 9px 3px 2px;
   scrollbar-width: thin;
   scrollbar-color: #3c3c42 transparent;
@@ -398,14 +387,22 @@ select:hover, .btn:hover { border-color: #5a5a63; }
   mask-image: linear-gradient(to right, transparent 0, #000 42px);
 }
 
-/* centered row of step actions under the steps carousel */
+/* centered row of step actions above the steps carousel */
 .step-actions {
   display: flex;
   justify-content: center;
   gap: 12px;
-  padding: 6px 0 10px;
+  padding: 6px 0 2px;
+  background: var(--panel);
+}
+
+/* chips shrink to fit and stay centered; overflow turns into the carousel */
+.steps-row {
+  display: flex;
+  justify-content: center;
   background: var(--panel);
   border-bottom: 1px solid #0009;
+  padding: 0 10px 5px;
 }
 
 .step-actions .step-chip {
@@ -862,8 +859,6 @@ body[data-tool="eraser"] .screen-cap {
 
 @media (max-width: 900px) {
   .topbar { gap: 8px; padding: 8px 10px; }
-  .step-chips { max-width: 100%; }
-  .step-controls { margin-left: 0; width: 100%; }
   .play-name { max-width: 34vw; }
 }
 
@@ -877,7 +872,6 @@ body[data-tool="eraser"] .screen-cap {
   /* steps as a swipeable carousel — single row, no visible scrollbar */
   .step-chips {
     max-width: 100%;
-    width: 100%;
     padding-top: 8px;
     gap: 5px;
     scrollbar-width: none;

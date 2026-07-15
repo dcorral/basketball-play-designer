@@ -57,12 +57,18 @@ body {
 }
 
 .lang-select {
+  appearance: none;
+  -webkit-appearance: none;
   background: var(--panel-2);
   color: var(--text);
   border: 1px solid #3c3c42;
   border-radius: 8px;
-  padding: 7px 10px;
-  font-size: 14px;
+  width: 40px;
+  height: 34px;
+  padding: 0;
+  text-align: center;
+  text-align-last: center;
+  font-size: 15px;
   cursor: pointer;
 }
 
@@ -205,14 +211,14 @@ body {
 #helpHome {
   position: fixed;
   top: 12px;
-  right: 78px;
+  right: 64px;
   z-index: 5;
 }
 
 #helpEditor {
   position: absolute;
   top: 9px;
-  right: 76px;
+  right: 62px;
 }
 
 /* spotlight tour — the container passes clicks through; only the shades
@@ -1056,8 +1062,8 @@ body[data-tool="eraser"] .screen-cap {
 /* ---------- Phones ---------- */
 @media (max-width: 640px) {
   .topbar { padding: 6px 104px 6px 8px; gap: 6px; }
-  #helpEditor { right: 62px; top: 6px; }
-  #helpHome { right: 64px; }
+  #helpEditor { right: 58px; top: 6px; }
+  #helpHome { right: 60px; }
   #langEditor { top: 6px; right: 8px; }
   .topbar .btn { padding: 5px 8px; font-size: 12px; border-radius: 7px; }
   .play-name { font-size: 15px; padding: 3px 4px; max-width: 40vw; }

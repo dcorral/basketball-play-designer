@@ -88,6 +88,7 @@ const I18N = {
     ttPrev: "Previous step", ttNext: "Next step", ttPlay: "Play / Pause",
     ttSpeed: "Playback speed",
     ttUndo: "Undo (Ctrl+Z)", ttRedo: "Redo (Ctrl+Y / Ctrl+Shift+Z)",
+    ttGrip: "Drag to move the toolbar (double-click to reset)",
     exportAll: "⤓ Export all (.zip)", importAll: "⤒ Import (.zip)",
     ttExportAll: "Download every play as a .zip backup",
     ttImportAll: "Import plays from a .zip backup",
@@ -136,6 +137,7 @@ const I18N = {
     ttPrev: "Paso anterior", ttNext: "Paso siguiente", ttPlay: "Reproducir / Pausa",
     ttSpeed: "Velocidad de reproducción",
     ttUndo: "Deshacer (Ctrl+Z)", ttRedo: "Rehacer (Ctrl+Y / Ctrl+Mayús+Z)",
+    ttGrip: "Arrastra para mover la barra (doble clic para restablecer)",
     exportAll: "⤓ Exportar todo (.zip)", importAll: "⤒ Importar (.zip)",
     ttExportAll: "Descargar todas las jugadas como copia de seguridad .zip",
     ttImportAll: "Importar jugadas desde una copia de seguridad .zip",
@@ -197,7 +199,7 @@ function applyLang() {
     deletePlayBtn: "ttDelete",
     prevBtn: "ttPrev", nextBtn: "ttNext",
     playBtn: "ttPlay", speedSelect: "ttSpeed",
-    undoBtn: "ttUndo", redoBtn: "ttRedo",
+    undoBtn: "ttUndo", redoBtn: "ttRedo", toolGrip: "ttGrip",
     exportAllBtn: "ttExportAll", importAllBtn: "ttImportAll",
   };
   for (const [id, key] of Object.entries(titles)) $(id).title = t(key);
@@ -714,11 +716,13 @@ function renderStepChips() {
       playhead = i;
       renderAll();
     });
-    // only the last step can be removed — badge on its corner
+    // only the last step can be removed — bin bubble on its corner
     if (i === steps.length - 1 && steps.length > 1) {
       const del = document.createElement("span");
       del.className = "chip-del";
-      del.textContent = "✕";
+      del.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M4 7 H20 M10 4 H14 M6.5 7 L7.5 20 H16.5 L17.5 7 M10 11 V16 M14 11 V16"/></svg>';
       del.title = t("ttDeleteStep");
       del.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -969,6 +973,63 @@ toolbar.addEventListener("click", (e) => {
   const btn = e.target.closest(".tool");
   if (btn && btn.dataset.tool && !btn.disabled) setTool(btn.dataset.tool);
 });
+
+/* ---- draggable toolbar ---- */
+
+const TOOLBAR_POS_KEY = "playbook-toolbar-pos";
+
+function applyToolbarPos() {
+  try {
+    const p = JSON.parse(localStorage.getItem(TOOLBAR_POS_KEY));
+    if (!p) return;
+    toolbar.style.left = p.x * 100 + "%";
+    toolbar.style.top = p.y * 100 + "%";
+    toolbar.style.transform = "none";
+  } catch (_) { /* ignore bad stored value */ }
+}
+
+toolbar.addEventListener("pointerdown", (e) => {
+  if (e.target.closest(".tool")) return; // buttons keep their clicks
+  e.preventDefault();
+  try { toolbar.setPointerCapture(e.pointerId); } catch (_) {}
+  const tb = toolbar.getBoundingClientRect();
+  const dx = e.clientX - tb.left;
+  const dy = e.clientY - tb.top;
+
+  const move = (ev) => {
+    const st = stageEl.getBoundingClientRect();
+    const x = Math.min(Math.max(ev.clientX - st.left - dx, 0), st.width - tb.width);
+    const y = Math.min(Math.max(ev.clientY - st.top - dy, 0), st.height - tb.height);
+    toolbar.style.left = x + "px";
+    toolbar.style.top = y + "px";
+    toolbar.style.transform = "none";
+  };
+  const up = () => {
+    toolbar.removeEventListener("pointermove", move);
+    toolbar.removeEventListener("pointerup", up);
+    toolbar.removeEventListener("pointercancel", up);
+    const st = stageEl.getBoundingClientRect();
+    const now = toolbar.getBoundingClientRect();
+    localStorage.setItem(TOOLBAR_POS_KEY, JSON.stringify({
+      x: (now.left - st.left) / st.width,
+      y: (now.top - st.top) / st.height,
+    }));
+  };
+  toolbar.addEventListener("pointermove", move);
+  toolbar.addEventListener("pointerup", up);
+  toolbar.addEventListener("pointercancel", up);
+});
+
+// double-click the grip (or empty toolbar space) to snap back to default
+toolbar.addEventListener("dblclick", (e) => {
+  if (e.target.closest(".tool")) return;
+  localStorage.removeItem(TOOLBAR_POS_KEY);
+  toolbar.style.left = "";
+  toolbar.style.top = "";
+  toolbar.style.transform = "";
+});
+
+applyToolbarPos();
 
 // Eraser helper: removes a token's arrow (or the pass) with a history entry.
 function eraseMove(tokenId) {

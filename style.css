@@ -224,37 +224,38 @@ body {
 }
 
 .play-name {
+  appearance: none;
+  -webkit-appearance: none;
   font-weight: 700;
   font-size: 17px;
   letter-spacing: 0.3px;
   font-family: inherit;
   color: var(--text);
   background: transparent;
-  border: 1px solid transparent;
+  border: none;
   border-radius: 6px;
   padding: 4px 6px;
   max-width: 22vw;
   outline: none;
+  cursor: text;
 }
-
-.play-name:hover { border-color: #3a4250; }
 
 .play-name:focus {
   background: var(--panel-2);
-  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
 .pencil-btn {
   background: none;
   border: none;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   padding: 4px;
   border-radius: 6px;
 }
 
-.pencil-btn:hover { color: var(--text); background: var(--panel-2); }
+.pencil-btn:hover { color: var(--text); }
 
 .step-controls {
   display: flex;
@@ -303,8 +304,14 @@ select:hover, .btn:hover { border-color: #556072; }
   gap: 6px;
   overflow-x: auto;
   max-width: 46vw;
-  padding: 7px 7px 3px 2px;
+  padding: 9px 9px 3px 2px;
+  scrollbar-width: thin;
+  scrollbar-color: #3a4250 transparent;
 }
+
+.step-chips::-webkit-scrollbar { height: 5px; width: 5px; }
+.step-chips::-webkit-scrollbar-track { background: transparent; }
+.step-chips::-webkit-scrollbar-thumb { background: #3a4250; border-radius: 3px; }
 
 .step-chip {
   position: relative;
@@ -348,23 +355,24 @@ select:hover, .btn:hover { border-color: #556072; }
 
 .chip-del {
   position: absolute;
-  top: -6px;
-  right: -5px;
-  width: 15px;
-  height: 15px;
+  top: -8px;
+  right: -8px;
+  width: 19px;
+  height: 19px;
   border-radius: 50%;
-  background: #d05050;
+  background: #d84343;
   color: #fff;
-  font-size: 9px;
-  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 1px 3px #0008;
+  box-shadow: 0 1px 4px #000a;
+  border: 1.5px solid var(--panel);
 }
 
-.chip-del:hover { background: #e06060; }
+.chip-del svg { width: 11px; height: 11px; }
+
+.chip-del:hover { background: #ef5a5a; transform: scale(1.12); }
 
 /* ---------- Stage ---------- */
 .stage-wrap {
@@ -373,15 +381,18 @@ select:hover, .btn:hover { border-color: #556072; }
   align-items: center;
   justify-content: center;
   min-height: 0;
+  min-width: 0;
   padding: 12px;
+  container-type: size;
 }
 
+/* Fit the container in both directions while keeping the exact court
+   aspect ratio — token positions are percentages of this box, so the
+   ratio must never distort. */
 .stage {
   position: relative;
-  height: 100%;
-  max-height: 100%;
+  width: min(100cqw, calc(100cqh * 62 / 59));
   aspect-ratio: 62 / 59;
-  max-width: 100%;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 10px 40px #000a;
@@ -599,6 +610,23 @@ input[type="range"]::-moz-range-thumb {
   background: #e3e5e9;
 }
 
+.tool-grip {
+  width: 16px;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c6cad0;
+  cursor: grab;
+  touch-action: none;
+}
+
+.tool-grip svg { width: 14px; height: 18px; }
+
+.tool-grip:hover { color: #8a919c; }
+
+.toolbar { touch-action: none; }
+
 .tool:disabled .knum { color: #d5d8dd; }
 
 .tool.active {
@@ -694,4 +722,43 @@ body[data-tool="eraser"] .screen-cap {
   .step-chips { max-width: 100%; }
   .step-controls { margin-left: 0; width: 100%; }
   .play-name { max-width: 34vw; }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 640px) {
+  .topbar { padding: 6px 8px; gap: 6px; }
+  .topbar .btn { padding: 5px 8px; font-size: 12px; border-radius: 7px; }
+  .play-name { font-size: 15px; padding: 3px 4px; max-width: 40vw; }
+  .lang-select { padding: 4px 6px; font-size: 12px; }
+  /* steps as a wrapping list — every step visible, no horizontal scrolling */
+  .step-chips {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    overflow-y: auto;
+    max-height: 96px;
+    width: 100%;
+    padding-top: 8px;
+    gap: 5px;
+  }
+  .step-chip { padding: 5px 9px; font-size: 12px; }
+
+  .stage-wrap { padding: 8px; }
+  .toolbar { top: 8px; padding: 4px; gap: 2px; border-radius: 10px; }
+  .tool { width: 32px; height: 32px; }
+  .tool svg { width: 17px; height: 17px; }
+  .tool .knum { display: none; }
+  .tool-sep { margin: 4px 2px; }
+
+  .player-bar { padding: 8px 10px; gap: 8px; }
+  .pbtn { font-size: 14px; padding: 4px 5px; }
+  .pbtn-main { width: 36px; height: 36px; font-size: 17px; }
+  .step-indicator { display: none; }
+  .speed-select { padding: 4px 5px; font-size: 12px; }
+
+  .home { gap: 22px; }
+  .home h1 { font-size: 30px; }
+  .create-new { padding: 14px 32px; font-size: 16px; letter-spacing: 1px; }
+  .backup-row { flex-wrap: wrap; justify-content: center; }
+  .play-card { padding: 13px 16px; font-size: 15px; }
+  .modal { padding: 18px; gap: 12px; }
 }

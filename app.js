@@ -51,6 +51,7 @@ let tool = "select";   // select | arrow | screen | eraser
 
 const I18N = {
   en: {
+    appTitle: "Cejudo's Playbook",
     createNew: "＋ CREATE NEW",
     stepSingular: "step", stepPlural: "steps",
     back: "← Plays", rename: "✎ Rename", exportBtn: "⤓ Export", deletePlay: "✕ Delete",
@@ -100,6 +101,7 @@ const I18N = {
     importErrMsg: "That file doesn't look like a Playbook backup (.zip).",
   },
   es: {
+    appTitle: "Playbook de Cejudos",
     createNew: "＋ CREAR NUEVA",
     stepSingular: "paso", stepPlural: "pasos",
     back: "← Jugadas", rename: "✎ Renombrar", exportBtn: "⤓ Exportar", deletePlay: "✕ Eliminar",
@@ -186,6 +188,8 @@ function applyLang() {
   localStorage.setItem("playbook-lang", lang);
   $("langHome").value = lang;
   $("langEditor").value = lang;
+  $("homeTitle").textContent = t("appTitle");
+  document.title = t("appTitle");
 
   const texts = {
     createNewBtn: "createNew", backBtn: "back",

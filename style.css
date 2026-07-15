@@ -53,9 +53,17 @@ body {
   cursor: pointer;
 }
 
+.home-logo {
+  width: 150px;
+  height: auto;
+  filter: drop-shadow(0 8px 24px #0009);
+  margin-bottom: -8px;
+}
+
 .home h1 {
-  font-size: 42px;
+  font-size: 40px;
   letter-spacing: 1px;
+  text-align: center;
 }
 
 .play-list {

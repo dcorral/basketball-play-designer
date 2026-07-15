@@ -759,8 +759,12 @@ function renderStepChips() {
       playhead = i;
       renderAll();
     });
-    // only the last step can be removed — bin bubble on its corner
-    if (i === steps.length - 1 && steps.length > 1) {
+    // Deletable: the last step, or any step with no drawn actions (an empty
+    // step's positions equal the next step's, so removing it keeps every
+    // surrounding arrow valid).
+    const deletable = steps.length > 1 &&
+      (i === steps.length - 1 || !hasMoves(steps[i]));
+    if (deletable) {
       const del = document.createElement("span");
       del.className = "chip-del";
       del.innerHTML =
@@ -769,7 +773,7 @@ function renderStepChips() {
       del.title = t("ttDeleteStep");
       del.addEventListener("click", (e) => {
         e.stopPropagation();
-        deleteLastStep();
+        deleteStepAt(i);
       });
       chip.appendChild(del);
     }
@@ -1469,16 +1473,21 @@ function addStep() {
   renderAll();
 }
 
-function deleteLastStep() {
+function deleteStepAt(i) {
   stopPlayback();
   const steps = currentPlay().steps;
   if (steps.length <= 1) return;
+  const isLast = i === steps.length - 1;
+  if (!isLast && hasMoves(steps[i])) return; // middle steps only when empty
   pushUndo();
-  steps.pop();
-  // The arrows that led into the removed step no longer make sense.
-  steps[steps.length - 1].moves = {};
-  steps[steps.length - 1].pass = null;
+  steps.splice(i, 1);
+  if (isLast) {
+    // The arrows that led into the removed step no longer make sense.
+    steps[steps.length - 1].moves = {};
+    steps[steps.length - 1].pass = null;
+  }
   syncBallChain();
+  if (currentStep > i) currentStep -= 1;
   currentStep = Math.min(currentStep, steps.length - 1);
   playhead = currentStep;
   save();

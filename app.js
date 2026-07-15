@@ -409,11 +409,19 @@ function migrateBall(p) {
   return p;
 }
 
+// A moving receiver is always reached at the end of their movement.
+function normalizePassTimings(p) {
+  for (const s of p.steps) {
+    if (s.pass) s.pass.timing = s.moves[s.pass.to] ? "after" : "before";
+  }
+  return p;
+}
+
 function load() {
   try {
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (data && Array.isArray(data.plays)) {
-      plays = data.plays.map((p) => migrateBall(migratePlay(p)));
+      plays = data.plays.map((p) => normalizePassTimings(migrateBall(migratePlay(p))));
     }
   } catch (_) { plays = []; }
 }
@@ -883,6 +891,7 @@ function setMove(tokenId, move) {
   if (currentStep + 1 < steps.length) {
     steps[currentStep + 1].pos[tokenId] = { ...move.to };
   }
+  syncBallChain(); // the pass timing may depend on this move
 }
 
 function deleteMove(tokenId) {
@@ -892,6 +901,7 @@ function deleteMove(tokenId) {
   if (currentStep + 1 < steps.length) {
     steps[currentStep + 1].pos[tokenId] = { ...steps[currentStep].pos[tokenId] };
   }
+  syncBallChain();
   return true;
 }
 
@@ -904,19 +914,17 @@ function moveToken(tokenId, p) {
   }
 }
 
-// Nearest pass target for a point: a teammate where they stand now
-// ("before"), or the end of a teammate's cut ("after" — cut first, then pass).
+// Nearest pass target for a point. A teammate with a movement can ONLY be
+// reached at the end of that movement ("after"); a static teammate is
+// reached where they stand ("before").
 function nearestPassTarget(step, p) {
   let best = null, bd = Infinity;
   for (const id of PLAYER_IDS) {
     if (id === step.ball) continue;
-    const d1 = Math.hypot(step.pos[id].x - p.x, step.pos[id].y - p.y);
-    if (d1 < bd) { bd = d1; best = { to: id, timing: "before" }; }
     const m = step.moves[id];
-    if (m) {
-      const d2 = Math.hypot(m.to.x - p.x, m.to.y - p.y);
-      if (d2 < bd) { bd = d2; best = { to: id, timing: "after" }; }
-    }
+    const spot = m ? m.to : step.pos[id];
+    const d = Math.hypot(spot.x - p.x, spot.y - p.y);
+    if (d < bd) { bd = d; best = { to: id, timing: m ? "after" : "before" }; }
   }
   return best;
 }
@@ -928,6 +936,10 @@ function syncBallChain() {
   for (let i = 0; i < steps.length; i++) {
     if (i > 0) steps[i].ball = steps[i - 1].pass ? steps[i - 1].pass.to : steps[i - 1].ball;
     if (steps[i].pass && steps[i].pass.to === steps[i].ball) steps[i].pass = null;
+    // a moving receiver is always reached at the END of their movement
+    if (steps[i].pass) {
+      steps[i].pass.timing = steps[i].moves[steps[i].pass.to] ? "after" : "before";
+    }
   }
 }
 
@@ -1973,7 +1985,7 @@ async function importFromLink() {
   try {
     const raw = await decodeSharePlay(m[2]);
     if (!raw || !raw.name || !Array.isArray(raw.steps) || !raw.steps.length) throw new Error("bad");
-    const p = migrateBall(migratePlay(raw));
+    const p = normalizePassTimings(migrateBall(migratePlay(raw)));
     p.id = "play-" + Math.random().toString(36).slice(2, 10); // always a fresh copy
     if (m[1] === "v") openViewer(p);
     else await addSharedPlay(p);

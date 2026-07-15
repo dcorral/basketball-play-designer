@@ -159,7 +159,7 @@ async function importBackup(buffer) {
   for (const raw of imported) {
     if (!raw || typeof raw !== "object" || !raw.id || !raw.name ||
         !Array.isArray(raw.steps) || !raw.steps.length) continue;
-    const p = migrateBall(migratePlay(raw));
+    const p = normalizePassTimings(migrateBall(migratePlay(raw)));
     const idx = plays.findIndex((x) => x.id === p.id);
     if (idx >= 0) { plays[idx] = p; updated++; }
     else { p.name = uniquePlayName(p.name); plays.push(p); added++; }

@@ -1005,7 +1005,7 @@ function renderStepChips() {
     // Deletable: the last step, or any step with no drawn actions (an empty
     // step's positions equal the next step's, so removing it keeps every
     // surrounding arrow valid).
-    const deletable = steps.length > 1 &&
+    const deletable = !viewPlay && steps.length > 1 &&
       (i === steps.length - 1 || !hasMoves(steps[i]));
     if (deletable) {
       const del = document.createElement("span");

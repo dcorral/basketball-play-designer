@@ -216,15 +216,45 @@ body {
   flex-wrap: wrap;
 }
 
+.name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
 .play-name {
   font-weight: 700;
   font-size: 17px;
   letter-spacing: 0.3px;
+  font-family: inherit;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 4px 6px;
   max-width: 22vw;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  outline: none;
 }
+
+.play-name:hover { border-color: #3a4250; }
+
+.play-name:focus {
+  background: var(--panel-2);
+  border-color: var(--accent);
+}
+
+.pencil-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.pencil-btn:hover { color: var(--text); background: var(--panel-2); }
 
 .step-controls {
   display: flex;
@@ -269,13 +299,15 @@ select:hover, .btn:hover { border-color: #556072; }
 /* ---------- Step chips ---------- */
 .step-chips {
   display: flex;
+  align-items: center;
   gap: 6px;
   overflow-x: auto;
-  max-width: 40vw;
-  padding: 2px;
+  max-width: 46vw;
+  padding: 7px 7px 3px 2px;
 }
 
 .step-chip {
+  position: relative;
   flex: 0 0 auto;
   padding: 6px 12px;
   border-radius: 999px;
@@ -283,6 +315,8 @@ select:hover, .btn:hover { border-color: #556072; }
   background: var(--panel-2);
   color: var(--muted);
   font-size: 13px;
+  font-family: inherit;
+  line-height: 1.2;
   cursor: pointer;
   user-select: none;
 }
@@ -293,6 +327,44 @@ select:hover, .btn:hover { border-color: #556072; }
   color: #fff;
   font-weight: 600;
 }
+
+.step-chip.step-add {
+  background: #2ea44f;
+  border-color: #2ea44f;
+  color: #fff;
+  font-weight: 700;
+}
+
+.step-chip.step-add:hover { background: #36b95a; border-color: #36b95a; }
+
+.step-chip.step-reset {
+  background: #d05050;
+  border-color: #d05050;
+  color: #fff;
+  font-weight: 700;
+}
+
+.step-chip.step-reset:hover { background: #e06060; border-color: #e06060; }
+
+.chip-del {
+  position: absolute;
+  top: -6px;
+  right: -5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #d05050;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 3px #0008;
+}
+
+.chip-del:hover { background: #e06060; }
 
 /* ---------- Stage ---------- */
 .stage-wrap {
@@ -612,7 +684,14 @@ body[data-tool="eraser"] .screen-cap {
 
 .playing .toolbar { opacity: 0.35; pointer-events: none; }
 
+@media (max-width: 1100px) {
+  .chip-word { display: none; }
+  .step-chip { padding: 6px 10px; }
+}
+
 @media (max-width: 900px) {
+  .topbar { gap: 8px; padding: 8px 10px; }
   .step-chips { max-width: 100%; }
   .step-controls { margin-left: 0; width: 100%; }
+  .play-name { max-width: 34vw; }
 }

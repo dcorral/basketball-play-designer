@@ -27,15 +27,14 @@
   <div id="editor" class="editor" hidden>
     <header class="topbar">
       <button id="backBtn" class="btn" title="Back to all plays">← Plays</button>
-      <div id="playName" class="play-name"></div>
-      <button id="renamePlayBtn" class="btn" title="Rename current play">✎ Rename</button>
+      <div class="name-wrap">
+        <input id="playName" class="play-name" spellcheck="false" autocomplete="off">
+        <button id="renamePencil" class="pencil-btn" title="Rename current play">✎</button>
+      </div>
       <button id="exportBtn" class="btn" title="Export as GIF, video or PDF">⤓ Export</button>
       <button id="deletePlayBtn" class="btn btn-danger" title="Delete current play">✕ Delete</button>
       <div class="step-controls">
         <div id="stepChips" class="step-chips"></div>
-        <button id="addStepBtn" class="btn btn-primary">Next step ＋</button>
-        <button id="deleteStepBtn" class="btn" title="Delete current step">Delete step</button>
-        <button id="resetAllBtn" class="btn btn-danger" title="Clear all steps">Reset all</button>
       </div>
       <select id="langEditor" class="lang-select" title="Language / Idioma">
         <option value="en">🇬🇧 EN</option>

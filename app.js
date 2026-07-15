@@ -183,9 +183,8 @@ function applyLang() {
   $("langEditor").value = lang;
 
   const texts = {
-    createNewBtn: "createNew", backBtn: "back", renamePlayBtn: "rename",
-    exportBtn: "exportBtn", deletePlayBtn: "deletePlay", addStepBtn: "nextStep",
-    deleteStepBtn: "deleteStep", resetAllBtn: "resetAll",
+    createNewBtn: "createNew", backBtn: "back",
+    exportBtn: "exportBtn", deletePlayBtn: "deletePlay",
     modalCancel: "cancel", exportCancel: "cancel", exportGo: "exportGo",
     exportTitle: "exportTitle", exportFormatLabel: "formatLabel",
     exportMoveLabel: "moveDur", exportPauseLabel: "pauseDur",
@@ -194,9 +193,9 @@ function applyLang() {
   for (const [id, key] of Object.entries(texts)) $(id).textContent = t(key);
 
   const titles = {
-    backBtn: "ttBack", renamePlayBtn: "ttRename", exportBtn: "ttExport",
-    deletePlayBtn: "ttDelete", deleteStepBtn: "ttDeleteStep",
-    resetAllBtn: "ttResetAll", prevBtn: "ttPrev", nextBtn: "ttNext",
+    backBtn: "ttBack", renamePencil: "ttRename", exportBtn: "ttExport",
+    deletePlayBtn: "ttDelete",
+    prevBtn: "ttPrev", nextBtn: "ttNext",
     playBtn: "ttPlay", speedSelect: "ttSpeed",
     undoBtn: "ttUndo", redoBtn: "ttRedo",
     exportAllBtn: "ttExportAll", importAllBtn: "ttImportAll",
@@ -686,7 +685,8 @@ function syncBallChain() {
 /* ================= Rendering ================= */
 
 function renderAll() {
-  playNameEl.textContent = currentPlay().name;
+  playNameEl.value = currentPlay().name;
+  sizeNameInput();
   renderStepChips();
   buildTokens();
   renderPositions(positionsAt(playhead));
@@ -702,15 +702,46 @@ function renderStepChips() {
   steps.forEach((_, i) => {
     const chip = document.createElement("div");
     chip.className = "step-chip" + (i === currentStep && !playing ? " active" : "");
-    chip.textContent = t("step") + " " + (i + 1);
+    const word = document.createElement("span");
+    word.className = "chip-word";
+    word.textContent = t("step") + " ";
+    const num = document.createElement("span");
+    num.textContent = i + 1;
+    chip.append(word, num);
     chip.addEventListener("click", () => {
       stopPlayback();
       currentStep = i;
       playhead = i;
       renderAll();
     });
+    // only the last step can be removed — badge on its corner
+    if (i === steps.length - 1 && steps.length > 1) {
+      const del = document.createElement("span");
+      del.className = "chip-del";
+      del.textContent = "✕";
+      del.title = t("ttDeleteStep");
+      del.addEventListener("click", (e) => {
+        e.stopPropagation();
+        deleteLastStep();
+      });
+      chip.appendChild(del);
+    }
     stepChipsEl.appendChild(chip);
   });
+
+  const add = document.createElement("button");
+  add.className = "step-chip step-add";
+  add.textContent = "＋";
+  add.title = t("nextStep");
+  add.addEventListener("click", addStep);
+  stepChipsEl.appendChild(add);
+
+  const reset = document.createElement("button");
+  reset.className = "step-chip step-reset";
+  reset.textContent = "↺";
+  reset.title = t("ttResetAll");
+  reset.addEventListener("click", resetAllPlay);
+  stepChipsEl.appendChild(reset);
 }
 
 function buildTokens() {
@@ -1204,21 +1235,38 @@ $("createNewBtn").addEventListener("click", async () => {
 
 $("backBtn").addEventListener("click", showHome);
 
-$("renamePlayBtn").addEventListener("click", async () => {
-  const name = await openModal({
-    title: t("renameTitle"),
-    input: true,
-    value: currentPlay().name,
-    confirmLabel: t("renameConfirm"),
-  });
-  if (name === null) return;
-  const newName = name.trim() || currentPlay().name;
-  if (newName !== currentPlay().name) {
+/* ---- inline rename ---- */
+
+function sizeNameInput() {
+  playNameEl.style.width = Math.min(Math.max(playNameEl.value.length + 2, 5), 26) + "ch";
+}
+
+function commitRename() {
+  const p = currentPlay();
+  if (!p) return;
+  const newName = playNameEl.value.trim() || p.name;
+  if (newName !== p.name) {
     pushUndo();
-    currentPlay().name = newName;
+    p.name = newName;
     save();
   }
-  playNameEl.textContent = currentPlay().name;
+  playNameEl.value = p.name;
+  sizeNameInput();
+}
+
+playNameEl.addEventListener("input", sizeNameInput);
+playNameEl.addEventListener("blur", commitRename);
+playNameEl.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") playNameEl.blur();
+  else if (e.key === "Escape") {
+    playNameEl.value = currentPlay().name;
+    playNameEl.blur();
+  }
+});
+
+$("renamePencil").addEventListener("click", () => {
+  playNameEl.focus();
+  playNameEl.select();
 });
 
 $("deletePlayBtn").addEventListener("click", async () => {
@@ -1235,7 +1283,7 @@ $("deletePlayBtn").addEventListener("click", async () => {
   showHome();
 });
 
-$("resetAllBtn").addEventListener("click", async () => {
+async function resetAllPlay() {
   const ok = await openModal({
     title: t("resetTitle"),
     message: t("resetMsg"),
@@ -1256,7 +1304,7 @@ $("resetAllBtn").addEventListener("click", async () => {
   playhead = 0;
   save();
   renderAll();
-});
+}
 
 playBtn.addEventListener("click", () => {
   if (playing) stopPlayback();
@@ -1293,42 +1341,40 @@ scrubber.addEventListener("input", () => {
   updateToolAvailability();
 });
 
-$("addStepBtn").addEventListener("click", () => {
+// Appends a new step at the end, committing the last step's arrows.
+function addStep() {
   stopPlayback();
   pushUndo();
   const steps = currentPlay().steps;
-  const cur = steps[currentStep];
-  const next = {
-    pos: derivedNextPos(cur),
+  const last = steps[steps.length - 1];
+  steps.push({
+    pos: derivedNextPos(last),
     moves: {},
-    ball: cur.pass ? cur.pass.to : cur.ball,
+    ball: last.pass ? last.pass.to : last.ball,
     pass: null,
-  };
-  steps.splice(currentStep + 1, 0, next);
+  });
   syncBallChain();
-  currentStep += 1;
+  currentStep = steps.length - 1;
   playhead = currentStep;
   save();
   renderAll();
-});
+}
 
-$("deleteStepBtn").addEventListener("click", () => {
+function deleteLastStep() {
   stopPlayback();
   const steps = currentPlay().steps;
   if (steps.length <= 1) return;
   pushUndo();
-  steps.splice(currentStep, 1);
+  steps.pop();
   // The arrows that led into the removed step no longer make sense.
-  if (currentStep > 0) {
-    steps[currentStep - 1].moves = {};
-    steps[currentStep - 1].pass = null;
-  }
+  steps[steps.length - 1].moves = {};
+  steps[steps.length - 1].pass = null;
   syncBallChain();
   currentStep = Math.min(currentStep, steps.length - 1);
   playhead = currentStep;
   save();
   renderAll();
-});
+}
 
 speedSelect.addEventListener("change", () => speedSelect.blur());
 

@@ -285,7 +285,6 @@ body.view-only .step-actions,
 body.view-only .steps-row,
 body.view-only .delete-row,
 body.view-only #handles,
-body.view-only #renamePencil,
 body.view-only #exportBtn,
 body.view-only #shareBtn { display: none !important; }
 
@@ -380,18 +379,6 @@ body.view-only .play-name { cursor: default; }
   background: var(--panel-2);
   box-shadow: 0 0 0 1px var(--accent);
 }
-
-.pencil-btn {
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 13px;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
-}
-
-.pencil-btn:hover { color: var(--text); }
 
 select, .btn {
   background: var(--panel-2);

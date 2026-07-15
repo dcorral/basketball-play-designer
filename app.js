@@ -243,7 +243,7 @@ function applyLang() {
   for (const [id, key] of Object.entries(texts)) $(id).textContent = t(key);
 
   const titles = {
-    backBtn: "ttBack", renamePencil: "ttRename", exportBtn: "ttExport",
+    backBtn: "ttBack", exportBtn: "ttExport",
     shareBtn: "ttShare",
     deletePlayBtn: "ttDelete",
     prevBtn: "ttPrev", nextBtn: "ttNext",
@@ -1742,11 +1742,6 @@ playNameEl.addEventListener("keydown", (e) => {
     playNameEl.value = currentPlay().name;
     playNameEl.blur();
   }
-});
-
-$("renamePencil").addEventListener("click", () => {
-  playNameEl.focus();
-  playNameEl.select();
 });
 
 $("deletePlayBtn").addEventListener("click", async () => {

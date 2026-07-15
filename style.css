@@ -207,13 +207,21 @@ body {
 
 /* ---------- Top bar ---------- */
 .topbar {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 10px 16px;
+  padding: 10px 96px 10px 16px; /* right space reserved for the language select */
   background: var(--panel);
   border-bottom: 1px solid #0009;
   flex-wrap: wrap;
+}
+
+/* pinned to the screen's top-right corner, level with the title row */
+#langEditor {
+  position: absolute;
+  top: 9px;
+  right: 14px;
 }
 
 .name-wrap {
@@ -741,7 +749,8 @@ body[data-tool="eraser"] .screen-cap {
 
 /* ---------- Phones ---------- */
 @media (max-width: 640px) {
-  .topbar { padding: 6px 8px; gap: 6px; }
+  .topbar { padding: 6px 76px 6px 8px; gap: 6px; }
+  #langEditor { top: 6px; right: 8px; }
   .topbar .btn { padding: 5px 8px; font-size: 12px; border-radius: 7px; }
   .play-name { font-size: 15px; padding: 3px 4px; max-width: 40vw; }
   .lang-select { padding: 4px 6px; font-size: 12px; }

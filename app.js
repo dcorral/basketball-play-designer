@@ -1196,7 +1196,7 @@ function renderHome() {
   $("exportAllBtn").hidden = plays.length === 0;
 
   const search = $("playSearch");
-  search.hidden = plays.length === 0;
+  search.hidden = plays.length < 2;
   search.placeholder = t("searchPlays");
 
   const filtered = filteredPlays();

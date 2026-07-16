@@ -131,6 +131,20 @@ body {
 
 .card-grip.grip-off { opacity: 0.3; pointer-events: none; }
 
+.delete-all {
+  background: none;
+  border: none;
+  margin-top: 10px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.delete-all:hover { color: #ff8a8a; }
+
 .select-all-row {
   display: flex;
   align-items: center;

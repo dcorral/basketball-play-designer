@@ -68,6 +68,9 @@ const I18N = {
     searchPlays: "Search plays…",
     noResults: "No plays match your search.",
     deleteSelTitle: "Delete selected plays?",
+    deleteAllBtn: "Delete all plays",
+    deleteAllTitle: "Delete ALL plays?",
+    deleteAllMsg: (n) => `All ${n} plays will be deleted permanently. This cannot be undone.`,
     deleteSelMsg: (n) => n === 1 ? "The selected play will be deleted permanently." : `The ${n} selected plays will be deleted permanently.`,
     resetTitle: "Reset play?",
     resetMsg: "All steps and arrows will be removed. The starting positions of step 1 are kept.",
@@ -173,6 +176,9 @@ const I18N = {
     searchPlays: "Buscar jugadas…",
     noResults: "Ninguna jugada coincide con tu búsqueda.",
     deleteSelTitle: "¿Eliminar las jugadas seleccionadas?",
+    deleteAllBtn: "Eliminar todas las jugadas",
+    deleteAllTitle: "¿Eliminar TODAS las jugadas?",
+    deleteAllMsg: (n) => `Se eliminarán permanentemente las ${n} jugadas. Esto no se puede deshacer.`,
     deleteSelMsg: (n) => n === 1 ? "La jugada seleccionada se eliminará permanentemente." : `Las ${n} jugadas seleccionadas se eliminarán permanentemente.`,
     resetTitle: "¿Reiniciar jugada?",
     resetMsg: "Se eliminarán todos los pasos y flechas. Se mantendrán las posiciones iniciales del paso 1.",
@@ -278,6 +284,9 @@ const I18N = {
     searchPlays: "Cerca giocate…",
     noResults: "Nessuna giocata corrisponde alla ricerca.",
     deleteSelTitle: "Eliminare le giocate selezionate?",
+    deleteAllBtn: "Elimina tutte le giocate",
+    deleteAllTitle: "Eliminare TUTTE le giocate?",
+    deleteAllMsg: (n) => `Tutte le ${n} giocate verranno eliminate definitivamente. Non si può annullare.`,
     deleteSelMsg: (n) => n === 1 ? "La giocata selezionata verrà eliminata definitivamente." : `Le ${n} giocate selezionate verranno eliminate definitivamente.`,
     resetTitle: "Azzerare la giocata?",
     resetMsg: "Tutti i passi e le frecce verranno rimossi. Le posizioni iniziali del passo 1 vengono mantenute.",
@@ -382,6 +391,9 @@ const I18N = {
     searchPlays: "Поиск комбинаций…",
     noResults: "По вашему запросу ничего не найдено.",
     deleteSelTitle: "Удалить выбранные комбинации?",
+    deleteAllBtn: "Удалить все комбинации",
+    deleteAllTitle: "Удалить ВСЕ комбинации?",
+    deleteAllMsg: (n) => `Все комбинации (${n}) будут удалены навсегда. Это нельзя отменить.`,
     deleteSelMsg: (n) => n === 1 ? "Выбранная комбинация будет удалена навсегда." : `Выбранные комбинации (${n}) будут удалены навсегда.`,
     resetTitle: "Сбросить комбинацию?",
     resetMsg: "Все шаги и стрелки будут удалены. Начальные позиции шага 1 сохранятся.",
@@ -486,6 +498,9 @@ const I18N = {
     searchPlays: "搜索战术…",
     noResults: "没有符合搜索的战术。",
     deleteSelTitle: "删除所选战术？",
+    deleteAllBtn: "删除全部战术",
+    deleteAllTitle: "删除全部战术？",
+    deleteAllMsg: (n) => `全部 ${n} 套战术将被永久删除，且无法撤销。`,
     deleteSelMsg: (n) => `选中的 ${n} 套战术将被永久删除。`,
     resetTitle: "重置战术？",
     resetMsg: "所有步骤和箭头将被删除，仅保留第 1 步的初始位置。",
@@ -590,6 +605,9 @@ const I18N = {
     searchPlays: "Pretraži akcije…",
     noResults: "Nijedna akcija ne odgovara pretrazi.",
     deleteSelTitle: "Obrisati izabrane akcije?",
+    deleteAllBtn: "Obriši sve akcije",
+    deleteAllTitle: "Obrisati SVE akcije?",
+    deleteAllMsg: (n) => `Svih ${n} akcija biće trajno obrisano. Ovo se ne može poništiti.`,
     deleteSelMsg: (n) => n === 1 ? "Izabrana akcija biće trajno obrisana." : `Izabrane akcije (${n}) biće trajno obrisane.`,
     resetTitle: "Resetovati akciju?",
     resetMsg: "Svi koraci i strelice biće uklonjeni. Početne pozicije koraka 1 se zadržavaju.",
@@ -694,6 +712,9 @@ const I18N = {
     searchPlays: "Išči akcije…",
     noResults: "Nobena akcija ne ustreza iskanju.",
     deleteSelTitle: "Izbrišem izbrane akcije?",
+    deleteAllBtn: "Izbriši vse akcije",
+    deleteAllTitle: "Izbrišem VSE akcije?",
+    deleteAllMsg: (n) => `Vseh ${n} akcij bo trajno izbrisanih. Tega ni mogoče razveljaviti.`,
     deleteSelMsg: (n) => n === 1 ? "Izbrana akcija bo trajno izbrisana." : `Izbrane akcije (${n}) bodo trajno izbrisane.`,
     resetTitle: "Ponastavim akcijo?",
     resetMsg: "Vsi koraki in puščice bodo odstranjeni. Začetni položaji koraka 1 se ohranijo.",
@@ -798,6 +819,9 @@ const I18N = {
     searchPlays: "Αναζήτηση συστημάτων…",
     noResults: "Κανένα σύστημα δεν ταιριάζει με την αναζήτηση.",
     deleteSelTitle: "Διαγραφή επιλεγμένων συστημάτων;",
+    deleteAllBtn: "Διαγραφή όλων των συστημάτων",
+    deleteAllTitle: "Διαγραφή ΟΛΩΝ των συστημάτων;",
+    deleteAllMsg: (n) => `Και τα ${n} συστήματα θα διαγραφούν οριστικά. Δεν μπορεί να αναιρεθεί.`,
     deleteSelMsg: (n) => n === 1 ? "Το επιλεγμένο σύστημα θα διαγραφεί οριστικά." : `Τα ${n} επιλεγμένα συστήματα θα διαγραφούν οριστικά.`,
     resetTitle: "Επαναφορά συστήματος;",
     resetMsg: "Όλα τα βήματα και τα βέλη θα αφαιρεθούν. Οι αρχικές θέσεις του βήματος 1 διατηρούνται.",
@@ -1177,6 +1201,10 @@ function filteredPlays() {
   return q ? plays.filter((p) => p.name.toLowerCase().includes(q)) : plays;
 }
 
+function visiblePlays() {
+  return filteredPlays().slice(pageOffset, pageOffset + PAGE_SIZE);
+}
+
 function updateDeleteSelected() {
   const ids = new Set(plays.map((p) => p.id));
   for (const id of [...selectedPlayIds]) if (!ids.has(id)) selectedPlayIds.delete(id);
@@ -1186,12 +1214,14 @@ function updateDeleteSelected() {
   const topBtn = $("deleteSelectedTop");
   topBtn.hidden = selectedPlayIds.size === 0;
   topBtn.title = t("deleteSelected", selectedPlayIds.size);
-  const filtered = filteredPlays();
-  $("selectAllRow").hidden = filtered.length < 2;
+  $("selectAllRow").hidden = filteredPlays().length < 2;
   $("selectAllLabel").textContent = t("selectAll");
+  const visible = visiblePlays();
   const all = $("selectAllCheck");
-  all.checked = filtered.length > 0 && filtered.every((p) => selectedPlayIds.has(p.id));
-  all.indeterminate = !all.checked && filtered.some((p) => selectedPlayIds.has(p.id));
+  all.checked = visible.length > 0 && visible.every((p) => selectedPlayIds.has(p.id));
+  all.indeterminate = !all.checked && visible.some((p) => selectedPlayIds.has(p.id));
+  $("deleteAllBtn").hidden = plays.length === 0;
+  $("deleteAllBtn").textContent = t("deleteAllBtn");
 }
 
 function renderHome() {
@@ -2575,9 +2605,28 @@ $("createNewBtn").addEventListener("click", () => {
 });
 
 $("selectAllCheck").addEventListener("change", (e) => {
-  const filtered = filteredPlays();
-  if (e.target.checked) filtered.forEach((p) => selectedPlayIds.add(p.id));
-  else filtered.forEach((p) => selectedPlayIds.delete(p.id));
+  const visible = visiblePlays();
+  if (e.target.checked) visible.forEach((p) => selectedPlayIds.add(p.id));
+  else visible.forEach((p) => selectedPlayIds.delete(p.id));
+  renderHome();
+});
+
+$("deleteAllBtn").addEventListener("click", async () => {
+  const n = plays.length;
+  if (!n) return;
+  const ok = await openModal({
+    title: t("deleteAllTitle"),
+    message: t("deleteAllMsg", n),
+    confirmLabel: t("deleteConfirm"),
+    danger: true,
+  });
+  if (!ok) return;
+  plays = [];
+  selectedPlayIds.clear();
+  playSearch = "";
+  $("playSearch").value = "";
+  playPage = 0;
+  save();
   renderHome();
 });
 

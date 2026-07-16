@@ -303,6 +303,7 @@ body {
   height: 170px;
   image-rendering: pixelated;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 .card-del:hover { background: #e0525226; }

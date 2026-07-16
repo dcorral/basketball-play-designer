@@ -127,6 +127,10 @@ const I18N = {
     shareCopiedTitle: "Link copied",
     shareCopiedMsg: "The share link is in your clipboard — send it to anyone.",
     shareLinkTitle: "Share link",
+    copyLink: "Copy link",
+    linkCopied: "Link copied to clipboard.",
+    qrCopied: "QR code copied to clipboard.",
+    ttCopyQr: "Click to copy the QR code",
     sharedTitle: "Shared play",
     sharedMsg: (n) => `Add "${n}" to your plays?`,
     sharedAdd: "Add",
@@ -248,6 +252,10 @@ const I18N = {
     shareCopiedTitle: "Enlace copiado",
     shareCopiedMsg: "El enlace está en tu portapapeles — envíaselo a quien quieras.",
     shareLinkTitle: "Enlace para compartir",
+    copyLink: "Copiar enlace",
+    linkCopied: "Enlace copiado al portapapeles.",
+    qrCopied: "Código QR copiado al portapapeles.",
+    ttCopyQr: "Pulsa para copiar el código QR",
     sharedTitle: "Jugada compartida",
     sharedMsg: (n) => `¿Añadir "${n}" a tus jugadas?`,
     sharedAdd: "Añadir",
@@ -368,6 +376,10 @@ const I18N = {
     shareCopiedTitle: "Link copiato",
     shareCopiedMsg: "Il link è negli appunti — invialo a chi vuoi.",
     shareLinkTitle: "Link di condivisione",
+    copyLink: "Copia link",
+    linkCopied: "Link copiato negli appunti.",
+    qrCopied: "Codice QR copiato negli appunti.",
+    ttCopyQr: "Clicca per copiare il codice QR",
     sharedTitle: "Giocata condivisa",
     sharedMsg: (n) => `Aggiungere "${n}" alle tue giocate?`,
     sharedAdd: "Aggiungi",
@@ -488,6 +500,10 @@ const I18N = {
     shareCopiedTitle: "Ссылка скопирована",
     shareCopiedMsg: "Ссылка в буфере обмена — отправьте её кому угодно.",
     shareLinkTitle: "Ссылка для отправки",
+    copyLink: "Копировать ссылку",
+    linkCopied: "Ссылка скопирована в буфер обмена.",
+    qrCopied: "QR-код скопирован в буфер обмена.",
+    ttCopyQr: "Нажмите, чтобы скопировать QR-код",
     sharedTitle: "Комбинация из ссылки",
     sharedMsg: (n) => `Добавить «${n}» к вашим комбинациям?`,
     sharedAdd: "Добавить",
@@ -608,6 +624,10 @@ const I18N = {
     shareCopiedTitle: "链接已复制",
     shareCopiedMsg: "分享链接已复制到剪贴板 — 发给任何人吧。",
     shareLinkTitle: "分享链接",
+    copyLink: "复制链接",
+    linkCopied: "链接已复制到剪贴板。",
+    qrCopied: "二维码已复制到剪贴板。",
+    ttCopyQr: "点击复制二维码",
     sharedTitle: "收到的战术",
     sharedMsg: (n) => `将“${n}”加入你的战术？`,
     sharedAdd: "添加",
@@ -728,6 +748,10 @@ const I18N = {
     shareCopiedTitle: "Link kopiran",
     shareCopiedMsg: "Link je u ostavi — pošalji ga kome želiš.",
     shareLinkTitle: "Link za deljenje",
+    copyLink: "Kopiraj link",
+    linkCopied: "Link je kopiran u ostavu.",
+    qrCopied: "QR kod je kopiran u ostavu.",
+    ttCopyQr: "Klikni da kopiraš QR kod",
     sharedTitle: "Podeljena akcija",
     sharedMsg: (n) => `Dodati „${n}" u tvoje akcije?`,
     sharedAdd: "Dodaj",
@@ -848,6 +872,10 @@ const I18N = {
     shareCopiedTitle: "Povezava kopirana",
     shareCopiedMsg: "Povezava je v odložišču — pošlji jo komurkoli.",
     shareLinkTitle: "Povezava za deljenje",
+    copyLink: "Kopiraj povezavo",
+    linkCopied: "Povezava je kopirana v odložišče.",
+    qrCopied: "Koda QR je kopirana v odložišče.",
+    ttCopyQr: "Klikni za kopiranje kode QR",
     sharedTitle: "Deljena akcija",
     sharedMsg: (n) => `Dodam »${n}« med tvoje akcije?`,
     sharedAdd: "Dodaj",
@@ -968,6 +996,10 @@ const I18N = {
     shareCopiedTitle: "Ο σύνδεσμος αντιγράφηκε",
     shareCopiedMsg: "Ο σύνδεσμος είναι στο πρόχειρο — στείλ' τον σε όποιον θες.",
     shareLinkTitle: "Σύνδεσμος κοινοποίησης",
+    copyLink: "Αντιγραφή συνδέσμου",
+    linkCopied: "Ο σύνδεσμος αντιγράφηκε στο πρόχειρο.",
+    qrCopied: "Ο κωδικός QR αντιγράφηκε στο πρόχειρο.",
+    ttCopyQr: "Κλικ για αντιγραφή του κωδικού QR",
     sharedTitle: "Κοινοποιημένο σύστημα",
     sharedMsg: (n) => `Προσθήκη του «${n}» στα συστήματά σου;`,
     sharedAdd: "Προσθήκη",
@@ -1127,7 +1159,7 @@ $("toastClose").addEventListener("click", hideToast);
 
 // openModal resolves with the input text (or true when there is no input),
 // or null if cancelled.
-function openModal({ title, message = "", input = false, value = "", confirmLabel = "OK", danger = false, noCancel = false, checkboxLabel = null, qr = null }) {
+function openModal({ title, message = "", input = false, value = "", confirmLabel = "OK", danger = false, noCancel = false, checkboxLabel = null, qr = null, copyLink = null }) {
   return new Promise((resolve) => {
     $("modalTitle").textContent = title;
     $("modalMsg").textContent = message;
@@ -1136,6 +1168,16 @@ function openModal({ title, message = "", input = false, value = "", confirmLabe
     qrEl.hidden = true;
     qrEl.innerHTML = "";
     if (qr) renderQrInto(qrEl, qr);
+    const copyBtn = $("modalCopyLink");
+    copyBtn.hidden = !copyLink;
+    if (copyLink) copyBtn.textContent = t("copyLink");
+    const onCopy = async () => {
+      try {
+        await navigator.clipboard.writeText(copyLink);
+        showToast(t("linkCopied"));
+      } catch (_) { /* clipboard unavailable */ }
+    };
+    if (copyLink) copyBtn.addEventListener("click", onCopy);
     $("modalCancel").hidden = noCancel;
     $("modalCheckWrap").hidden = !checkboxLabel;
     if (checkboxLabel) {
@@ -1156,6 +1198,7 @@ function openModal({ title, message = "", input = false, value = "", confirmLabe
     const close = (result) => {
       modalEl.hidden = true;
       okBtn.removeEventListener("click", onOk);
+      copyBtn.removeEventListener("click", onCopy);
       $("modalCancel").removeEventListener("click", onCancel);
       document.removeEventListener("keydown", onKey, true);
       resolve(result);
@@ -3229,10 +3272,32 @@ async function renderQrInto(el, text) {
     const img = document.createElement("img");
     img.src = qr.createDataURL(4, 8);
     img.alt = "QR";
+    img.title = t("ttCopyQr");
+    img.addEventListener("click", async () => {
+      try {
+        // re-draw the QR on a canvas to get a PNG for the clipboard
+        const c = document.createElement("canvas");
+        c.width = c.height = 680;
+        const ctx = c.getContext("2d");
+        ctx.imageSmoothingEnabled = false;
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        const blob = await new Promise((r) => c.toBlob(r, "image/png"));
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+        showToast(t("qrCopied"));
+      } catch (_) {
+        // image clipboard unsupported — fall back to copying the link
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast(t("linkCopied"));
+        } catch (_) {}
+      }
+    });
     el.appendChild(img);
     el.hidden = false;
   } catch (_) {
-    // link too long for a QR (or the lib failed) — the text link still works
+    // link too long for a QR (or the lib failed) — nothing to show
     el.hidden = true;
   }
 }
@@ -3251,19 +3316,12 @@ $("shareBtn").addEventListener("click", async () => {
     try { await navigator.share({ title: currentPlay().name, url }); } catch (_) { /* cancelled */ }
     return;
   }
-  let msg = "";
-  try {
-    await navigator.clipboard.writeText(url);
-    msg = t("shareCopiedMsg");
-  } catch (_) { /* clipboard unavailable — the link is still shown below */ }
   openModal({
     title: t("shareLinkTitle"),
-    message: msg,
-    input: true,
-    value: url,
     confirmLabel: "OK",
     noCancel: true,
     qr: url,
+    copyLink: url,
   });
 });
 

@@ -64,6 +64,7 @@ const I18N = {
     deleteTitle: "Delete play?",
     deleteMsg: (n) => `"${n}" will be deleted permanently.`,
     deleteSelected: (n) => `Delete selected (${n})`,
+    selectAll: "Select all",
     deleteSelTitle: "Delete selected plays?",
     deleteSelMsg: (n) => n === 1 ? "The selected play will be deleted permanently." : `The ${n} selected plays will be deleted permanently.`,
     resetTitle: "Reset play?",
@@ -166,6 +167,7 @@ const I18N = {
     deleteTitle: "¿Eliminar jugada?",
     deleteMsg: (n) => `"${n}" se eliminará permanentemente.`,
     deleteSelected: (n) => `Eliminar seleccionadas (${n})`,
+    selectAll: "Seleccionar todas",
     deleteSelTitle: "¿Eliminar las jugadas seleccionadas?",
     deleteSelMsg: (n) => n === 1 ? "La jugada seleccionada se eliminará permanentemente." : `Las ${n} jugadas seleccionadas se eliminarán permanentemente.`,
     resetTitle: "¿Reiniciar jugada?",
@@ -268,6 +270,7 @@ const I18N = {
     deleteTitle: "Eliminare la giocata?",
     deleteMsg: (n) => `"${n}" verrà eliminata definitivamente.`,
     deleteSelected: (n) => `Elimina selezionate (${n})`,
+    selectAll: "Seleziona tutte",
     deleteSelTitle: "Eliminare le giocate selezionate?",
     deleteSelMsg: (n) => n === 1 ? "La giocata selezionata verrà eliminata definitivamente." : `Le ${n} giocate selezionate verranno eliminate definitivamente.`,
     resetTitle: "Azzerare la giocata?",
@@ -369,6 +372,7 @@ const I18N = {
     deleteTitle: "Удалить комбинацию?",
     deleteMsg: (n) => `«${n}» будет удалена навсегда.`,
     deleteSelected: (n) => `Удалить выбранные (${n})`,
+    selectAll: "Выбрать все",
     deleteSelTitle: "Удалить выбранные комбинации?",
     deleteSelMsg: (n) => n === 1 ? "Выбранная комбинация будет удалена навсегда." : `Выбранные комбинации (${n}) будут удалены навсегда.`,
     resetTitle: "Сбросить комбинацию?",
@@ -470,6 +474,7 @@ const I18N = {
     deleteTitle: "删除战术？",
     deleteMsg: (n) => `“${n}”将被永久删除。`,
     deleteSelected: (n) => `删除所选（${n}）`,
+    selectAll: "全选",
     deleteSelTitle: "删除所选战术？",
     deleteSelMsg: (n) => `选中的 ${n} 套战术将被永久删除。`,
     resetTitle: "重置战术？",
@@ -571,6 +576,7 @@ const I18N = {
     deleteTitle: "Obrisati akciju?",
     deleteMsg: (n) => `„${n}" će biti trajno obrisana.`,
     deleteSelected: (n) => `Obriši izabrane (${n})`,
+    selectAll: "Izaberi sve",
     deleteSelTitle: "Obrisati izabrane akcije?",
     deleteSelMsg: (n) => n === 1 ? "Izabrana akcija biće trajno obrisana." : `Izabrane akcije (${n}) biće trajno obrisane.`,
     resetTitle: "Resetovati akciju?",
@@ -672,6 +678,7 @@ const I18N = {
     deleteTitle: "Izbrišem akcijo?",
     deleteMsg: (n) => `»${n}« bo trajno izbrisana.`,
     deleteSelected: (n) => `Izbriši izbrane (${n})`,
+    selectAll: "Izberi vse",
     deleteSelTitle: "Izbrišem izbrane akcije?",
     deleteSelMsg: (n) => n === 1 ? "Izbrana akcija bo trajno izbrisana." : `Izbrane akcije (${n}) bodo trajno izbrisane.`,
     resetTitle: "Ponastavim akcijo?",
@@ -773,6 +780,7 @@ const I18N = {
     deleteTitle: "Διαγραφή συστήματος;",
     deleteMsg: (n) => `Το «${n}» θα διαγραφεί οριστικά.`,
     deleteSelected: (n) => `Διαγραφή επιλεγμένων (${n})`,
+    selectAll: "Επιλογή όλων",
     deleteSelTitle: "Διαγραφή επιλεγμένων συστημάτων;",
     deleteSelMsg: (n) => n === 1 ? "Το επιλεγμένο σύστημα θα διαγραφεί οριστικά." : `Τα ${n} επιλεγμένα συστήματα θα διαγραφούν οριστικά.`,
     resetTitle: "Επαναφορά συστήματος;",
@@ -1150,6 +1158,11 @@ function updateDeleteSelected() {
   const btn = $("deleteSelectedBtn");
   btn.hidden = selectedPlayIds.size === 0;
   btn.textContent = t("deleteSelected", selectedPlayIds.size);
+  $("selectAllRow").hidden = plays.length === 0;
+  $("selectAllLabel").textContent = t("selectAll");
+  const all = $("selectAllCheck");
+  all.checked = plays.length > 0 && selectedPlayIds.size === plays.length;
+  all.indeterminate = selectedPlayIds.size > 0 && selectedPlayIds.size < plays.length;
 }
 
 function renderHome() {
@@ -2508,6 +2521,12 @@ $("createNewBtn").addEventListener("click", () => {
   const play = createPlay(name);
   openPlay(play.id);
   if (name !== base) showToast(t("renamedToast", name));
+});
+
+$("selectAllCheck").addEventListener("change", (e) => {
+  selectedPlayIds.clear();
+  if (e.target.checked) plays.forEach((p) => selectedPlayIds.add(p.id));
+  renderHome();
 });
 
 $("deleteSelectedBtn").addEventListener("click", async () => {

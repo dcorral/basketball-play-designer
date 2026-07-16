@@ -94,6 +94,22 @@ body {
 
 .play-list:empty { display: none; }
 
+.select-all-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 500px;
+  padding: 0 15px 0 9px;
+}
+
+.select-all-row label {
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+}
+
 .card-check {
   flex: none;
   width: 17px;

@@ -204,9 +204,10 @@ const I18N = {
     helpTourBtn: "Restart the tour",
     tourSkip: "Skip tour", tourNext: "Next", tourDone: "Done!",
     tourTexts: [
-      "Welcome! Let's build your first play — click the highlighted button.",
+      "Welcome! Let's build your first play — click the highlighted button and pick its type (offense or defense) and court size.",
       "This is your court. Drag the players and the ball to their starting spots (out of bounds works too).",
-      "Your toolbar: movement arrows, screens and the eraser. Drag from a player to draw their cut, or from the ball to pass. Drag the grip to move the toolbar anywhere.",
+      "Your toolbar: movement arrows, screens, passes and the eraser. Drag from a player to draw their cut, or use the pass tool to throw from anywhere. Drag the grip to move it.",
+      "In defensive plays this tool shades each defender\u2019s area of action — drag anywhere on the court to draw one, and drag the area to move it.",
       "Once you've drawn arrows, the green + turns them into the next step of the play.",
       "Need defense? This button adds five X defenders you can place and move just like your players.",
       "Press play to watch the whole play animate, step by step.",
@@ -224,6 +225,7 @@ const I18N = {
       { h: "Playback and zoom", b: "Use the bottom player: play/pause (Space), previous/next (arrow keys), scrubber and speed. Zoom with the wheel, a pinch or the corner control; drag the court to pan; double-click to reset." },
       { h: "Sharing", b: "The share button (in the editor or on each card) creates a link with the play inside it. By default it opens a view-only player with an Edit button; tick the checkbox to share an editable copy. The link modal shows a QR code — click it to copy it as an image, or use the button to copy the link." },
       { h: "Defenders", b: "The shield button beside the step controls adds five defenders \u2014 red X markers placed and moved exactly like your players. Defenders never draw arrows: drag them with the select tool to reposition them in any step, or use the arrow tool to set where they move during the step \u2014 a faint X marks the destination while you edit (drag it to adjust), and in playback they simply glide there. Defenders can\u2019t set screens or receive passes. Toggle again to remove them (undo brings everything back). In defensive plays the zone tool (3) shades each defender\u2019s area of action in a soft colour." },
+      { h: "Offense, defense & courts", b: "When creating a play you pick its type and court size. Defensive plays flip the roles: the defenders draw the visible red arrows, the dimmed attack repositions silently, and playback runs the attack first with the defense reacting after. Full-court plays double the floor for presses and transition. The home list tags every play (A/D) and the filter above it shows one type at a time." },
       { h: "Locking & organizing", b: "The padlock in the editor makes a play read-only until you unlock it. On the home screen every card has duplicate, share and delete buttons plus a thumbnail of step 1; the checkboxes select several plays at once to export, download as .zip, lock or delete together." },
       { h: "Exporting and backups", b: "The save button exports the play as a GIF, a video or a step-by-step PDF. On the home screen, Export all downloads every play as a .zip you can import on another device." },
       { h: "Undo", b: "Ctrl+Z undoes and Ctrl+Shift+Z (or Ctrl+Y) redoes any edit: drags, arrows, steps, renames." },
@@ -337,9 +339,10 @@ const I18N = {
     helpTourBtn: "Reiniciar el tour",
     tourSkip: "Saltar tour", tourNext: "Siguiente", tourDone: "¡Listo!",
     tourTexts: [
-      "¡Bienvenido! Vamos a crear tu primera jugada — pulsa el botón resaltado.",
+      "¡Bienvenido! Vamos a crear tu primera jugada — pulsa el botón resaltado y elige su tipo (ataque o defensa) y el tamaño de pista.",
       "Esta es tu pista. Arrastra a los jugadores y el balón a sus posiciones iniciales (también vale fuera de la pista).",
-      "Tu barra de herramientas: flechas de movimiento, bloqueos y el borrador. Arrastra desde un jugador para dibujar su corte, o desde el balón para pasar. Muévela arrastrando su agarre.",
+      "Tu barra de herramientas: flechas de movimiento, bloqueos, pases y el borrador. Arrastra desde un jugador para dibujar su corte, o usa la herramienta de pase desde cualquier punto. Muévela arrastrando su agarre.",
+      "En las jugadas defensivas esta herramienta sombrea el área de acción de cada defensor — arrastra en cualquier punto para dibujarla y arrástrala para moverla.",
       "Cuando hayas dibujado flechas, el + verde las convierte en el siguiente paso de la jugada.",
       "¿Necesitas defensa? Este botón añade cinco defensores (X) que puedes colocar y mover como a tus jugadores.",
       "Pulsa play para ver la jugada completa animada, paso a paso.",
@@ -357,6 +360,7 @@ const I18N = {
       { h: "Reproducción y zoom", b: "Usa el reproductor inferior: play/pausa (Espacio), anterior/siguiente (flechas), barra de progreso y velocidad. Zoom con la rueda, pellizco o el control de la esquina; arrastra la pista para desplazarte; doble clic para restablecer." },
       { h: "Compartir", b: "El botón de compartir (en el editor o en cada tarjeta) crea un enlace con la jugada dentro. Por defecto abre un visor de solo lectura con botón Editar; marca la casilla para compartir una copia editable. El diálogo del enlace muestra un código QR: púlsalo para copiarlo como imagen, o usa el botón para copiar el enlace." },
       { h: "Defensores", b: "El botón del escudo junto a los controles de paso añade cinco defensores: marcas X rojas que se colocan y mueven igual que tus jugadores. Los defensores nunca dibujan flechas: arrástralos con la herramienta de selección para recolocarlos en cualquier paso, o usa la flecha de movimiento para marcar a dónde se desplazan durante el paso — una X tenue señala el destino mientras editas (arrástrala para ajustarla) y en la reproducción simplemente se deslizan hasta allí. No pueden bloquear ni recibir pases. Vuelve a pulsarlo para quitarlos (deshacer lo recupera todo). En las jugadas defensivas, la herramienta de zona (3) sombrea con un color suave el área de acción de cada defensor." },
+      { h: "Ataque, defensa y pistas", b: "Al crear una jugada eliges su tipo y el tamaño de pista. Las jugadas defensivas invierten los papeles: los defensores dibujan las flechas rojas visibles, el ataque (atenuado) se recoloca en silencio y en la reproducción primero actúa el ataque y después reacciona la defensa. Las jugadas a pista completa doblan el campo para presiones y transiciones. La lista de inicio etiqueta cada jugada (A/D) y el filtro superior muestra un tipo a la vez." },
       { h: "Bloqueo y organización", b: "El candado del editor hace la jugada de solo lectura hasta que la desbloquees. En la pantalla de inicio cada tarjeta tiene botones de duplicar, compartir y eliminar, más una miniatura del paso 1; las casillas seleccionan varias jugadas a la vez para exportarlas, descargarlas en .zip, bloquearlas o eliminarlas juntas." },
       { h: "Exportar y copias", b: "El botón de guardar exporta la jugada como GIF, vídeo o PDF paso a paso. En el inicio, Exportar todo descarga todas tus jugadas en un .zip que puedes importar en otro dispositivo." },
       { h: "Deshacer", b: "Ctrl+Z deshace y Ctrl+Mayús+Z (o Ctrl+Y) rehace cualquier edición: arrastres, flechas, pasos, renombrados." },
@@ -481,9 +485,10 @@ const I18N = {
     helpTourBtn: "Riavvia il tour",
     tourSkip: "Salta il tour", tourNext: "Avanti", tourDone: "Fatto!",
     tourTexts: [
-      "Benvenuto! Creiamo la tua prima giocata — clicca il pulsante evidenziato.",
+      "Benvenuto! Creiamo la tua prima giocata — clicca il pulsante evidenziato e scegli tipo (attacco o difesa) e campo.",
       "Questo è il tuo campo. Trascina i giocatori e il pallone nelle posizioni iniziali (anche fuori dal campo).",
-      "La barra degli strumenti: frecce di movimento, blocchi e gomma. Trascina da un giocatore per disegnare il suo taglio, o dal pallone per passare. Spostala trascinando la sua presa.",
+      "La barra degli strumenti: frecce di movimento, blocchi, passaggi e gomma. Trascina da un giocatore per il suo taglio, o usa lo strumento passaggio da qualsiasi punto. Spostala trascinando la presa.",
+      "Nelle giocate difensive questo strumento evidenzia l\u2019area di azione di ogni difensore — trascina ovunque per disegnarla e trascina l\u2019area per spostarla.",
       "Quando hai disegnato le frecce, il + verde le trasforma nel passo successivo della giocata.",
       "Serve la difesa? Questo pulsante aggiunge cinque difensori (X) da posizionare e muovere come i tuoi giocatori.",
       "Premi play per vedere l'intera giocata animata, passo dopo passo.",
@@ -501,6 +506,7 @@ const I18N = {
       { h: "Riproduzione e zoom", b: "Usa il lettore in basso: play/pausa (Spazio), precedente/successivo (frecce), barra di avanzamento e velocità. Zoom con la rotellina, il pizzico o il controllo nell'angolo; trascina il campo per spostarti; doppio clic per ripristinare." },
       { h: "Condivisione", b: "Il pulsante di condivisione (nell\u2019editor o su ogni scheda) crea un link con la giocata dentro. Per impostazione predefinita apre un visualizzatore in sola lettura con pulsante Modifica; spunta la casella per condividere una copia modificabile. La finestra del link mostra un codice QR: cliccalo per copiarlo come immagine, o usa il pulsante per copiare il link." },
       { h: "Difensori", b: "Il pulsante con lo scudo accanto ai controlli dei passi aggiunge cinque difensori: X rosse che si posizionano e muovono come i tuoi giocatori. I difensori non disegnano mai frecce: trascinali con lo strumento di selezione per riposizionarli in qualsiasi passo, oppure usa la freccia di movimento per indicare dove si spostano durante il passo — una X tenue segna la destinazione mentre modifichi (trascinala per regolarla) e nella riproduzione scivolano semplicemente lì. Non possono fare blocchi né ricevere passaggi. Premilo di nuovo per toglierli (annulla ripristina tutto). Nelle giocate difensive lo strumento zona (3) evidenzia con un colore tenue l\u2019area di azione di ogni difensore." },
+      { h: "Attacco, difesa e campi", b: "Creando una giocata scegli tipo e dimensione del campo. Le giocate difensive invertono i ruoli: i difensori disegnano le frecce rosse visibili, l\u2019attacco (attenuato) si riposiziona in silenzio e nella riproduzione prima agisce l\u2019attacco, poi reagisce la difesa. Le giocate a campo intero raddoppiano il parquet per pressing e transizione. La lista iniziale etichetta ogni giocata (A/D) e il filtro in alto mostra un tipo alla volta." },
       { h: "Blocco e organizzazione", b: "Il lucchetto nell\u2019editor rende la giocata di sola lettura finché non la sblocchi. Nella schermata iniziale ogni scheda ha pulsanti per duplicare, condividere ed eliminare, più una miniatura del passo 1; le caselle selezionano più giocate insieme per esportarle, scaricarle in .zip, bloccarle o eliminarle." },
       { h: "Esportazione e backup", b: "Il pulsante di salvataggio esporta la giocata come GIF, video o PDF passo-passo. Nella schermata iniziale, Esporta tutto scarica ogni giocata in un .zip importabile su un altro dispositivo." },
       { h: "Annulla", b: "Ctrl+Z annulla e Ctrl+Maiusc+Z (o Ctrl+Y) ripristina qualsiasi modifica: trascinamenti, frecce, passi, rinominazioni." },
@@ -613,9 +619,10 @@ const I18N = {
     helpTourBtn: "Запустить тур заново",
     tourSkip: "Пропустить тур", tourNext: "Далее", tourDone: "Готово!",
     tourTexts: [
-      "Добро пожаловать! Создадим вашу первую комбинацию — нажмите подсвеченную кнопку.",
+      "Добро пожаловать! Создадим вашу первую комбинацию — нажмите подсвеченную кнопку и выберите тип (нападение или защита) и размер площадки.",
       "Это ваша площадка. Перетащите игроков и мяч на начальные позиции (можно и за пределы площадки).",
-      "Панель инструментов: стрелки движения, заслоны и ластик. Тяните от игрока, чтобы нарисовать рывок, или от мяча — для передачи. Панель можно перетащить за её захват.",
+      "Панель инструментов: стрелки движения, заслоны, передачи и ластик. Тяните от игрока, чтобы нарисовать рывок, или используйте инструмент передачи из любой точки. Панель можно перетащить за захват.",
+      "В защитных комбинациях этот инструмент выделяет зону ответственности каждого защитника — тяните в любом месте площадки, чтобы нарисовать её, и перетаскивайте зону, чтобы сдвинуть.",
       "Когда стрелки нарисованы, зелёный + превращает их в следующий шаг комбинации.",
       "Нужна защита? Эта кнопка добавляет пятерых защитников (X), которых можно расставлять и двигать, как своих игроков.",
       "Нажмите play — вся комбинация оживёт, шаг за шагом.",
@@ -633,6 +640,7 @@ const I18N = {
       { h: "Воспроизведение и масштаб", b: "Нижний плеер: пуск/пауза (Пробел), предыдущий/следующий (стрелки), прокрутка и скорость. Масштаб — колесо, щипок или элемент в углу; перетаскивайте площадку для перемещения; двойной щелчок — сброс." },
       { h: "Обмен", b: "Кнопка «поделиться» (в редакторе или на карточке) создаёт ссылку, содержащую комбинацию. По умолчанию она открывает просмотр с кнопкой «Редактировать»; отметьте флажок, чтобы поделиться редактируемой копией. В окне ссылки есть QR-код — нажмите на него, чтобы скопировать как картинку, или скопируйте ссылку кнопкой." },
       { h: "Защитники", b: "Кнопка со щитом рядом с управлением шагами добавляет пятерых защитников — красные метки X, которые расставляются и двигаются так же, как ваши игроки. Защитники никогда не рисуют стрелок: перетаскивайте их инструментом выбора на любом шаге либо инструментом стрелки укажите, куда они смещаются в течение шага — при редактировании цель отмечает бледный X (его можно перетащить), а при воспроизведении они просто плавно скользят туда. Они не ставят заслоны и не получают передачи. Нажмите ещё раз, чтобы убрать их (отмена всё вернёт). В защитных комбинациях инструмент зоны (3) мягким цветом выделяет зону ответственности каждого защитника." },
+      { h: "Нападение, защита и площадки", b: "При создании комбинации вы выбираете её тип и размер площадки. В защитных комбинациях роли меняются: защитники рисуют видимые красные стрелки, приглушённое нападение переставляется без стрелок, а при воспроизведении сначала действует нападение и лишь затем реагирует защита. Комбинации на всю площадку удваивают паркет — для прессинга и перехода. Список на главном экране помечает каждую комбинацию (Н/З), а фильтр сверху показывает один тип за раз." },
       { h: "Блокировка и порядок", b: "Замок в редакторе делает комбинацию доступной только для чтения, пока вы её не разблокируете. На главном экране у каждой карточки есть кнопки дублирования, отправки и удаления, а также миниатюра шага 1; флажки выбирают несколько комбинаций сразу — их можно вместе экспортировать, скачать в .zip, заблокировать или удалить." },
       { h: "Экспорт и резервные копии", b: "Кнопка сохранения экспортирует комбинацию в GIF, видео или пошаговый PDF. На главном экране «Экспорт всего» скачивает все комбинации в .zip для переноса на другое устройство." },
       { h: "Отмена", b: "Ctrl+Z отменяет, Ctrl+Shift+Z (или Ctrl+Y) повторяет любое действие: перетаскивания, стрелки, шаги, переименования." },
@@ -745,9 +753,10 @@ const I18N = {
     helpTourBtn: "重新开始教程",
     tourSkip: "跳过教程", tourNext: "下一步", tourDone: "完成！",
     tourTexts: [
-      "欢迎！让我们创建你的第一套战术 — 点击高亮按钮。",
+      "欢迎！让我们创建你的第一套战术 — 点击高亮按钮，并选择类型（进攻或防守）和场地大小。",
       "这是你的球场。将球员和球拖到初始位置（也可以放在场外）。",
-      "工具栏：移动箭头、掩护和橡皮擦。从球员拖出画切入路线，从球拖出传球。拖动手柄可移动工具栏。",
+      "工具栏：移动箭头、掩护、传球和橡皮擦。从球员拖出画切入路线，或用传球工具在任意位置传球。拖动手柄可移动工具栏。",
+      "在防守战术中，此工具会标出每名防守球员的负责区域——在球场任意位置拖动即可绘制，拖动区域可移动它。",
       "画好箭头后，绿色 + 会把它们变成战术的下一步。",
       "需要防守？此按钮会添加五名防守球员（X），可以像己方球员一样放置和移动。",
       "按播放键，整套战术将逐步动起来。",
@@ -765,6 +774,7 @@ const I18N = {
       { h: "播放与缩放", b: "底部播放器：播放/暂停（空格）、上一步/下一步（方向键）、进度条和速度。滚轮、捏合或角落控件缩放；拖动球场平移；双击复位。" },
       { h: "分享", b: "分享按钮（编辑器中或每张卡片上）生成包含战术的链接。默认打开带“编辑”按钮的只读播放器；勾选复选框则直接分享可编辑副本。链接窗口会显示二维码——点击可将其复制为图片，或用按钮复制链接。" },
       { h: "防守球员", b: "步骤控制旁的盾牌按钮会添加五名防守球员——红色 X 标记，可像己方球员一样放置和移动。防守球员从不画箭头：用选择工具在任意步骤拖动它们重新定位，或用移动箭头工具指定他们在该步骤中的移动目标——编辑时淡淡的 X 标出目的地（可拖动调整），回放时他们会平滑滑过去。防守球员不能掩护也不能接球。再次点击可移除（撤销可恢复全部）。在防守战术中，区域工具（3）会用柔和的颜色标出每名防守球员的负责区域。" },
+      { h: "进攻、防守与场地", b: "创建战术时可选择类型和场地大小。防守战术会互换角色：防守球员绘制可见的红色箭头，进攻方（淡化显示）静默重新定位，回放时先进攻后防守依次进行。全场战术将场地加倍，适合紧逼和攻防转换。主屏幕列表为每套战术加上标签（进/防），上方的筛选器可按类型查看。" },
       { h: "锁定与整理", b: "编辑器中的挂锁可将战术设为只读，直到再次解锁。主屏幕上每张卡片都有复制、分享和删除按钮，以及第 1 步的缩略图；勾选复选框可同时选择多套战术，一起导出、打包下载 .zip、锁定或删除。" },
       { h: "导出与备份", b: "保存按钮可将战术导出为 GIF、视频或分步 PDF。主屏幕的“导出全部”会把所有战术打包成 .zip，可在其他设备导入。" },
       { h: "撤销", b: "Ctrl+Z 撤销，Ctrl+Shift+Z（或 Ctrl+Y）重做任何编辑：拖动、箭头、步骤、重命名。" },
@@ -877,9 +887,10 @@ const I18N = {
     helpTourBtn: "Ponovo pokreni vodič",
     tourSkip: "Preskoči vodič", tourNext: "Dalje", tourDone: "Gotovo!",
     tourTexts: [
-      "Dobro došao! Napravimo tvoju prvu akciju — klikni istaknuto dugme.",
+      "Dobro došao! Napravimo tvoju prvu akciju — klikni istaknuto dugme i izaberi tip (napad ili odbrana) i veličinu terena.",
       "Ovo je tvoj teren. Prevuci igrače i loptu na početne pozicije (može i van terena).",
-      "Traka sa alatima: strelice kretanja, blokovi i gumica. Prevuci od igrača da nacrtaš utrčavanje, ili od lopte za dodavanje. Pomeri traku prevlačenjem njenog držača.",
+      "Traka sa alatima: strelice kretanja, blokovi, dodavanja i gumica. Prevuci od igrača da nacrtaš utrčavanje, ili koristi alat za dodavanje sa bilo kog mesta. Pomeri traku prevlačenjem držača.",
+      "U odbrambenim akcijama ovaj alat boji zonu delovanja svakog odbrambenog igrača — prevuci bilo gde da je nacrtaš i prevuci zonu da je pomeriš.",
       "Kada nacrtaš strelice, zeleni + ih pretvara u sledeći korak akcije.",
       "Treba ti odbrana? Ovo dugme dodaje pet odbrambenih igrača (X) koje postavljaš i pomeraš kao svoje igrače.",
       "Pritisni plej i cela akcija oživi, korak po korak.",
@@ -897,6 +908,7 @@ const I18N = {
       { h: "Reprodukcija i zum", b: "Donji plejer: plej/pauza (Space), prethodni/sledeći (strelice), traka i brzina. Zum točkićem, štipanjem ili kontrolom u uglu; prevuci teren za pomeranje; dupli klik za reset." },
       { h: "Deljenje", b: "Dugme za deljenje (u editoru ili na svakoj kartici) pravi link koji sadrži akciju. Podrazumevano otvara plejer samo za gledanje sa dugmetom Izmeni; štikliraj kućicu za deljenje kopije koja se može menjati. Prozor sa linkom prikazuje QR kod — klikni ga da ga kopiraš kao sliku, ili kopiraj link dugmetom." },
       { h: "Odbrana", b: "Dugme sa štitom pored kontrola koraka dodaje pet odbrambenih igrača — crvene X oznake koje se postavljaju i pomeraju kao tvoji igrači. Odbrana nikada ne crta strelice: prevlači ih alatom za izbor u bilo kom koraku, ili alatom za strelicu odredi kuda se pomeraju tokom koraka — bledi X označava odredište dok uređuješ (prevuci ga da ga podesiš), a pri reprodukciji jednostavno klize tamo. Ne mogu da blokiraju niti primaju dodavanja. Pritisni ponovo da ih ukloniš (poništavanje sve vraća). U odbrambenim akcijama alat za zonu (3) blago boji zonu delovanja svakog odbrambenog igrača." },
+      { h: "Napad, odbrana i tereni", b: "Pri pravljenju akcije biraš njen tip i veličinu terena. Odbrambene akcije menjaju uloge: odbrana crta vidljive crvene strelice, prigušeni napad se premešta bez strelica, a pri reprodukciji prvo deluje napad pa reaguje odbrana. Akcije na celom terenu udvostručuju parket za presing i tranziciju. Početna lista označava svaku akciju (N/O), a filter iznad prikazuje jedan tip odjednom." },
       { h: "Zaključavanje i organizacija", b: "Katanac u editoru čini akciju samo za čitanje dok je ne otključaš. Na početnom ekranu svaka kartica ima dugmad za dupliranje, deljenje i brisanje, plus sličicu koraka 1; kućice biraju više akcija odjednom za zajednički izvoz, preuzimanje u .zip, zaključavanje ili brisanje." },
       { h: "Izvoz i rezervne kopije", b: "Dugme za čuvanje izvozi akciju kao GIF, video ili PDF korak-po-korak. Na početnom ekranu, Izvezi sve preuzima sve akcije u .zip koji se uvozi na drugom uređaju." },
       { h: "Poništavanje", b: "Ctrl+Z poništava, a Ctrl+Shift+Z (ili Ctrl+Y) ponavlja svaku izmenu: prevlačenja, strelice, korake, imena." },
@@ -1009,9 +1021,10 @@ const I18N = {
     helpTourBtn: "Ponovno zaženi vodič",
     tourSkip: "Preskoči vodič", tourNext: "Naprej", tourDone: "Končano!",
     tourTexts: [
-      "Dobrodošel! Ustvarimo tvojo prvo akcijo — klikni označeni gumb.",
+      "Dobrodošel! Ustvarimo tvojo prvo akcijo — klikni označeni gumb ter izberi vrsto (napad ali obramba) in velikost igrišča.",
       "To je tvoje igrišče. Povleci igralce in žogo na začetne položaje (lahko tudi izven igrišča).",
-      "Orodna vrstica: puščice gibanja, blokade in radirka. Povleci od igralca za vtekanje ali od žoge za podajo. Vrstico premakneš z vlečenjem njenega ročaja.",
+      "Orodna vrstica: puščice gibanja, blokade, podaje in radirka. Povleci od igralca za vtekanje ali uporabi orodje za podajo od koderkoli. Vrstico premakneš z vlečenjem ročaja.",
+      "Pri obrambnih akcijah to orodje obarva območje delovanja vsakega obrambnega igralca — povleci kjerkoli, da ga narišeš, in povleci območje, da ga premakneš.",
       "Ko narišeš puščice, jih zeleni + spremeni v naslednji korak akcije.",
       "Potrebuješ obrambo? Ta gumb doda pet obrambnih igralcev (X), ki jih postavljaš in premikaš kot svoje igralce.",
       "Pritisni predvajanje in celotna akcija oživi, korak za korakom.",
@@ -1029,6 +1042,7 @@ const I18N = {
       { h: "Predvajanje in povečava", b: "Spodnji predvajalnik: predvajaj/premor (preslednica), prejšnji/naslednji (puščici), drsnik in hitrost. Povečava s koleščkom, ščipom ali kontrolo v kotu; povleci igrišče za premik; dvojni klik za ponastavitev." },
       { h: "Deljenje", b: "Gumb za deljenje (v urejevalniku ali na vsaki kartici) ustvari povezavo z akcijo. Privzeto odpre predvajalnik samo za ogled z gumbom Uredi; označi potrditveno polje za deljenje kopije, ki jo je mogoče urejati. Okno s povezavo prikaže kodo QR — klikni jo, da jo kopiraš kot sliko, ali kopiraj povezavo z gumbom." },
       { h: "Obramba", b: "Gumb s ščitom ob kontrolah korakov doda pet obrambnih igralcev — rdeče oznake X, ki jih postavljaš in premikaš enako kot svoje igralce. Obramba nikoli ne riše puščic: povleci jih z orodjem za izbiro v kateremkoli koraku ali z orodjem za puščico določi, kam se premaknejo med korakom — bled X označuje cilj med urejanjem (povleci ga za prilagoditev), med predvajanjem pa preprosto zdrsnejo tja. Ne morejo postavljati blokad niti prejemati podaj. Pritisni znova, da jih odstraniš (razveljavitev vse povrne). Pri obrambnih akcijah orodje za cono (3) nežno obarva območje delovanja vsakega obrambnega igralca." },
+      { h: "Napad, obramba in igrišča", b: "Ob ustvarjanju akcije izbereš njeno vrsto in velikost igrišča. Obrambne akcije zamenjajo vlogi: obramba riše vidne rdeče puščice, zatemnjen napad se premešča brez puščic, pri predvajanju pa najprej deluje napad in nato reagira obramba. Akcije na celem igrišču podvojijo parket za presing in tranzicijo. Začetni seznam označi vsako akcijo (N/O), filter zgoraj pa prikaže eno vrsto naenkrat." },
       { h: "Zaklepanje in urejanje", b: "Ključavnica v urejevalniku naredi akcijo samo za branje, dokler je ne odkleneš. Na začetnem zaslonu ima vsaka kartica gumbe za podvajanje, deljenje in brisanje ter sličico koraka 1; potrditvena polja izberejo več akcij hkrati za skupni izvoz, prenos v .zip, zaklepanje ali brisanje." },
       { h: "Izvoz in varnostne kopije", b: "Gumb za shranjevanje izvozi akcijo kot GIF, video ali PDF po korakih. Na začetnem zaslonu Izvozi vse prenese vse akcije v .zip, ki ga uvoziš na drugi napravi." },
       { h: "Razveljavitev", b: "Ctrl+Z razveljavi, Ctrl+Shift+Z (ali Ctrl+Y) ponovi vsako urejanje: vlečenja, puščice, korake, preimenovanja." },
@@ -1141,9 +1155,10 @@ const I18N = {
     helpTourBtn: "Επανεκκίνηση ξενάγησης",
     tourSkip: "Παράλειψη", tourNext: "Επόμενο", tourDone: "Έτοιμο!",
     tourTexts: [
-      "Καλώς ήρθες! Ας φτιάξουμε το πρώτο σου σύστημα — πάτησε το φωτισμένο κουμπί.",
+      "Καλώς ήρθες! Ας φτιάξουμε το πρώτο σου σύστημα — πάτησε το φωτισμένο κουμπί και διάλεξε τύπο (επίθεση ή άμυνα) και μέγεθος γηπέδου.",
       "Αυτό είναι το γήπεδό σου. Σύρε τους παίκτες και την μπάλα στις αρχικές θέσεις (και εκτός γηπέδου).",
-      "Η εργαλειοθήκη: βέλη κίνησης, σκριν και γόμα. Σύρε από παίκτη για κόψιμο ή από την μπάλα για πάσα. Μετακίνησέ τη σέρνοντας τη λαβή της.",
+      "Η εργαλειοθήκη: βέλη κίνησης, σκριν, πάσες και γόμα. Σύρε από παίκτη για κόψιμο ή χρησιμοποίησε το εργαλείο πάσας από οπουδήποτε. Μετακίνησέ τη σέρνοντας τη λαβή της.",
+      "Στα αμυντικά συστήματα αυτό το εργαλείο χρωματίζει την περιοχή ευθύνης κάθε αμυντικού — σύρε οπουδήποτε για να τη σχεδιάσεις και σύρε την περιοχή για να τη μετακινήσεις.",
       "Όταν σχεδιάσεις βέλη, το πράσινο + τα κάνει το επόμενο βήμα του συστήματος.",
       "Χρειάζεσαι άμυνα; Αυτό το κουμπί προσθέτει πέντε αμυντικούς (X) που τοποθετείς και κινείς όπως τους παίκτες σου.",
       "Πάτησε αναπαραγωγή και όλο το σύστημα ζωντανεύει, βήμα-βήμα.",
@@ -1161,6 +1176,7 @@ const I18N = {
       { h: "Αναπαραγωγή και ζουμ", b: "Κάτω πρόγραμμα αναπαραγωγής: play/παύση (Space), προηγούμενο/επόμενο (βέλη), μπάρα και ταχύτητα. Ζουμ με ροδέλα, τσίμπημα ή το χειριστήριο στη γωνία· σύρε το γήπεδο για μετατόπιση· διπλό κλικ για επαναφορά." },
       { h: "Κοινοποίηση", b: "Το κουμπί κοινοποίησης (στον επεξεργαστή ή σε κάθε κάρτα) φτιάχνει σύνδεσμο που περιέχει το σύστημα. Από προεπιλογή ανοίγει προβολή μόνο για ανάγνωση με κουμπί Επεξεργασίας· τσέκαρε το κουτάκι για επεξεργάσιμο αντίγραφο. Το παράθυρο του συνδέσμου δείχνει κωδικό QR — κλικ πάνω του για αντιγραφή ως εικόνα, ή αντέγραψε τον σύνδεσμο με το κουμπί." },
       { h: "Αμυντικοί", b: "Το κουμπί με την ασπίδα δίπλα στα χειριστήρια βημάτων προσθέτει πέντε αμυντικούς — κόκκινα X που τοποθετούνται και κινούνται όπως οι παίκτες σου. Οι αμυντικοί δεν σχεδιάζουν ποτέ βέλη: σύρε τους με το εργαλείο επιλογής σε οποιοδήποτε βήμα, ή με το βέλος κίνησης όρισε πού μετακινούνται στη διάρκεια του βήματος — ένα αχνό X σημειώνει τον προορισμό όσο επεξεργάζεσαι (σύρε το για προσαρμογή), και στην αναπαραγωγή απλώς γλιστρούν εκεί. Δεν βάζουν σκριν ούτε δέχονται πάσες. Πάτησέ το ξανά για να τους αφαιρέσεις (η αναίρεση τα επαναφέρει όλα). Στα αμυντικά συστήματα το εργαλείο ζώνης (3) χρωματίζει απαλά την περιοχή ευθύνης κάθε αμυντικού." },
+      { h: "Επίθεση, άμυνα και γήπεδα", b: "Δημιουργώντας ένα σύστημα διαλέγεις τον τύπο και το μέγεθος γηπέδου. Τα αμυντικά συστήματα αντιστρέφουν τους ρόλους: οι αμυντικοί σχεδιάζουν τα ορατά κόκκινα βέλη, η (αχνή) επίθεση επανατοποθετείται σιωπηλά και στην αναπαραγωγή πρώτα ενεργεί η επίθεση και μετά αντιδρά η άμυνα. Τα συστήματα ολόκληρου γηπέδου διπλασιάζουν το παρκέ για πρέσινγκ και μετάβαση. Η αρχική λίστα μαρκάρει κάθε σύστημα (Ε/Α) και το φίλτρο από πάνω δείχνει έναν τύπο τη φορά." },
       { h: "Κλείδωμα και οργάνωση", b: "Το λουκέτο στον επεξεργαστή κάνει το σύστημα μόνο για ανάγνωση μέχρι να το ξεκλειδώσεις. Στην αρχική οθόνη κάθε κάρτα έχει κουμπιά αντιγραφής, κοινοποίησης και διαγραφής, συν μια μικρογραφία του βήματος 1· τα πλαίσια επιλογής επιλέγουν πολλά συστήματα μαζί για εξαγωγή, λήψη σε .zip, κλείδωμα ή διαγραφή." },
       { h: "Εξαγωγή και αντίγραφα", b: "Το κουμπί αποθήκευσης εξάγει το σύστημα ως GIF, βίντεο ή PDF βήμα-βήμα. Στην αρχική, η Εξαγωγή όλων κατεβάζει όλα τα συστήματα σε .zip για εισαγωγή σε άλλη συσκευή." },
       { h: "Αναίρεση", b: "Ctrl+Z αναιρεί και Ctrl+Shift+Z (ή Ctrl+Y) επαναλαμβάνει κάθε αλλαγή: μετακινήσεις, βέλη, βήματα, μετονομασίες." },
@@ -3998,6 +4014,7 @@ const tourDefs = [
   { sel: "#createNewBtn", action: true },
   { sel: "#stage" },
   { sel: "#toolbar" },
+  { sel: '[data-tool="zone"]' },
   { sel: "#addStepBtn" },
   { sel: "#defenseBtn" },
   { sel: "#playBtn" },
@@ -4008,8 +4025,9 @@ let tourIdx = -1;
 
 function tourPlace() {
   const def = tourDefs[tourIdx];
-  // the toolbar stop needs the tools visible on small screens
-  if (SMALL_MQ.matches) setToolbarFolded(def.sel !== "#toolbar");
+  // toolbar-related stops need the tools visible on small screens
+  const toolbarStop = def.sel === "#toolbar" || def.sel.includes("data-tool");
+  if (SMALL_MQ.matches) setToolbarFolded(!toolbarStop);
   const el = document.querySelector(def.sel);
   if (!el || el.offsetParent === null && def.sel !== "#toolbar") {
     // target missing — move on

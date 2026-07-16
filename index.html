@@ -26,11 +26,18 @@
     <div class="home-inner">
       <img src="assets/logo.png" alt="Cejudos" class="home-logo">
       <h1 id="homeTitle">Cejudo's Playbook</h1>
+      <input id="playSearch" class="play-search" type="search" autocomplete="off" spellcheck="false" hidden>
       <div id="selectAllRow" class="select-all-row" hidden>
         <input type="checkbox" id="selectAllCheck" class="card-check">
         <label for="selectAllCheck" id="selectAllLabel"></label>
       </div>
       <div id="playList" class="play-list"></div>
+      <div id="noResults" class="no-results" hidden></div>
+      <div id="pageRow" class="page-row" hidden>
+        <button id="pagePrev" class="btn">‹</button>
+        <span id="pageLabel"></span>
+        <button id="pageNext" class="btn">›</button>
+      </div>
       <button id="deleteSelectedBtn" class="btn btn-danger-solid" hidden></button>
       <button id="createNewBtn" class="create-new">＋ CREATE NEW</button>
       <div class="backup-row">

@@ -65,6 +65,8 @@ const I18N = {
     deleteMsg: (n) => `"${n}" will be deleted permanently.`,
     deleteSelected: (n) => `Delete selected (${n})`,
     selectAll: "Select all",
+    searchPlays: "Search plays…",
+    noResults: "No plays match your search.",
     deleteSelTitle: "Delete selected plays?",
     deleteSelMsg: (n) => n === 1 ? "The selected play will be deleted permanently." : `The ${n} selected plays will be deleted permanently.`,
     resetTitle: "Reset play?",
@@ -168,6 +170,8 @@ const I18N = {
     deleteMsg: (n) => `"${n}" se eliminará permanentemente.`,
     deleteSelected: (n) => `Eliminar seleccionadas (${n})`,
     selectAll: "Seleccionar todas",
+    searchPlays: "Buscar jugadas…",
+    noResults: "Ninguna jugada coincide con tu búsqueda.",
     deleteSelTitle: "¿Eliminar las jugadas seleccionadas?",
     deleteSelMsg: (n) => n === 1 ? "La jugada seleccionada se eliminará permanentemente." : `Las ${n} jugadas seleccionadas se eliminarán permanentemente.`,
     resetTitle: "¿Reiniciar jugada?",
@@ -271,6 +275,8 @@ const I18N = {
     deleteMsg: (n) => `"${n}" verrà eliminata definitivamente.`,
     deleteSelected: (n) => `Elimina selezionate (${n})`,
     selectAll: "Seleziona tutte",
+    searchPlays: "Cerca giocate…",
+    noResults: "Nessuna giocata corrisponde alla ricerca.",
     deleteSelTitle: "Eliminare le giocate selezionate?",
     deleteSelMsg: (n) => n === 1 ? "La giocata selezionata verrà eliminata definitivamente." : `Le ${n} giocate selezionate verranno eliminate definitivamente.`,
     resetTitle: "Azzerare la giocata?",
@@ -373,6 +379,8 @@ const I18N = {
     deleteMsg: (n) => `«${n}» будет удалена навсегда.`,
     deleteSelected: (n) => `Удалить выбранные (${n})`,
     selectAll: "Выбрать все",
+    searchPlays: "Поиск комбинаций…",
+    noResults: "По вашему запросу ничего не найдено.",
     deleteSelTitle: "Удалить выбранные комбинации?",
     deleteSelMsg: (n) => n === 1 ? "Выбранная комбинация будет удалена навсегда." : `Выбранные комбинации (${n}) будут удалены навсегда.`,
     resetTitle: "Сбросить комбинацию?",
@@ -475,6 +483,8 @@ const I18N = {
     deleteMsg: (n) => `“${n}”将被永久删除。`,
     deleteSelected: (n) => `删除所选（${n}）`,
     selectAll: "全选",
+    searchPlays: "搜索战术…",
+    noResults: "没有符合搜索的战术。",
     deleteSelTitle: "删除所选战术？",
     deleteSelMsg: (n) => `选中的 ${n} 套战术将被永久删除。`,
     resetTitle: "重置战术？",
@@ -577,6 +587,8 @@ const I18N = {
     deleteMsg: (n) => `„${n}" će biti trajno obrisana.`,
     deleteSelected: (n) => `Obriši izabrane (${n})`,
     selectAll: "Izaberi sve",
+    searchPlays: "Pretraži akcije…",
+    noResults: "Nijedna akcija ne odgovara pretrazi.",
     deleteSelTitle: "Obrisati izabrane akcije?",
     deleteSelMsg: (n) => n === 1 ? "Izabrana akcija biće trajno obrisana." : `Izabrane akcije (${n}) biće trajno obrisane.`,
     resetTitle: "Resetovati akciju?",
@@ -679,6 +691,8 @@ const I18N = {
     deleteMsg: (n) => `»${n}« bo trajno izbrisana.`,
     deleteSelected: (n) => `Izbriši izbrane (${n})`,
     selectAll: "Izberi vse",
+    searchPlays: "Išči akcije…",
+    noResults: "Nobena akcija ne ustreza iskanju.",
     deleteSelTitle: "Izbrišem izbrane akcije?",
     deleteSelMsg: (n) => n === 1 ? "Izbrana akcija bo trajno izbrisana." : `Izbrane akcije (${n}) bodo trajno izbrisane.`,
     resetTitle: "Ponastavim akcijo?",
@@ -781,6 +795,8 @@ const I18N = {
     deleteMsg: (n) => `Το «${n}» θα διαγραφεί οριστικά.`,
     deleteSelected: (n) => `Διαγραφή επιλεγμένων (${n})`,
     selectAll: "Επιλογή όλων",
+    searchPlays: "Αναζήτηση συστημάτων…",
+    noResults: "Κανένα σύστημα δεν ταιριάζει με την αναζήτηση.",
     deleteSelTitle: "Διαγραφή επιλεγμένων συστημάτων;",
     deleteSelMsg: (n) => n === 1 ? "Το επιλεγμένο σύστημα θα διαγραφεί οριστικά." : `Τα ${n} επιλεγμένα συστήματα θα διαγραφούν οριστικά.`,
     resetTitle: "Επαναφορά συστήματος;",
@@ -1151,6 +1167,15 @@ function openViewer(play) {
 
 let cardDragJustEnded = false;
 const selectedPlayIds = new Set();
+const PAGE_SIZE = 10;
+let playSearch = "";
+let playPage = 0;
+let pageOffset = 0; // index in `plays` of the first visible card (for drag reorder)
+
+function filteredPlays() {
+  const q = playSearch.trim().toLowerCase();
+  return q ? plays.filter((p) => p.name.toLowerCase().includes(q)) : plays;
+}
 
 function updateDeleteSelected() {
   const ids = new Set(plays.map((p) => p.id));
@@ -1158,17 +1183,39 @@ function updateDeleteSelected() {
   const btn = $("deleteSelectedBtn");
   btn.hidden = selectedPlayIds.size === 0;
   btn.textContent = t("deleteSelected", selectedPlayIds.size);
-  $("selectAllRow").hidden = plays.length === 0;
+  const filtered = filteredPlays();
+  $("selectAllRow").hidden = filtered.length < 2;
   $("selectAllLabel").textContent = t("selectAll");
   const all = $("selectAllCheck");
-  all.checked = plays.length > 0 && selectedPlayIds.size === plays.length;
-  all.indeterminate = selectedPlayIds.size > 0 && selectedPlayIds.size < plays.length;
+  all.checked = filtered.length > 0 && filtered.every((p) => selectedPlayIds.has(p.id));
+  all.indeterminate = !all.checked && filtered.some((p) => selectedPlayIds.has(p.id));
 }
 
 function renderHome() {
   playListEl.innerHTML = "";
   $("exportAllBtn").hidden = plays.length === 0;
-  for (const p of plays) {
+
+  const search = $("playSearch");
+  search.hidden = plays.length === 0;
+  search.placeholder = t("searchPlays");
+
+  const filtered = filteredPlays();
+  const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  playPage = Math.min(Math.max(playPage, 0), pages - 1);
+  pageOffset = playPage * PAGE_SIZE;
+  const visible = filtered.slice(pageOffset, pageOffset + PAGE_SIZE);
+  const reorderable = !playSearch.trim();
+
+  const empty = $("noResults");
+  empty.hidden = !(plays.length > 0 && filtered.length === 0);
+  empty.textContent = t("noResults");
+
+  $("pageRow").hidden = filtered.length <= PAGE_SIZE;
+  $("pageLabel").textContent = (playPage + 1) + " / " + pages;
+  $("pagePrev").disabled = playPage === 0;
+  $("pageNext").disabled = playPage >= pages - 1;
+
+  for (const p of visible) {
     const card = document.createElement("div");
     card.className = "play-card";
     card.dataset.id = p.id;
@@ -1192,7 +1239,8 @@ function renderHome() {
       '<circle cx="9" cy="5" r="1.8"/><circle cx="15" cy="5" r="1.8"/>' +
       '<circle cx="9" cy="12" r="1.8"/><circle cx="15" cy="12" r="1.8"/>' +
       '<circle cx="9" cy="19" r="1.8"/><circle cx="15" cy="19" r="1.8"/></svg>';
-    attachCardReorder(grip, card);
+    if (reorderable) attachCardReorder(grip, card);
+    else grip.classList.add("grip-off");
 
     const name = document.createElement("span");
     name.className = "card-name";
@@ -1266,9 +1314,9 @@ function attachCardReorder(grip, card) {
       if (!moved) return;
       cardDragJustEnded = true;
       setTimeout(() => { cardDragJustEnded = false; }, 200);
-      // new index = how many other cards' centres sit above the drop point
+      // new index = page offset + how many other cards' centres sit above the drop point
       const others = [...playListEl.querySelectorAll(".play-card")].filter((c) => c !== card);
-      const newIdx = others.filter((c) => {
+      const newIdx = pageOffset + others.filter((c) => {
         const r = c.getBoundingClientRect();
         return r.top + r.height / 2 < ev.clientY;
       }).length;
@@ -2524,10 +2572,20 @@ $("createNewBtn").addEventListener("click", () => {
 });
 
 $("selectAllCheck").addEventListener("change", (e) => {
-  selectedPlayIds.clear();
-  if (e.target.checked) plays.forEach((p) => selectedPlayIds.add(p.id));
+  const filtered = filteredPlays();
+  if (e.target.checked) filtered.forEach((p) => selectedPlayIds.add(p.id));
+  else filtered.forEach((p) => selectedPlayIds.delete(p.id));
   renderHome();
 });
+
+$("playSearch").addEventListener("input", (e) => {
+  playSearch = e.target.value;
+  playPage = 0;
+  renderHome();
+});
+
+$("pagePrev").addEventListener("click", () => { playPage--; renderHome(); });
+$("pageNext").addEventListener("click", () => { playPage++; renderHome(); });
 
 $("deleteSelectedBtn").addEventListener("click", async () => {
   const n = selectedPlayIds.size;

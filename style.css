@@ -94,6 +94,43 @@ body {
 
 .play-list:empty { display: none; }
 
+.play-search {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px 14px;
+  background: var(--panel);
+  border: 1px solid #3c3c42;
+  border-radius: 10px;
+  color: inherit;
+  font: inherit;
+  font-size: 15px;
+}
+
+.play-search:focus { outline: none; border-color: var(--accent); }
+
+.play-search::placeholder { color: var(--muted); }
+
+.no-results {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.page-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.page-row span {
+  color: var(--muted);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  min-width: 44px;
+  text-align: center;
+}
+
+.card-grip.grip-off { opacity: 0.3; pointer-events: none; }
+
 .select-all-row {
   display: flex;
   align-items: center;

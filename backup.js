@@ -141,7 +141,7 @@ function exportBackup() {
 }
 
 // Import plays from a backup zip: always added as fresh copies (never
-// overriding existing plays), grouped in their own "imported" section.
+// overriding existing plays), marked with an "imported" badge in the list.
 async function importBackup(buffer) {
   const entries = await readZip(buffer);
   const dec = new TextDecoder();

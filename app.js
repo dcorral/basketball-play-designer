@@ -1218,8 +1218,6 @@ function attachCardReorder(grip, card) {
       if (oldIdx >= 0 && newIdx !== oldIdx) {
         const [p] = plays.splice(oldIdx, 1);
         plays.splice(newIdx, 0, p);
-        // own plays stay before the imported section (stable within groups)
-        plays = [...plays.filter((x) => !x.imported), ...plays.filter((x) => x.imported)];
         save();
       }
       renderHome();

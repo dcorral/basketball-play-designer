@@ -226,7 +226,28 @@ function exStatus(msg) {
 
 /* ---------------- GIF export ---------------- */
 
+// gif.js is only needed here, so it is injected on first use instead of
+// loading on every visit.
+let gifLibPromise = null;
+function loadGifLib() {
+  if (window.GIF) return Promise.resolve();
+  if (!gifLibPromise) {
+    gifLibPromise = new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = "gif.js";
+      s.onload = resolve;
+      s.onerror = () => {
+        gifLibPromise = null;
+        reject(new Error("gif.js failed to load"));
+      };
+      document.head.appendChild(s);
+    });
+  }
+  return gifLibPromise;
+}
+
 async function exportGif(opts) {
+  await loadGifLib();
   const W = 720, H = Math.round(W * VB.h / VB.w);
   const tl = exTimeline(opts, segmentCount(currentPlay()));
   const fps = 15;

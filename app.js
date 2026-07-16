@@ -1159,7 +1159,7 @@ $("toastClose").addEventListener("click", hideToast);
 
 // openModal resolves with the input text (or true when there is no input),
 // or null if cancelled.
-function openModal({ title, message = "", input = false, value = "", confirmLabel = "OK", danger = false, noCancel = false, checkboxLabel = null, qr = null, copyLink = null }) {
+function openModal({ title, message = "", input = false, value = "", confirmLabel = "OK", danger = false, noCancel = false, checkboxLabel = null, qr = null, copyLink = null, xClose = false }) {
   return new Promise((resolve) => {
     $("modalTitle").textContent = title;
     $("modalMsg").textContent = message;
@@ -1169,12 +1169,20 @@ function openModal({ title, message = "", input = false, value = "", confirmLabe
     qrEl.innerHTML = "";
     if (qr) renderQrInto(qrEl, qr);
     const copyBtn = $("modalCopyLink");
-    copyBtn.hidden = !copyLink;
-    if (copyLink) copyBtn.textContent = t("copyLink");
+    $("modalCopyWrap").hidden = !copyLink;
+    if (copyLink) {
+      $("modalCopyLabel").textContent = t("copyLink");
+      $("modalCopyMsg").textContent = "";
+      $("modalCopyMsg").classList.remove("show");
+      copyBtn.classList.remove("copied");
+    }
     const onCopy = async () => {
       try {
         await navigator.clipboard.writeText(copyLink);
-        showToast(t("linkCopied"));
+        copyBtn.classList.add("copied");
+        const msg = $("modalCopyMsg");
+        msg.textContent = t("linkCopied");
+        msg.classList.add("show");
       } catch (_) { /* clipboard unavailable */ }
     };
     if (copyLink) copyBtn.addEventListener("click", onCopy);
@@ -1188,17 +1196,30 @@ function openModal({ title, message = "", input = false, value = "", confirmLabe
     inputEl.hidden = !input;
     inputEl.value = value;
     const okBtn = $("modalOk");
+    okBtn.hidden = !!xClose;
     okBtn.textContent = confirmLabel;
     okBtn.classList.toggle("btn-danger-solid", danger);
     okBtn.classList.toggle("btn-primary", !danger);
+    const xBtn = $("modalX");
+    xBtn.hidden = !xClose;
     modalEl.hidden = false;
     if (input) inputEl.focus(), inputEl.select();
-    else okBtn.focus();
+    else if (!okBtn.hidden) okBtn.focus();
+    else xBtn.focus();
+
+    const onX = () => close(true);
+    const onBackdrop = (e) => { if (e.target === modalEl) close(true); };
+    if (xClose) {
+      xBtn.addEventListener("click", onX);
+      modalEl.addEventListener("click", onBackdrop);
+    }
 
     const close = (result) => {
       modalEl.hidden = true;
       okBtn.removeEventListener("click", onOk);
       copyBtn.removeEventListener("click", onCopy);
+      xBtn.removeEventListener("click", onX);
+      modalEl.removeEventListener("click", onBackdrop);
       $("modalCancel").removeEventListener("click", onCancel);
       document.removeEventListener("keydown", onKey, true);
       resolve(result);
@@ -1508,6 +1529,18 @@ function renderHome() {
       showToast(t("duplicatedToast", copy.name));
     });
 
+    const shareIc = document.createElement("button");
+    shareIc.className = "card-share";
+    shareIc.title = t("ttShare");
+    shareIc.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">' +
+      '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/>' +
+      '<path d="M8.4 10.9 L15.6 6.3 M8.4 13.1 L15.6 17.7"/></svg>';
+    shareIc.addEventListener("click", (e) => {
+      e.stopPropagation();
+      sharePlayFlow(p);
+    });
+
     let lockIc = null;
     if (p.locked) {
       lockIc = document.createElement("span");
@@ -1544,7 +1577,7 @@ function renderHome() {
     card.append(check, grip, thumb, name);
     if (lockIc) card.append(lockIc);
     if (badge) card.append(badge);
-    card.append(meta, dup, del);
+    card.append(meta, dup, shareIc, del);
     card.addEventListener("click", () => {
       if (cardDragJustEnded) return;
       openPlay(p.id);
@@ -3273,6 +3306,17 @@ async function renderQrInto(el, text) {
     img.src = qr.createDataURL(4, 8);
     img.alt = "QR";
     img.title = t("ttCopyQr");
+    const box = document.createElement("div");
+    box.className = "qr-box";
+    const overlay = document.createElement("div");
+    overlay.className = "qr-overlay";
+    let overlayTimer = null;
+    const flash = (msg) => {
+      overlay.textContent = msg;
+      overlay.classList.add("show");
+      clearTimeout(overlayTimer);
+      overlayTimer = setTimeout(() => overlay.classList.remove("show"), 1800);
+    };
     img.addEventListener("click", async () => {
       try {
         // re-draw the QR on a canvas to get a PNG for the clipboard
@@ -3285,16 +3329,17 @@ async function renderQrInto(el, text) {
         ctx.drawImage(img, 0, 0, c.width, c.height);
         const blob = await new Promise((r) => c.toBlob(r, "image/png"));
         await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
-        showToast(t("qrCopied"));
+        flash(t("qrCopied"));
       } catch (_) {
         // image clipboard unsupported — fall back to copying the link
         try {
           await navigator.clipboard.writeText(text);
-          showToast(t("linkCopied"));
+          flash(t("linkCopied"));
         } catch (_) {}
       }
     });
-    el.appendChild(img);
+    box.append(img, overlay);
+    el.appendChild(box);
     el.hidden = false;
   } catch (_) {
     // link too long for a QR (or the lib failed) — nothing to show
@@ -3302,7 +3347,7 @@ async function renderQrInto(el, text) {
   }
 }
 
-$("shareBtn").addEventListener("click", async () => {
+async function sharePlayFlow(play) {
   const res = await openModal({
     title: t("shareTitle"),
     message: t("shareModalMsg"),
@@ -3310,20 +3355,22 @@ $("shareBtn").addEventListener("click", async () => {
     confirmLabel: t("shareGo"),
   });
   if (!res) return;
-  const frag = (res.checked ? "#p=" : "#v=") + await encodeSharePlay(currentPlay());
+  const frag = (res.checked ? "#p=" : "#v=") + await encodeSharePlay(play);
   const url = location.origin + location.pathname + frag;
   if (navigator.share) {
-    try { await navigator.share({ title: currentPlay().name, url }); } catch (_) { /* cancelled */ }
+    try { await navigator.share({ title: play.name, url }); } catch (_) { /* cancelled */ }
     return;
   }
   openModal({
     title: t("shareLinkTitle"),
-    confirmLabel: "OK",
     noCancel: true,
+    xClose: true,
     qr: url,
     copyLink: url,
   });
-});
+}
+
+$("shareBtn").addEventListener("click", () => sharePlayFlow(currentPlay()));
 
 // Add a shared play to the collection (with a duplicate check).
 async function addSharedPlay(p) {

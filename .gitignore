@@ -4,3 +4,4 @@
 *.pdf
 !gif.js
 !gif.worker.js
+!assets/demo.gif

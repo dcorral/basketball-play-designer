@@ -125,7 +125,7 @@ function exDrawToken(ctx, W, H, def, p) {
 }
 
 // arrowsStepIdx: which step's arrows to overlay (null = none)
-function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label) {
+function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label, stepLabel) {
   ctx.drawImage(courtImg, 0, 0, W, H);
   if (arrowsStepIdx !== null) {
     const step = currentPlay().steps[arrowsStepIdx];
@@ -148,6 +148,7 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label) {
   for (const d of TOKEN_DEFS) exDrawToken(ctx, W, H, d, posMap[d.id]);
 
   if (label) {
+    // play name, bottom left
     ctx.save();
     ctx.font = `600 ${Math.round(W * 0.026)}px system-ui, sans-serif`;
     const pad = W * 0.012;
@@ -160,6 +161,24 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label) {
     ctx.fillStyle = "#fff";
     ctx.textBaseline = "middle";
     ctx.fillText(label, bx + pad, by + W * 0.021);
+    ctx.restore();
+  }
+
+  if (stepLabel) {
+    // step counter, top centre — the first thing the eye should find
+    ctx.save();
+    ctx.font = `700 ${Math.round(W * 0.034)}px system-ui, sans-serif`;
+    const pad = W * 0.018;
+    const tw = ctx.measureText(stepLabel).width;
+    const bh = W * 0.056;
+    const bx = (W - tw) / 2 - pad, by = W * 0.016;
+    ctx.fillStyle = "rgba(0,0,0,0.55)";
+    ctx.beginPath();
+    ctx.roundRect(bx, by, tw + pad * 2, bh, W * 0.012);
+    ctx.fill();
+    ctx.fillStyle = "#fff";
+    ctx.textBaseline = "middle";
+    ctx.fillText(stepLabel, bx + pad, by + bh / 2 + W * 0.002);
     ctx.restore();
   }
 }
@@ -202,7 +221,7 @@ function exDrawTimelineFrame(ctx, W, H, courtImg, time, tl) {
   }
   const stepNum = Math.min(Math.floor(ph) + 1, play.steps.length);
   exDrawScene(ctx, W, H, courtImg, posMap, arrowsStep, moving,
-    `${play.name} — ${t("stepLower")} ${stepNum}/${play.steps.length}`);
+    play.name, `${t("stepLower")} ${stepNum}/${play.steps.length}`);
 }
 
 /* ---------------- Download helper ---------------- */

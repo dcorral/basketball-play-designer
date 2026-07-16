@@ -146,7 +146,7 @@ const I18N = {
     ttImportAll: "Import plays from a .zip backup",
     importDoneTitle: "Import complete",
     importDoneMsg: (a) => `${a} plays imported.`,
-    importedSection: "Imported",
+    importedBadge: "imported",
     importErrTitle: "Import failed",
     importErrMsg: "That file doesn't look like a Playbook backup (.zip).",
   },
@@ -245,7 +245,7 @@ const I18N = {
     ttImportAll: "Importar jugadas desde una copia de seguridad .zip",
     importDoneTitle: "Importación completada",
     importDoneMsg: (a) => `${a} jugadas importadas.`,
-    importedSection: "Importadas",
+    importedBadge: "importada",
     importErrTitle: "Error al importar",
     importErrMsg: "El archivo no parece una copia de seguridad de Playbook (.zip).",
   },
@@ -314,7 +314,7 @@ const I18N = {
     ttImportAll: "Importa giocate da un backup .zip",
     importDoneTitle: "Importazione completata",
     importDoneMsg: (a) => `${a} giocate importate.`,
-    importedSection: "Importate",
+    importedBadge: "importata",
     importErrTitle: "Importazione non riuscita",
     importErrMsg: "Il file non sembra un backup di Playbook (.zip).",
     renamedToast: (n) => `Nome già in uso — la giocata ora si chiama "${n}".`,
@@ -412,7 +412,7 @@ const I18N = {
     ttImportAll: "Импортировать комбинации из .zip",
     importDoneTitle: "Импорт завершён",
     importDoneMsg: (a) => `Импортировано комбинаций: ${a}.`,
-    importedSection: "Импортированные",
+    importedBadge: "импорт",
     importErrTitle: "Ошибка импорта",
     importErrMsg: "Файл не похож на резервную копию Playbook (.zip).",
     renamedToast: (n) => `Имя уже занято — комбинация теперь называется «${n}».`,
@@ -510,7 +510,7 @@ const I18N = {
     ttImportAll: "从 .zip 备份导入战术",
     importDoneTitle: "导入完成",
     importDoneMsg: (a) => `已导入 ${a} 套战术。`,
-    importedSection: "已导入",
+    importedBadge: "已导入",
     importErrTitle: "导入失败",
     importErrMsg: "该文件不是有效的 Playbook 备份（.zip）。",
     renamedToast: (n) => `名称已被占用 — 此战术现名为“${n}”。`,
@@ -608,7 +608,7 @@ const I18N = {
     ttImportAll: "Uvezi akcije iz .zip rezervne kopije",
     importDoneTitle: "Uvoz završen",
     importDoneMsg: (a) => `Uvezeno akcija: ${a}.`,
-    importedSection: "Uvezene",
+    importedBadge: "uvezena",
     importErrTitle: "Uvoz nije uspeo",
     importErrMsg: "Fajl ne izgleda kao Playbook rezervna kopija (.zip).",
     renamedToast: (n) => `To ime je zauzeto — akcija se sada zove „${n}".`,
@@ -706,7 +706,7 @@ const I18N = {
     ttImportAll: "Uvozi akcije iz varnostne kopije .zip",
     importDoneTitle: "Uvoz končan",
     importDoneMsg: (a) => `Uvoženih akcij: ${a}.`,
-    importedSection: "Uvožene",
+    importedBadge: "uvožena",
     importErrTitle: "Uvoz ni uspel",
     importErrMsg: "Datoteka ni videti kot varnostna kopija Playbooka (.zip).",
     renamedToast: (n) => `Ime je že v uporabi — akcija se zdaj imenuje »${n}«.`,
@@ -804,7 +804,7 @@ const I18N = {
     ttImportAll: "Εισαγωγή συστημάτων από .zip",
     importDoneTitle: "Η εισαγωγή ολοκληρώθηκε",
     importDoneMsg: (a) => `Εισήχθησαν ${a} συστήματα.`,
-    importedSection: "Εισηγμένα",
+    importedBadge: "εισηγμένο",
     importErrTitle: "Η εισαγωγή απέτυχε",
     importErrMsg: "Το αρχείο δεν μοιάζει με αντίγραφο ασφαλείας του Playbook (.zip).",
     renamedToast: (n) => `Το όνομα υπήρχε ήδη — το σύστημα λέγεται τώρα «${n}».`,
@@ -1122,15 +1122,7 @@ let cardDragJustEnded = false;
 function renderHome() {
   playListEl.innerHTML = "";
   $("exportAllBtn").hidden = plays.length === 0;
-  let importedHeader = false;
   for (const p of plays) {
-    if (p.imported && !importedHeader) {
-      importedHeader = true;
-      const lbl = document.createElement("div");
-      lbl.className = "list-section";
-      lbl.textContent = t("importedSection");
-      playListEl.appendChild(lbl);
-    }
     const card = document.createElement("div");
     card.className = "play-card";
     card.dataset.id = p.id;
@@ -1148,6 +1140,13 @@ function renderHome() {
     const name = document.createElement("span");
     name.className = "card-name";
     name.textContent = p.name;
+
+    let badge = null;
+    if (p.imported) {
+      badge = document.createElement("span");
+      badge.className = "card-badge";
+      badge.textContent = t("importedBadge");
+    }
 
     const del = document.createElement("button");
     del.className = "card-del";
@@ -1173,7 +1172,8 @@ function renderHome() {
     meta.className = "meta";
     meta.textContent = p.steps.length + " " + (p.steps.length === 1 ? t("stepSingular") : t("stepPlural"));
 
-    card.append(grip, name, meta, del);
+    if (badge) card.append(grip, name, badge, meta, del);
+    else card.append(grip, name, meta, del);
     card.addEventListener("click", () => {
       if (cardDragJustEnded) return;
       openPlay(p.id);

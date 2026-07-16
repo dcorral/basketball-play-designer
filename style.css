@@ -94,15 +94,18 @@ body {
 
 .play-list:empty { display: none; }
 
-.list-section {
-  margin: 8px 2px 0;
-  font-size: 11px;
+.card-badge {
+  flex: none;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--muted);
-  border-bottom: 1px solid #2e2e34;
-  padding-bottom: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #8fb4e8;
+  background: rgba(95, 145, 220, 0.14);
+  border: 1px solid rgba(95, 145, 220, 0.4);
+  white-space: nowrap;
 }
 
 .play-card {
@@ -402,7 +405,7 @@ body.view-only #exportBtn,
 body.view-only #shareBtn { display: none !important; }
 
 body.view-only #viewEditBtn { display: inline-flex; }
-body.view-only .play-name { cursor: default; }
+body.view-only .play-name { cursor: default; pointer-events: none; }
 
 .modal .field {
   display: flex;

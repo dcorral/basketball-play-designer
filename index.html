@@ -34,6 +34,11 @@
         <button id="importAllBtn" class="btn">⤒ Import (.zip)</button>
       </div>
       <input id="playSearch" class="play-search" type="search" autocomplete="off" spellcheck="false" hidden>
+      <div id="kindFilter" class="seg kind-filter" hidden>
+        <button type="button" class="seg-btn active" data-v="all" id="filterAll">All</button>
+        <button type="button" class="seg-btn" data-v="offense" id="filterOffense">Offense</button>
+        <button type="button" class="seg-btn" data-v="defense" id="filterDefense">Defense</button>
+      </div>
       <div id="selectAllRow" class="select-all-row" hidden>
         <input type="checkbox" id="selectAllCheck" class="card-check">
         <label for="selectAllCheck" id="selectAllLabel"></label>
@@ -160,19 +165,21 @@
           </defs>
 
           <!-- out of bounds floor -->
-          <rect x="-3.5" y="-6" width="57" height="62" fill="url(#woodOut)"/>
-          <rect x="-3.5" y="-6" width="57" height="62" fill="url(#planks)"/>
+          <rect id="oobRect1" x="-3.5" y="-6" width="57" height="62" fill="url(#woodOut)"/>
+          <rect id="oobRect2" x="-3.5" y="-6" width="57" height="62" fill="url(#planks)"/>
 
           <!-- court floor -->
-          <rect x="0" y="0" width="50" height="54" fill="url(#woodIn)"/>
-          <rect x="0" y="0" width="50" height="54" fill="url(#planks)"/>
+          <rect id="floorRect1" x="0" y="0" width="50" height="54" fill="url(#woodIn)"/>
+          <rect id="floorRect2" x="0" y="0" width="50" height="54" fill="url(#planks)"/>
 
           <!-- team logo at centre court, in place of the centre circle
-               (href injected at runtime) -->
+               (href injected at runtime); y 39.5 centres it on 47 — the
+               fake centre of the half court AND the real centre of the
+               full court, so it never moves -->
           <image id="teamLogo" x="18.25" y="39.5" width="13.5" height="15" opacity="0.92"
                  preserveAspectRatio="xMidYMid meet"/>
 
-          <g stroke="#f6f0e8" stroke-width="0.35" fill="none" stroke-linecap="round">
+          <g id="halfMarks" stroke="#f6f0e8" stroke-width="0.35" fill="none" stroke-linecap="round">
             <!-- boundary -->
             <rect x="0" y="0" width="50" height="47"/>
             <!-- paint / key -->
@@ -183,14 +190,21 @@
             <path d="M 21 5.25 A 4 4 0 0 0 29 5.25"/>
             <!-- 3pt line -->
             <path d="M 3 0 L 3 14.2 A 23.75 23.75 0 0 0 47 14.2 L 47 0"/>
-            <!-- sidelines continuing into the other half -->
-            <line x1="0" y1="47" x2="0" y2="54"/>
-            <line x1="50" y1="47" x2="50" y2="54"/>
             <!-- backboard -->
             <line x1="22" y1="4" x2="28" y2="4" stroke-width="0.5"/>
+            <!-- rim -->
+            <circle cx="25" cy="5.25" r="0.9" stroke="#ff6b35" stroke-width="0.4"/>
           </g>
-          <!-- rim -->
-          <circle cx="25" cy="5.25" r="0.9" fill="none" stroke="#ff6b35" stroke-width="0.4"/>
+          <!-- half-court mode: sidelines continuing past the half line -->
+          <g id="halfExtras" stroke="#f6f0e8" stroke-width="0.35" stroke-linecap="round">
+            <line x1="0" y1="47" x2="0" y2="54"/>
+            <line x1="50" y1="47" x2="50" y2="54"/>
+          </g>
+          <!-- full-court mode: the far half is the near one, rotated -->
+          <g id="fullMarks" style="display:none">
+            <use href="#halfMarks" transform="rotate(180 25 47)"/>
+            <circle cx="25" cy="47" r="6" fill="none" stroke="#f6f0e8" stroke-width="0.35"/>
+          </g>
         </svg>
 
         <!-- Arrows overlay -->
@@ -242,6 +256,10 @@
       </button>
       <button class="tool" data-tool="screen" title="Screen / block — drag from the screener to where they set it (3)">
         <svg viewBox="0 0 24 24"><path d="M4 12 H 16 M19 5 V 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="knum">3</span>
+      </button>
+      <button class="tool" data-tool="zone" hidden title="Zone — drag from a defender to mark their area of action (3)">
+        <svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3.5 2.5"/></svg>
         <span class="knum">3</span>
       </button>
       <button class="tool" data-tool="pass" title="Pass — drag anywhere on the court; the line starts at the ball (4)">
@@ -351,6 +369,31 @@
       <div class="modal-actions">
         <button id="modalCancel" class="btn">Cancel</button>
         <button id="modalOk" class="btn btn-primary">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ New play modal ============ -->
+  <div id="createModal" class="modal-overlay" hidden>
+    <div class="modal">
+      <h2 id="createTitle">New play</h2>
+      <div class="field">
+        <span id="createKindLabel">Type</span>
+        <div class="seg" id="createKindSeg">
+          <button type="button" class="seg-btn active" data-v="offense" id="segOffense">Offense</button>
+          <button type="button" class="seg-btn" data-v="defense" id="segDefense">Defense</button>
+        </div>
+      </div>
+      <div class="field">
+        <span id="createCourtLabel">Court</span>
+        <div class="seg" id="createCourtSeg">
+          <button type="button" class="seg-btn active" data-v="half" id="segHalf">Half court</button>
+          <button type="button" class="seg-btn" data-v="full" id="segFull">Full court</button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="createCancel" class="btn">Cancel</button>
+        <button id="createGo" class="btn btn-primary">Create</button>
       </div>
     </div>
   </div>

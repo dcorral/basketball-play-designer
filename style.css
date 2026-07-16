@@ -175,7 +175,9 @@ body {
   font-weight: 700;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  padding: 2px 8px;
+  padding: 2px 0;
+  min-width: 20px;
+  text-align: center;
   border-radius: 999px;
   color: #8fb4e8;
   background: rgba(95, 145, 220, 0.14);
@@ -183,11 +185,23 @@ body {
   white-space: nowrap;
 }
 
+.card-badge.kind-offense {
+  color: #7dd8a0;
+  background: rgba(72, 180, 120, 0.13);
+  border-color: rgba(72, 180, 120, 0.4);
+}
+
+.card-badge.kind-defense {
+  color: #f08a84;
+  background: rgba(217, 60, 52, 0.13);
+  border-color: rgba(217, 60, 52, 0.4);
+}
+
 .play-card {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 14px 12px 8px;
+  padding: 12px 6px 12px 12px;
   background: var(--panel);
   border: 1px solid #3c3c42;
   border-radius: 12px;
@@ -202,6 +216,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 72px;
 }
 
 .card-del { margin-left: auto; }
@@ -268,8 +283,8 @@ body {
 
 .card-thumb {
   flex: none;
-  width: 46px;
   height: 50px;
+  width: auto;
   border-radius: 6px;
   background: #2a2a2f;
 }
@@ -995,6 +1010,7 @@ select:hover, .btn:hover { border-color: #5a5a63; }
   position: relative;
   width: min(100cqw, calc(100cqh * 57 / 62));
   aspect-ratio: 57 / 62;
+  font-size: calc(min(100cqw, 100cqh * 57 / 62) * 0.034);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 10px 40px #000a;
@@ -1064,7 +1080,9 @@ select:hover, .btn:hover { border-color: #5a5a63; }
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: clamp(10px, 2.2vmin, 20px);
+  font-size: 1em;
+  line-height: 1;
+  overflow: hidden;
   color: #fff;
   cursor: grab;
   user-select: none;
@@ -1105,7 +1123,7 @@ select:hover, .btn:hover { border-color: #5a5a63; }
 .token.defense .dnum {
   position: relative;
   z-index: 2;
-  font-size: clamp(8px, 1.7vmin, 15px);
+  font-size: 0.8em;
   text-shadow: 0 1px 2px #000d, 0 0 3px #000a;
 }
 
@@ -1376,6 +1394,70 @@ body[data-tool="eraser"] .screen-cap {
 }
 
 .def-ghost-tie.ghost { opacity: 0.08; }
+
+.def-ghost.off { stroke: #2b5ea8; }
+.def-ghost-tie.off { stroke: #2b5ea8; }
+
+/* areas of action: whisper-quiet coloured guides */
+.zone-rect {
+  /* the arrows svg is pointer-events:none — interactive children opt in */
+  pointer-events: auto;
+  fill-opacity: 0.17;
+  stroke-opacity: 0.55;
+  stroke-width: 0.4;
+  stroke-dasharray: 1.4 1;
+}
+
+.zone-rect.ghost { fill-opacity: 0.08; stroke-opacity: 0.25; }
+
+.zone-num {
+  font-size: 4.2px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+  opacity: 0.5;
+  pointer-events: none;
+  font-family: system-ui, sans-serif;
+}
+
+.zone-num.ghost { opacity: 0.22; }
+
+body[data-tool="eraser"] .zone-rect { cursor: pointer; }
+body[data-tool="zone"] .zone-rect,
+body[data-tool="arrow"] .zone-rect,
+body[data-tool="select"] .zone-rect { cursor: grab; }
+
+/* defensive plays: the attack is context — keep it quiet */
+body.kind-defense .token.offense { opacity: 0.7; }
+body.kind-defense .token.ball { opacity: 0.9; }
+
+.seg { display: flex; gap: 6px; }
+
+.seg-btn {
+  flex: 1;
+  padding: 9px 10px;
+  border-radius: 9px;
+  border: 1px solid #3c3c42;
+  background: var(--panel-2);
+  color: var(--muted);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.seg-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.kind-filter {
+  width: 100%;
+  max-width: 500px;
+}
+
+.kind-filter .seg-btn { padding: 6px 8px; font-size: 13px; }
 
 .def-ghost { cursor: grab; }
 

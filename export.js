@@ -150,19 +150,49 @@ function exDrawToken(ctx, W, H, def, p) {
   ctx.restore();
 }
 
+function exDrawZones(ctx, W, H, step) {
+  if (!step.zones) return;
+  for (const id of DEFENDER_IDS) {
+    const z = step.zones[id];
+    if (!z) continue;
+    const a = exPoint({ x: z.x, y: z.y }, W, H);
+    const w = (z.w / VB.w) * W;
+    const h = (z.h / VB.h) * H;
+    const color = ZONE_COLORS[id];
+    ctx.save();
+    ctx.globalAlpha = 0.17;
+    ctx.fillStyle = color;
+    ctx.fillRect(a.x, a.y, w, h);
+    ctx.globalAlpha = 0.55;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = W * 0.004;
+    ctx.setLineDash([W * 0.014, W * 0.01]);
+    ctx.strokeRect(a.x, a.y, w, h);
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = color;
+    ctx.font = `700 ${Math.round((4.2 / VB.w) * W)}px system-ui, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(id.slice(1), a.x + w / 2, a.y + h / 2);
+    ctx.restore();
+  }
+}
+
 // arrowsStepIdx: which step's arrows to overlay (null = none)
 function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label, stepLabel) {
   ctx.drawImage(courtImg, 0, 0, W, H);
   if (arrowsStepIdx !== null) {
     const step = currentPlay().steps[arrowsStepIdx];
+    exDrawZones(ctx, W, H, step);
     const dual = !!(step.pass && step.moves[step.ball]);
     const passOrder = dual ? passOrderOf(step) : 1;
     for (const id of idsFor(currentPlay())) {
-      if (DEFENDER_IDS.includes(id)) continue; // silent moves — never drawn
+      if (isSilentMover(currentPlay(), id)) continue; // silent moves — never drawn
       const m = step.moves[id];
       if (m) exDrawArrow(ctx, W, H, step.pos[id], m, false,
         ghost || (dual && id === step.ball && passOrder === 1),
-        isDribbleMove(step, id, m));
+        isDribbleMove(step, id, m), DEFENDER_IDS.includes(id));
     }
     if (step.pass) {
       const ends = passEndpoints(step);
@@ -173,7 +203,14 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label, s
       }, true, ghost || (dual && passOrder === 2));
     }
   }
-  for (const d of defsFor(currentPlay())) exDrawToken(ctx, W, H, d, posMap[d.id]);
+  const dimOffense = playKind(currentPlay()) === "defense";
+  for (const d of defsFor(currentPlay())) {
+    ctx.save();
+    if (dimOffense && d.type === "offense") ctx.globalAlpha = 0.7;
+    else if (dimOffense && d.type === "ball") ctx.globalAlpha = 0.9;
+    exDrawToken(ctx, W, H, d, posMap[d.id]);
+    ctx.restore();
+  }
 
   if (label) {
     // play name, bottom left
@@ -521,10 +558,12 @@ async function exportPdf() {
     });
     await new Promise((r) => setTimeout(r));
   }
-  // 2x2 grid: four steps per page, play name as the page header.
+  // 2x2 grid (or 2x1 for the taller full-court renders), play name as
+  // the page header.
+  const per = playCourt(play) === "full" ? 2 : 4;
   const pages = [];
-  for (let i = 0; i < cells.length; i += 4) {
-    pages.push({ header: play.name, cells: cells.slice(i, i + 4) });
+  for (let i = 0; i < cells.length; i += per) {
+    pages.push({ header: play.name, cells: cells.slice(i, i + per) });
   }
   const bytes = buildPdf(pages);
   exDownload(new Blob([bytes], { type: "application/pdf" }), exFileBase() + ".pdf");
@@ -591,9 +630,11 @@ exportGoBtn.addEventListener("click", async () => {
       for (const id of exportQueue) {
         if (exportAborted) break;
         currentPlayId = id;
+        applyCourtMode(currentPlay());
         await runOne();
       }
       currentPlayId = prevId;
+      if (currentPlay()) applyCourtMode(currentPlay());
     } else {
       await runOne();
     }

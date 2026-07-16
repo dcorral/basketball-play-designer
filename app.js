@@ -3,8 +3,12 @@
 /* ================= Constants ================= */
 
 // Court coordinate system = SVG viewBox units (feet).
-const VB = { minX: -3.5, minY: -6, w: 57, h: 62 };
-const CLAMP = { minX: -3, maxX: 53, minY: -5.5, maxY: 55 };
+const VB_HALF = { minX: -3.5, minY: -6, w: 57, h: 62 };
+const VB_FULL = { minX: -3.5, minY: -6, w: 57, h: 106 };
+const CLAMP_HALF = { minX: -3, maxX: 53, minY: -5.5, maxY: 55 };
+const CLAMP_FULL = { minX: -3, maxX: 53, minY: -5.5, maxY: 99.5 };
+let VB = VB_HALF;
+let CLAMP = CLAMP_HALF;
 // Each sequential action (screen wave, pass, cut wave) gets this long, so a
 // busy step lasts proportionally longer than a simple one.
 const SECONDS_PER_PHASE = 1.8;
@@ -21,14 +25,57 @@ const TOKEN_DEFS = [
 ];
 const PLAYER_IDS = ["P1", "P2", "P3", "P4", "P5"];
 const DEFENDER_IDS = ["D1", "D2", "D3", "D4", "D5"];
+// soft, distinct hue per defender's area of action
+const ZONE_COLORS = {
+  D1: "#e8b93b", D2: "#48a9e6", D3: "#5ecf8f", D4: "#b98ae0", D5: "#ef8354",
+};
 const DEFENDER_DEFS = DEFENDER_IDS.map((id, i) => ({ id, label: String(i + 1), type: "defense" }));
 
-// Defenders are optional per play; most iteration goes through these.
+function playKind(p) { return p && p.kind === "defense" ? "defense" : "offense"; }
+function playCourt(p) { return p && p.court === "full" ? "full" : "half"; }
+
+// In an offensive play the defenders are the optional, silent team; in a
+// defensive play the roles swap: defenders draw real arrows and the
+// offence (always present, it carries the ball) becomes the silent team.
+function contextIds(play) {
+  if (playKind(play) === "defense") return PLAYER_IDS;
+  return play && play.defense ? DEFENDER_IDS : [];
+}
+function isSilentMover(play, id) {
+  return contextIds(play).includes(id);
+}
+function hasBothTeams(play) {
+  return playKind(play) === "defense" || !!(play && play.defense);
+}
 function idsFor(play) {
-  return play && play.defense ? [...PLAYER_IDS, ...DEFENDER_IDS] : PLAYER_IDS;
+  return hasBothTeams(play) ? [...PLAYER_IDS, ...DEFENDER_IDS] : PLAYER_IDS;
 }
 function defsFor(play) {
-  return play && play.defense ? [...TOKEN_DEFS, ...DEFENDER_DEFS] : TOKEN_DEFS;
+  return hasBothTeams(play) ? [...TOKEN_DEFS, ...DEFENDER_DEFS] : TOKEN_DEFS;
+}
+
+// Court mode: geometry, clamp region, svg viewBoxes and markings.
+function applyCourtMode(play) {
+  // defensive plays dim the attacking team — they are context, not focus
+  document.body.classList.toggle("kind-defense", playKind(play) === "defense");
+  const full = playCourt(play) === "full";
+  VB = full ? VB_FULL : VB_HALF;
+  CLAMP = full ? CLAMP_FULL : CLAMP_HALF;
+  const vb = `${VB.minX} ${VB.minY} ${VB.w} ${VB.h}`;
+  $("courtSvg").setAttribute("viewBox", vb);
+  $("arrowsSvg").setAttribute("viewBox", vb);
+  $("oobRect1").setAttribute("height", VB.h);
+  $("oobRect2").setAttribute("height", VB.h);
+  $("floorRect1").setAttribute("height", full ? 94 : 54);
+  $("floorRect2").setAttribute("height", full ? 94 : 54);
+  $("halfExtras").style.display = full ? "none" : "";
+  $("fullMarks").style.display = full ? "" : "none";
+  stageEl.style.aspectRatio = `${VB.w} / ${VB.h}`;
+  stageEl.style.width = `min(100cqw, calc(100cqh * ${VB.w} / ${VB.h}))`;
+  // token numbers scale with the stage, not the viewport — otherwise a
+  // narrow full-court stage gets text taller than the token is wide and
+  // the circles stretch into ovals
+  stageEl.style.fontSize = `calc(min(100cqw, 100cqh * ${VB.w} / ${VB.h}) * 0.034)`;
 }
 // The ball renders slightly beside its owner so it doesn't cover the number.
 const BALL_OFFSET = { x: 1.5, y: -1.2 };
@@ -71,6 +118,9 @@ const I18N = {
     cancel: "Cancel", create: "Create", renameConfirm: "Rename",
     deleteConfirm: "Delete", resetConfirm: "Reset",
     newPlayTitle: "New play", renameTitle: "Rename play",
+    kindLabel: "Type", kindOffense: "Offense", kindDefense: "Defense",
+    filterAll: "All",
+    courtLabel: "Court", courtHalf: "Half court", courtFull: "Full court",
     deleteTitle: "Delete play?",
     deleteMsg: (n) => `"${n}" will be deleted permanently.`,
     deleteSelected: (n) => `Delete selected (${n})`,
@@ -117,6 +167,7 @@ const I18N = {
     ttArrow: "Movement arrow — drag from a player to where they cut (2)",
     ttScreen: "Screen / block — drag from the screener to where they set it (3)",
     ttPass: "Pass — drag anywhere on the court; the line starts at the ball (4)",
+    ttZone: "Zone — drag from a defender to mark their area of action (3)",
     ttDefense: "Show / hide defenders",
     ttEraser: "Eraser — click an arrow or a player to remove its arrow (5)",
     ttBack: "Back to all plays", ttRename: "Rename current play",
@@ -172,7 +223,7 @@ const I18N = {
       { h: "Steps", b: "The green + commits the drawn arrows into a new step; steps without actions (and the last step) can be deleted from their bin bubble. A step lasts as long as its number of sequential actions." },
       { h: "Playback and zoom", b: "Use the bottom player: play/pause (Space), previous/next (arrow keys), scrubber and speed. Zoom with the wheel, a pinch or the corner control; drag the court to pan; double-click to reset." },
       { h: "Sharing", b: "The share button (in the editor or on each card) creates a link with the play inside it. By default it opens a view-only player with an Edit button; tick the checkbox to share an editable copy. The link modal shows a QR code — click it to copy it as an image, or use the button to copy the link." },
-      { h: "Defenders", b: "The shield button beside the step controls adds five defenders \u2014 red X markers placed and moved exactly like your players. Defenders never draw arrows: drag them with the select tool to reposition them in any step, or use the arrow tool to set where they move during the step \u2014 a faint X marks the destination while you edit (drag it to adjust), and in playback they simply glide there. Defenders can\u2019t set screens or receive passes. Toggle again to remove them (undo brings everything back)." },
+      { h: "Defenders", b: "The shield button beside the step controls adds five defenders \u2014 red X markers placed and moved exactly like your players. Defenders never draw arrows: drag them with the select tool to reposition them in any step, or use the arrow tool to set where they move during the step \u2014 a faint X marks the destination while you edit (drag it to adjust), and in playback they simply glide there. Defenders can\u2019t set screens or receive passes. Toggle again to remove them (undo brings everything back). In defensive plays the zone tool (3) shades each defender\u2019s area of action in a soft colour." },
       { h: "Locking & organizing", b: "The padlock in the editor makes a play read-only until you unlock it. On the home screen every card has duplicate, share and delete buttons plus a thumbnail of step 1; the checkboxes select several plays at once to export, download as .zip, lock or delete together." },
       { h: "Exporting and backups", b: "The save button exports the play as a GIF, a video or a step-by-step PDF. On the home screen, Export all downloads every play as a .zip you can import on another device." },
       { h: "Undo", b: "Ctrl+Z undoes and Ctrl+Shift+Z (or Ctrl+Y) redoes any edit: drags, arrows, steps, renames." },
@@ -200,6 +251,9 @@ const I18N = {
     cancel: "Cancelar", create: "Crear", renameConfirm: "Renombrar",
     deleteConfirm: "Eliminar", resetConfirm: "Reiniciar",
     newPlayTitle: "Nueva jugada", renameTitle: "Renombrar jugada",
+    kindLabel: "Tipo", kindOffense: "Ataque", kindDefense: "Defensa",
+    filterAll: "Todas",
+    courtLabel: "Pista", courtHalf: "Media pista", courtFull: "Pista completa",
     deleteTitle: "¿Eliminar jugada?",
     deleteMsg: (n) => `"${n}" se eliminará permanentemente.`,
     deleteSelected: (n) => `Eliminar seleccionadas (${n})`,
@@ -246,6 +300,7 @@ const I18N = {
     ttArrow: "Flecha de movimiento — arrastra desde un jugador hasta donde corta (2)",
     ttScreen: "Bloqueo — arrastra desde el bloqueador hasta donde lo pone (3)",
     ttPass: "Pase — arrastra en cualquier punto de la pista; la línea sale del balón (4)",
+    ttZone: "Zona — arrastra desde un defensor para marcar su área de acción (3)",
     ttDefense: "Mostrar / ocultar defensores",
     ttEraser: "Borrador — pulsa una flecha o un jugador para quitar su flecha (5)",
     ttBack: "Volver a todas las jugadas", ttRename: "Renombrar la jugada",
@@ -301,7 +356,7 @@ const I18N = {
       { h: "Pasos", b: "El + verde convierte las flechas dibujadas en un nuevo paso; los pasos sin acciones (y el último) se borran desde su burbuja de papelera. Un paso dura según su número de acciones secuenciales." },
       { h: "Reproducción y zoom", b: "Usa el reproductor inferior: play/pausa (Espacio), anterior/siguiente (flechas), barra de progreso y velocidad. Zoom con la rueda, pellizco o el control de la esquina; arrastra la pista para desplazarte; doble clic para restablecer." },
       { h: "Compartir", b: "El botón de compartir (en el editor o en cada tarjeta) crea un enlace con la jugada dentro. Por defecto abre un visor de solo lectura con botón Editar; marca la casilla para compartir una copia editable. El diálogo del enlace muestra un código QR: púlsalo para copiarlo como imagen, o usa el botón para copiar el enlace." },
-      { h: "Defensores", b: "El botón del escudo junto a los controles de paso añade cinco defensores: marcas X rojas que se colocan y mueven igual que tus jugadores. Los defensores nunca dibujan flechas: arrástralos con la herramienta de selección para recolocarlos en cualquier paso, o usa la flecha de movimiento para marcar a dónde se desplazan durante el paso — una X tenue señala el destino mientras editas (arrástrala para ajustarla) y en la reproducción simplemente se deslizan hasta allí. No pueden bloquear ni recibir pases. Vuelve a pulsarlo para quitarlos (deshacer lo recupera todo)." },
+      { h: "Defensores", b: "El botón del escudo junto a los controles de paso añade cinco defensores: marcas X rojas que se colocan y mueven igual que tus jugadores. Los defensores nunca dibujan flechas: arrástralos con la herramienta de selección para recolocarlos en cualquier paso, o usa la flecha de movimiento para marcar a dónde se desplazan durante el paso — una X tenue señala el destino mientras editas (arrástrala para ajustarla) y en la reproducción simplemente se deslizan hasta allí. No pueden bloquear ni recibir pases. Vuelve a pulsarlo para quitarlos (deshacer lo recupera todo). En las jugadas defensivas, la herramienta de zona (3) sombrea con un color suave el área de acción de cada defensor." },
       { h: "Bloqueo y organización", b: "El candado del editor hace la jugada de solo lectura hasta que la desbloquees. En la pantalla de inicio cada tarjeta tiene botones de duplicar, compartir y eliminar, más una miniatura del paso 1; las casillas seleccionan varias jugadas a la vez para exportarlas, descargarlas en .zip, bloquearlas o eliminarlas juntas." },
       { h: "Exportar y copias", b: "El botón de guardar exporta la jugada como GIF, vídeo o PDF paso a paso. En el inicio, Exportar todo descarga todas tus jugadas en un .zip que puedes importar en otro dispositivo." },
       { h: "Deshacer", b: "Ctrl+Z deshace y Ctrl+Mayús+Z (o Ctrl+Y) rehace cualquier edición: arrastres, flechas, pasos, renombrados." },
@@ -329,6 +384,9 @@ const I18N = {
     cancel: "Annulla", create: "Crea", renameConfirm: "Rinomina",
     deleteConfirm: "Elimina", resetConfirm: "Azzera",
     newPlayTitle: "Nuova giocata", renameTitle: "Rinomina giocata",
+    kindLabel: "Tipo", kindOffense: "Attacco", kindDefense: "Difesa",
+    filterAll: "Tutte",
+    courtLabel: "Campo", courtHalf: "Metà campo", courtFull: "Campo intero",
     deleteTitle: "Eliminare la giocata?",
     deleteMsg: (n) => `"${n}" verrà eliminata definitivamente.`,
     deleteSelected: (n) => `Elimina selezionate (${n})`,
@@ -375,6 +433,7 @@ const I18N = {
     ttArrow: "Freccia di movimento — trascina da un giocatore (2)",
     ttScreen: "Blocco — trascina dal bloccante (3)",
     ttPass: "Passaggio — trascina ovunque sul campo; la linea parte dal pallone (4)",
+    ttZone: "Zona — trascina da un difensore per segnare la sua area di azione (3)",
     ttDefense: "Mostra / nascondi difensori",
     ttEraser: "Gomma — clicca una freccia o un giocatore (5)",
     ttBack: "Torna alle giocate", ttRename: "Rinomina la giocata",
@@ -441,7 +500,7 @@ const I18N = {
       { h: "Passi", b: "Il + verde trasforma le frecce disegnate in un nuovo passo; i passi senza azioni (e l'ultimo) si eliminano dalla loro bolla-cestino. Un passo dura in base al numero di azioni sequenziali." },
       { h: "Riproduzione e zoom", b: "Usa il lettore in basso: play/pausa (Spazio), precedente/successivo (frecce), barra di avanzamento e velocità. Zoom con la rotellina, il pizzico o il controllo nell'angolo; trascina il campo per spostarti; doppio clic per ripristinare." },
       { h: "Condivisione", b: "Il pulsante di condivisione (nell\u2019editor o su ogni scheda) crea un link con la giocata dentro. Per impostazione predefinita apre un visualizzatore in sola lettura con pulsante Modifica; spunta la casella per condividere una copia modificabile. La finestra del link mostra un codice QR: cliccalo per copiarlo come immagine, o usa il pulsante per copiare il link." },
-      { h: "Difensori", b: "Il pulsante con lo scudo accanto ai controlli dei passi aggiunge cinque difensori: X rosse che si posizionano e muovono come i tuoi giocatori. I difensori non disegnano mai frecce: trascinali con lo strumento di selezione per riposizionarli in qualsiasi passo, oppure usa la freccia di movimento per indicare dove si spostano durante il passo — una X tenue segna la destinazione mentre modifichi (trascinala per regolarla) e nella riproduzione scivolano semplicemente lì. Non possono fare blocchi né ricevere passaggi. Premilo di nuovo per toglierli (annulla ripristina tutto)." },
+      { h: "Difensori", b: "Il pulsante con lo scudo accanto ai controlli dei passi aggiunge cinque difensori: X rosse che si posizionano e muovono come i tuoi giocatori. I difensori non disegnano mai frecce: trascinali con lo strumento di selezione per riposizionarli in qualsiasi passo, oppure usa la freccia di movimento per indicare dove si spostano durante il passo — una X tenue segna la destinazione mentre modifichi (trascinala per regolarla) e nella riproduzione scivolano semplicemente lì. Non possono fare blocchi né ricevere passaggi. Premilo di nuovo per toglierli (annulla ripristina tutto). Nelle giocate difensive lo strumento zona (3) evidenzia con un colore tenue l\u2019area di azione di ogni difensore." },
       { h: "Blocco e organizzazione", b: "Il lucchetto nell\u2019editor rende la giocata di sola lettura finché non la sblocchi. Nella schermata iniziale ogni scheda ha pulsanti per duplicare, condividere ed eliminare, più una miniatura del passo 1; le caselle selezionano più giocate insieme per esportarle, scaricarle in .zip, bloccarle o eliminarle." },
       { h: "Esportazione e backup", b: "Il pulsante di salvataggio esporta la giocata come GIF, video o PDF passo-passo. Nella schermata iniziale, Esporta tutto scarica ogni giocata in un .zip importabile su un altro dispositivo." },
       { h: "Annulla", b: "Ctrl+Z annulla e Ctrl+Maiusc+Z (o Ctrl+Y) ripristina qualsiasi modifica: trascinamenti, frecce, passi, rinominazioni." },
@@ -457,6 +516,9 @@ const I18N = {
     cancel: "Отмена", create: "Создать", renameConfirm: "Переименовать",
     deleteConfirm: "Удалить", resetConfirm: "Сбросить",
     newPlayTitle: "Новая комбинация", renameTitle: "Переименовать комбинацию",
+    kindLabel: "Тип", kindOffense: "Нападение", kindDefense: "Защита",
+    filterAll: "Все",
+    courtLabel: "Площадка", courtHalf: "Половина площадки", courtFull: "Вся площадка",
     deleteTitle: "Удалить комбинацию?",
     deleteMsg: (n) => `«${n}» будет удалена навсегда.`,
     deleteSelected: (n) => `Удалить выбранные (${n})`,
@@ -503,6 +565,7 @@ const I18N = {
     ttArrow: "Стрелка движения — тяните от игрока (2)",
     ttScreen: "Заслон — тяните от ставящего заслон (3)",
     ttPass: "Передача — тяните в любом месте площадки; линия идёт от мяча (4)",
+    ttZone: "Зона — тяните от защитника, чтобы обозначить его зону действий (3)",
     ttDefense: "Показать / скрыть защитников",
     ttEraser: "Ластик — нажмите на стрелку или игрока (5)",
     ttBack: "Ко всем комбинациям", ttRename: "Переименовать комбинацию",
@@ -569,7 +632,7 @@ const I18N = {
       { h: "Шаги", b: "Зелёный + превращает нарисованные стрелки в новый шаг; шаги без действий (и последний) удаляются через пузырёк-корзину. Длительность шага зависит от числа последовательных действий." },
       { h: "Воспроизведение и масштаб", b: "Нижний плеер: пуск/пауза (Пробел), предыдущий/следующий (стрелки), прокрутка и скорость. Масштаб — колесо, щипок или элемент в углу; перетаскивайте площадку для перемещения; двойной щелчок — сброс." },
       { h: "Обмен", b: "Кнопка «поделиться» (в редакторе или на карточке) создаёт ссылку, содержащую комбинацию. По умолчанию она открывает просмотр с кнопкой «Редактировать»; отметьте флажок, чтобы поделиться редактируемой копией. В окне ссылки есть QR-код — нажмите на него, чтобы скопировать как картинку, или скопируйте ссылку кнопкой." },
-      { h: "Защитники", b: "Кнопка со щитом рядом с управлением шагами добавляет пятерых защитников — красные метки X, которые расставляются и двигаются так же, как ваши игроки. Защитники никогда не рисуют стрелок: перетаскивайте их инструментом выбора на любом шаге либо инструментом стрелки укажите, куда они смещаются в течение шага — при редактировании цель отмечает бледный X (его можно перетащить), а при воспроизведении они просто плавно скользят туда. Они не ставят заслоны и не получают передачи. Нажмите ещё раз, чтобы убрать их (отмена всё вернёт)." },
+      { h: "Защитники", b: "Кнопка со щитом рядом с управлением шагами добавляет пятерых защитников — красные метки X, которые расставляются и двигаются так же, как ваши игроки. Защитники никогда не рисуют стрелок: перетаскивайте их инструментом выбора на любом шаге либо инструментом стрелки укажите, куда они смещаются в течение шага — при редактировании цель отмечает бледный X (его можно перетащить), а при воспроизведении они просто плавно скользят туда. Они не ставят заслоны и не получают передачи. Нажмите ещё раз, чтобы убрать их (отмена всё вернёт). В защитных комбинациях инструмент зоны (3) мягким цветом выделяет зону ответственности каждого защитника." },
       { h: "Блокировка и порядок", b: "Замок в редакторе делает комбинацию доступной только для чтения, пока вы её не разблокируете. На главном экране у каждой карточки есть кнопки дублирования, отправки и удаления, а также миниатюра шага 1; флажки выбирают несколько комбинаций сразу — их можно вместе экспортировать, скачать в .zip, заблокировать или удалить." },
       { h: "Экспорт и резервные копии", b: "Кнопка сохранения экспортирует комбинацию в GIF, видео или пошаговый PDF. На главном экране «Экспорт всего» скачивает все комбинации в .zip для переноса на другое устройство." },
       { h: "Отмена", b: "Ctrl+Z отменяет, Ctrl+Shift+Z (или Ctrl+Y) повторяет любое действие: перетаскивания, стрелки, шаги, переименования." },
@@ -585,6 +648,9 @@ const I18N = {
     cancel: "取消", create: "创建", renameConfirm: "重命名",
     deleteConfirm: "删除", resetConfirm: "重置",
     newPlayTitle: "新战术", renameTitle: "重命名战术",
+    kindLabel: "类型", kindOffense: "进攻", kindDefense: "防守",
+    filterAll: "全部",
+    courtLabel: "场地", courtHalf: "半场", courtFull: "全场",
     deleteTitle: "删除战术？",
     deleteMsg: (n) => `“${n}”将被永久删除。`,
     deleteSelected: (n) => `删除所选（${n}）`,
@@ -631,6 +697,7 @@ const I18N = {
     ttArrow: "移动箭头 — 从球员拖出（2）",
     ttScreen: "掩护 — 从掩护者拖出（3）",
     ttPass: "传球 — 在球场任意位置拖动；虚线自动从球出发（4）",
+    ttZone: "区域 — 从防守球员拖出以标记其负责区域（3）",
     ttDefense: "显示 / 隐藏防守球员",
     ttEraser: "橡皮擦 — 点击箭头或球员（5）",
     ttBack: "返回全部战术", ttRename: "重命名战术",
@@ -697,7 +764,7 @@ const I18N = {
       { h: "步骤", b: "绿色 + 将画好的箭头变成新步骤；无动作的步骤（及最后一步）可通过垃圾桶气泡删除。步骤时长取决于其顺序动作数量。" },
       { h: "播放与缩放", b: "底部播放器：播放/暂停（空格）、上一步/下一步（方向键）、进度条和速度。滚轮、捏合或角落控件缩放；拖动球场平移；双击复位。" },
       { h: "分享", b: "分享按钮（编辑器中或每张卡片上）生成包含战术的链接。默认打开带“编辑”按钮的只读播放器；勾选复选框则直接分享可编辑副本。链接窗口会显示二维码——点击可将其复制为图片，或用按钮复制链接。" },
-      { h: "防守球员", b: "步骤控制旁的盾牌按钮会添加五名防守球员——红色 X 标记，可像己方球员一样放置和移动。防守球员从不画箭头：用选择工具在任意步骤拖动它们重新定位，或用移动箭头工具指定他们在该步骤中的移动目标——编辑时淡淡的 X 标出目的地（可拖动调整），回放时他们会平滑滑过去。防守球员不能掩护也不能接球。再次点击可移除（撤销可恢复全部）。" },
+      { h: "防守球员", b: "步骤控制旁的盾牌按钮会添加五名防守球员——红色 X 标记，可像己方球员一样放置和移动。防守球员从不画箭头：用选择工具在任意步骤拖动它们重新定位，或用移动箭头工具指定他们在该步骤中的移动目标——编辑时淡淡的 X 标出目的地（可拖动调整），回放时他们会平滑滑过去。防守球员不能掩护也不能接球。再次点击可移除（撤销可恢复全部）。在防守战术中，区域工具（3）会用柔和的颜色标出每名防守球员的负责区域。" },
       { h: "锁定与整理", b: "编辑器中的挂锁可将战术设为只读，直到再次解锁。主屏幕上每张卡片都有复制、分享和删除按钮，以及第 1 步的缩略图；勾选复选框可同时选择多套战术，一起导出、打包下载 .zip、锁定或删除。" },
       { h: "导出与备份", b: "保存按钮可将战术导出为 GIF、视频或分步 PDF。主屏幕的“导出全部”会把所有战术打包成 .zip，可在其他设备导入。" },
       { h: "撤销", b: "Ctrl+Z 撤销，Ctrl+Shift+Z（或 Ctrl+Y）重做任何编辑：拖动、箭头、步骤、重命名。" },
@@ -713,6 +780,9 @@ const I18N = {
     cancel: "Otkaži", create: "Napravi", renameConfirm: "Preimenuj",
     deleteConfirm: "Obriši", resetConfirm: "Resetuj",
     newPlayTitle: "Nova akcija", renameTitle: "Preimenuj akciju",
+    kindLabel: "Tip", kindOffense: "Napad", kindDefense: "Odbrana",
+    filterAll: "Sve",
+    courtLabel: "Teren", courtHalf: "Pola terena", courtFull: "Ceo teren",
     deleteTitle: "Obrisati akciju?",
     deleteMsg: (n) => `„${n}" će biti trajno obrisana.`,
     deleteSelected: (n) => `Obriši izabrane (${n})`,
@@ -759,6 +829,7 @@ const I18N = {
     ttArrow: "Strelica kretanja — prevuci od igrača (2)",
     ttScreen: "Blok — prevuci od igrača koji blokira (3)",
     ttPass: "Dodavanje — prevuci bilo gde na terenu; linija kreće od lopte (4)",
+    ttZone: "Zona — prevuci od odbrambenog igrača da označiš njegovu zonu (3)",
     ttDefense: "Prikaži / sakrij odbranu",
     ttEraser: "Gumica — klikni strelicu ili igrača (5)",
     ttBack: "Nazad na akcije", ttRename: "Preimenuj akciju",
@@ -825,7 +896,7 @@ const I18N = {
       { h: "Koraci", b: "Zeleni + pretvara nacrtane strelice u novi korak; koraci bez radnji (i poslednji) brišu se preko svoje kantice. Korak traje prema broju uzastopnih radnji." },
       { h: "Reprodukcija i zum", b: "Donji plejer: plej/pauza (Space), prethodni/sledeći (strelice), traka i brzina. Zum točkićem, štipanjem ili kontrolom u uglu; prevuci teren za pomeranje; dupli klik za reset." },
       { h: "Deljenje", b: "Dugme za deljenje (u editoru ili na svakoj kartici) pravi link koji sadrži akciju. Podrazumevano otvara plejer samo za gledanje sa dugmetom Izmeni; štikliraj kućicu za deljenje kopije koja se može menjati. Prozor sa linkom prikazuje QR kod — klikni ga da ga kopiraš kao sliku, ili kopiraj link dugmetom." },
-      { h: "Odbrana", b: "Dugme sa štitom pored kontrola koraka dodaje pet odbrambenih igrača — crvene X oznake koje se postavljaju i pomeraju kao tvoji igrači. Odbrana nikada ne crta strelice: prevlači ih alatom za izbor u bilo kom koraku, ili alatom za strelicu odredi kuda se pomeraju tokom koraka — bledi X označava odredište dok uređuješ (prevuci ga da ga podesiš), a pri reprodukciji jednostavno klize tamo. Ne mogu da blokiraju niti primaju dodavanja. Pritisni ponovo da ih ukloniš (poništavanje sve vraća)." },
+      { h: "Odbrana", b: "Dugme sa štitom pored kontrola koraka dodaje pet odbrambenih igrača — crvene X oznake koje se postavljaju i pomeraju kao tvoji igrači. Odbrana nikada ne crta strelice: prevlači ih alatom za izbor u bilo kom koraku, ili alatom za strelicu odredi kuda se pomeraju tokom koraka — bledi X označava odredište dok uređuješ (prevuci ga da ga podesiš), a pri reprodukciji jednostavno klize tamo. Ne mogu da blokiraju niti primaju dodavanja. Pritisni ponovo da ih ukloniš (poništavanje sve vraća). U odbrambenim akcijama alat za zonu (3) blago boji zonu delovanja svakog odbrambenog igrača." },
       { h: "Zaključavanje i organizacija", b: "Katanac u editoru čini akciju samo za čitanje dok je ne otključaš. Na početnom ekranu svaka kartica ima dugmad za dupliranje, deljenje i brisanje, plus sličicu koraka 1; kućice biraju više akcija odjednom za zajednički izvoz, preuzimanje u .zip, zaključavanje ili brisanje." },
       { h: "Izvoz i rezervne kopije", b: "Dugme za čuvanje izvozi akciju kao GIF, video ili PDF korak-po-korak. Na početnom ekranu, Izvezi sve preuzima sve akcije u .zip koji se uvozi na drugom uređaju." },
       { h: "Poništavanje", b: "Ctrl+Z poništava, a Ctrl+Shift+Z (ili Ctrl+Y) ponavlja svaku izmenu: prevlačenja, strelice, korake, imena." },
@@ -841,6 +912,9 @@ const I18N = {
     cancel: "Prekliči", create: "Ustvari", renameConfirm: "Preimenuj",
     deleteConfirm: "Izbriši", resetConfirm: "Ponastavi",
     newPlayTitle: "Nova akcija", renameTitle: "Preimenuj akcijo",
+    kindLabel: "Vrsta", kindOffense: "Napad", kindDefense: "Obramba",
+    filterAll: "Vse",
+    courtLabel: "Igrišče", courtHalf: "Polovica igrišča", courtFull: "Celo igrišče",
     deleteTitle: "Izbrišem akcijo?",
     deleteMsg: (n) => `»${n}« bo trajno izbrisana.`,
     deleteSelected: (n) => `Izbriši izbrane (${n})`,
@@ -887,6 +961,7 @@ const I18N = {
     ttArrow: "Puščica gibanja — povleci od igralca (2)",
     ttScreen: "Blokada — povleci od blokerja (3)",
     ttPass: "Podaja — povleci kjerkoli na igrišču; črta se začne pri žogi (4)",
+    ttZone: "Cona — povleci od obrambnega igralca za njegovo območje delovanja (3)",
     ttDefense: "Prikaži / skrij obrambo",
     ttEraser: "Radirka — klikni puščico ali igralca (5)",
     ttBack: "Nazaj na akcije", ttRename: "Preimenuj akcijo",
@@ -953,7 +1028,7 @@ const I18N = {
       { h: "Koraki", b: "Zeleni + spremeni narisane puščice v nov korak; koraki brez akcij (in zadnji) se izbrišejo prek svojega koška. Korak traja glede na število zaporednih akcij." },
       { h: "Predvajanje in povečava", b: "Spodnji predvajalnik: predvajaj/premor (preslednica), prejšnji/naslednji (puščici), drsnik in hitrost. Povečava s koleščkom, ščipom ali kontrolo v kotu; povleci igrišče za premik; dvojni klik za ponastavitev." },
       { h: "Deljenje", b: "Gumb za deljenje (v urejevalniku ali na vsaki kartici) ustvari povezavo z akcijo. Privzeto odpre predvajalnik samo za ogled z gumbom Uredi; označi potrditveno polje za deljenje kopije, ki jo je mogoče urejati. Okno s povezavo prikaže kodo QR — klikni jo, da jo kopiraš kot sliko, ali kopiraj povezavo z gumbom." },
-      { h: "Obramba", b: "Gumb s ščitom ob kontrolah korakov doda pet obrambnih igralcev — rdeče oznake X, ki jih postavljaš in premikaš enako kot svoje igralce. Obramba nikoli ne riše puščic: povleci jih z orodjem za izbiro v kateremkoli koraku ali z orodjem za puščico določi, kam se premaknejo med korakom — bled X označuje cilj med urejanjem (povleci ga za prilagoditev), med predvajanjem pa preprosto zdrsnejo tja. Ne morejo postavljati blokad niti prejemati podaj. Pritisni znova, da jih odstraniš (razveljavitev vse povrne)." },
+      { h: "Obramba", b: "Gumb s ščitom ob kontrolah korakov doda pet obrambnih igralcev — rdeče oznake X, ki jih postavljaš in premikaš enako kot svoje igralce. Obramba nikoli ne riše puščic: povleci jih z orodjem za izbiro v kateremkoli koraku ali z orodjem za puščico določi, kam se premaknejo med korakom — bled X označuje cilj med urejanjem (povleci ga za prilagoditev), med predvajanjem pa preprosto zdrsnejo tja. Ne morejo postavljati blokad niti prejemati podaj. Pritisni znova, da jih odstraniš (razveljavitev vse povrne). Pri obrambnih akcijah orodje za cono (3) nežno obarva območje delovanja vsakega obrambnega igralca." },
       { h: "Zaklepanje in urejanje", b: "Ključavnica v urejevalniku naredi akcijo samo za branje, dokler je ne odkleneš. Na začetnem zaslonu ima vsaka kartica gumbe za podvajanje, deljenje in brisanje ter sličico koraka 1; potrditvena polja izberejo več akcij hkrati za skupni izvoz, prenos v .zip, zaklepanje ali brisanje." },
       { h: "Izvoz in varnostne kopije", b: "Gumb za shranjevanje izvozi akcijo kot GIF, video ali PDF po korakih. Na začetnem zaslonu Izvozi vse prenese vse akcije v .zip, ki ga uvoziš na drugi napravi." },
       { h: "Razveljavitev", b: "Ctrl+Z razveljavi, Ctrl+Shift+Z (ali Ctrl+Y) ponovi vsako urejanje: vlečenja, puščice, korake, preimenovanja." },
@@ -969,6 +1044,9 @@ const I18N = {
     cancel: "Άκυρο", create: "Δημιουργία", renameConfirm: "Μετονομασία",
     deleteConfirm: "Διαγραφή", resetConfirm: "Επαναφορά",
     newPlayTitle: "Νέο σύστημα", renameTitle: "Μετονομασία συστήματος",
+    kindLabel: "Τύπος", kindOffense: "Επίθεση", kindDefense: "Άμυνα",
+    filterAll: "Όλα",
+    courtLabel: "Γήπεδο", courtHalf: "Μισό γήπεδο", courtFull: "Ολόκληρο γήπεδο",
     deleteTitle: "Διαγραφή συστήματος;",
     deleteMsg: (n) => `Το «${n}» θα διαγραφεί οριστικά.`,
     deleteSelected: (n) => `Διαγραφή επιλεγμένων (${n})`,
@@ -1015,6 +1093,7 @@ const I18N = {
     ttArrow: "Βέλος κίνησης — σύρε από έναν παίκτη (2)",
     ttScreen: "Σκριν — σύρε από αυτόν που το βάζει (3)",
     ttPass: "Πάσα — σύρε οπουδήποτε στο γήπεδο· η γραμμή ξεκινά από την μπάλα (4)",
+    ttZone: "Ζώνη — σύρε από έναν αμυντικό για την περιοχή ευθύνης του (3)",
     ttDefense: "Εμφάνιση / απόκρυψη αμυντικών",
     ttEraser: "Γόμα — κλικ σε βέλος ή παίκτη (5)",
     ttBack: "Πίσω στα συστήματα", ttRename: "Μετονομασία συστήματος",
@@ -1081,7 +1160,7 @@ const I18N = {
       { h: "Βήματα", b: "Το πράσινο + μετατρέπει τα σχεδιασμένα βέλη σε νέο βήμα· βήματα χωρίς ενέργειες (και το τελευταίο) σβήνονται από τη φυσαλίδα-κάδο τους. Η διάρκεια βήματος εξαρτάται από τις διαδοχικές ενέργειες." },
       { h: "Αναπαραγωγή και ζουμ", b: "Κάτω πρόγραμμα αναπαραγωγής: play/παύση (Space), προηγούμενο/επόμενο (βέλη), μπάρα και ταχύτητα. Ζουμ με ροδέλα, τσίμπημα ή το χειριστήριο στη γωνία· σύρε το γήπεδο για μετατόπιση· διπλό κλικ για επαναφορά." },
       { h: "Κοινοποίηση", b: "Το κουμπί κοινοποίησης (στον επεξεργαστή ή σε κάθε κάρτα) φτιάχνει σύνδεσμο που περιέχει το σύστημα. Από προεπιλογή ανοίγει προβολή μόνο για ανάγνωση με κουμπί Επεξεργασίας· τσέκαρε το κουτάκι για επεξεργάσιμο αντίγραφο. Το παράθυρο του συνδέσμου δείχνει κωδικό QR — κλικ πάνω του για αντιγραφή ως εικόνα, ή αντέγραψε τον σύνδεσμο με το κουμπί." },
-      { h: "Αμυντικοί", b: "Το κουμπί με την ασπίδα δίπλα στα χειριστήρια βημάτων προσθέτει πέντε αμυντικούς — κόκκινα X που τοποθετούνται και κινούνται όπως οι παίκτες σου. Οι αμυντικοί δεν σχεδιάζουν ποτέ βέλη: σύρε τους με το εργαλείο επιλογής σε οποιοδήποτε βήμα, ή με το βέλος κίνησης όρισε πού μετακινούνται στη διάρκεια του βήματος — ένα αχνό X σημειώνει τον προορισμό όσο επεξεργάζεσαι (σύρε το για προσαρμογή), και στην αναπαραγωγή απλώς γλιστρούν εκεί. Δεν βάζουν σκριν ούτε δέχονται πάσες. Πάτησέ το ξανά για να τους αφαιρέσεις (η αναίρεση τα επαναφέρει όλα)." },
+      { h: "Αμυντικοί", b: "Το κουμπί με την ασπίδα δίπλα στα χειριστήρια βημάτων προσθέτει πέντε αμυντικούς — κόκκινα X που τοποθετούνται και κινούνται όπως οι παίκτες σου. Οι αμυντικοί δεν σχεδιάζουν ποτέ βέλη: σύρε τους με το εργαλείο επιλογής σε οποιοδήποτε βήμα, ή με το βέλος κίνησης όρισε πού μετακινούνται στη διάρκεια του βήματος — ένα αχνό X σημειώνει τον προορισμό όσο επεξεργάζεσαι (σύρε το για προσαρμογή), και στην αναπαραγωγή απλώς γλιστρούν εκεί. Δεν βάζουν σκριν ούτε δέχονται πάσες. Πάτησέ το ξανά για να τους αφαιρέσεις (η αναίρεση τα επαναφέρει όλα). Στα αμυντικά συστήματα το εργαλείο ζώνης (3) χρωματίζει απαλά την περιοχή ευθύνης κάθε αμυντικού." },
       { h: "Κλείδωμα και οργάνωση", b: "Το λουκέτο στον επεξεργαστή κάνει το σύστημα μόνο για ανάγνωση μέχρι να το ξεκλειδώσεις. Στην αρχική οθόνη κάθε κάρτα έχει κουμπιά αντιγραφής, κοινοποίησης και διαγραφής, συν μια μικρογραφία του βήματος 1· τα πλαίσια επιλογής επιλέγουν πολλά συστήματα μαζί για εξαγωγή, λήψη σε .zip, κλείδωμα ή διαγραφή." },
       { h: "Εξαγωγή και αντίγραφα", b: "Το κουμπί αποθήκευσης εξάγει το σύστημα ως GIF, βίντεο ή PDF βήμα-βήμα. Στην αρχική, η Εξαγωγή όλων κατεβάζει όλα τα συστήματα σε .zip για εισαγωγή σε άλλη συσκευή." },
       { h: "Αναίρεση", b: "Ctrl+Z αναιρεί και Ctrl+Shift+Z (ή Ctrl+Y) επαναλαμβάνει κάθε αλλαγή: μετακινήσεις, βέλη, βήματα, μετονομασίες." },
@@ -1150,7 +1229,7 @@ function applyLang() {
   };
   for (const [id, key] of Object.entries(titles)) $(id).title = t(key);
 
-  const toolTitles = { select: "ttSelect", arrow: "ttArrow", screen: "ttScreen", pass: "ttPass", eraser: "ttEraser" };
+  const toolTitles = { select: "ttSelect", arrow: "ttArrow", screen: "ttScreen", zone: "ttZone", pass: "ttPass", eraser: "ttEraser" };
   for (const [toolName, key] of Object.entries(toolTitles)) {
     toolbar.querySelector(`[data-tool="${toolName}"]`).title = t(key);
   }
@@ -1378,6 +1457,7 @@ function openPlay(id) {
   viewPlay = null;
   document.body.classList.remove("view-only");
   playNameEl.readOnly = false;
+  applyCourtMode(currentPlay());
   applyLockState();
   currentStep = 0;
   playhead = 0;
@@ -1395,6 +1475,7 @@ function openPlay(id) {
 // Read-only viewer for a shared play: court, name and playback only.
 function openViewer(play) {
   viewPlay = play;
+  applyCourtMode(play);
   document.body.classList.remove("play-locked");
   document.body.classList.add("view-only");
   playNameEl.readOnly = true;
@@ -1412,13 +1493,17 @@ function openViewer(play) {
 let cardDragJustEnded = false;
 const selectedPlayIds = new Set();
 const PAGE_SIZE = 10;
+let playKindFilter = "all";
 let playSearch = "";
 let playPage = 0;
 let pageOffset = 0; // index in `plays` of the first visible card (for drag reorder)
 
 function filteredPlays() {
   const q = playSearch.trim().toLowerCase();
-  return q ? plays.filter((p) => p.name.toLowerCase().includes(q)) : plays;
+  let list = plays;
+  if (playKindFilter !== "all") list = list.filter((p) => playKind(p) === playKindFilter);
+  if (q) list = list.filter((p) => p.name.toLowerCase().includes(q));
+  return list;
 }
 
 function visiblePlays() {
@@ -1457,17 +1542,25 @@ function updateDeleteSelected() {
 }
 
 // Tiny static render of a play's first step for its card. The export
-// renderer does the drawing; the court raster is shared across cards.
-let thumbCourt = null;
+// renderer does the drawing; one court raster is shared per court type.
+// applyCourtMode mutates the live court svg, so thumbnails render one
+// at a time through a promise chain.
+const thumbCourts = {};
+let thumbChain = Promise.resolve();
 function drawCardThumb(canvas, play) {
   if (typeof exRasterizeCourt !== "function") {
     // export.js loads after app.js — retry once everything is in
     window.addEventListener("load", () => drawCardThumb(canvas, play), { once: true });
     return;
   }
-  (thumbCourt ||= exRasterizeCourt(canvas.width, canvas.height))
-    .then((img) => {
-      if (!canvas.isConnected) return;
+  thumbChain = thumbChain.then(async () => {
+    if (!canvas.isConnected) return;
+    const key = playCourt(play);
+    const prevVB = VB, prevClamp = CLAMP;
+    const opened = viewPlay || plays.find((x) => x.id === currentPlayId);
+    applyCourtMode(play);
+    try {
+      const img = await (thumbCourts[key] ||= exRasterizeCourt(canvas.width, canvas.height));
       const step = play.steps[0];
       const posMap = {};
       for (const id of idsFor(play)) posMap[id] = step.pos[id];
@@ -1479,8 +1572,12 @@ function drawCardThumb(canvas, play) {
       } finally {
         currentPlayId = prev;
       }
-    })
-    .catch(() => {});
+    } finally {
+      // put the geometry back the way the open play (if any) needs it
+      if (opened) applyCourtMode(opened);
+      else { VB = prevVB; CLAMP = prevClamp; }
+    }
+  }).catch(() => {});
 }
 
 function renderHome() {
@@ -1491,12 +1588,21 @@ function renderHome() {
   search.hidden = plays.length < 2;
   search.placeholder = t("searchPlays");
 
+  const kf = $("kindFilter");
+  kf.hidden = plays.length < 2;
+  $("filterAll").textContent = t("filterAll");
+  $("filterOffense").textContent = t("kindOffense");
+  $("filterDefense").textContent = t("kindDefense");
+  for (const b of kf.querySelectorAll(".seg-btn")) {
+    b.classList.toggle("active", b.dataset.v === playKindFilter);
+  }
+
   const filtered = filteredPlays();
   const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   playPage = Math.min(Math.max(playPage, 0), pages - 1);
   pageOffset = playPage * PAGE_SIZE;
   const visible = filtered.slice(pageOffset, pageOffset + PAGE_SIZE);
-  const reorderable = !playSearch.trim();
+  const reorderable = !playSearch.trim() && playKindFilter === "all";
 
   const empty = $("noResults");
   empty.hidden = !(plays.length > 0 && filtered.length === 0);
@@ -1538,17 +1644,26 @@ function renderHome() {
     name.className = "card-name";
     name.textContent = p.name;
 
+    // single-letter tags keep the row compact; the full word is the hint
+    const kindText = t(playKind(p) === "defense" ? "kindDefense" : "kindOffense");
+    const kindBadge = document.createElement("span");
+    kindBadge.className = "card-badge kind-" + playKind(p);
+    kindBadge.textContent = kindText.trim().charAt(0);
+    kindBadge.title = kindText;
+
     let badge = null;
     if (p.imported) {
       badge = document.createElement("span");
       badge.className = "card-badge";
-      badge.textContent = t("importedBadge");
+      badge.textContent = t("importedBadge").trim().charAt(0);
+      badge.title = t("importedBadge");
     }
 
     const thumb = document.createElement("canvas");
     thumb.className = "card-thumb";
+    const tvb = playCourt(p) === "full" ? VB_FULL : VB_HALF;
     thumb.width = 108;
-    thumb.height = Math.round(108 * VB.h / VB.w);
+    thumb.height = Math.round(108 * tvb.h / tvb.w);
     drawCardThumb(thumb, p);
 
     const dup = document.createElement("button");
@@ -1618,6 +1733,7 @@ function renderHome() {
 
     card.append(check, grip, thumb, name);
     if (lockIc) card.append(lockIc);
+    card.append(kindBadge);
     if (badge) card.append(badge);
     card.append(meta, dup, shareIc, del);
     card.addEventListener("click", () => {
@@ -1677,21 +1793,34 @@ function attachCardReorder(grip, card) {
 
 /* ================= Play management ================= */
 
-function defaultStep() {
-  // Players lined up out of bounds above the baseline, ball with player 1.
+function defaultStep(kind) {
+  // Offensive play: players lined up out of bounds above the baseline.
+  // Defensive play: the offence waits in a spread set as context and the
+  // defenders (the team being coached) line up out of bounds instead.
   const pos = {};
   PLAYER_IDS.forEach((id, i) => {
     pos[id] = { x: 9 + i * 8, y: -3 };
   });
+  if (kind === "defense") {
+    const spread = [
+      { x: 25, y: 33 }, { x: 7, y: 25 }, { x: 43, y: 25 },
+      { x: 18, y: 19 }, { x: 32, y: 19 },
+    ];
+    PLAYER_IDS.forEach((id, i) => { pos[id] = { ...spread[i] }; });
+    DEFENDER_IDS.forEach((id, i) => { pos[id] = { x: 9 + i * 8, y: -3 }; });
+  }
   return { pos, moves: {}, ball: "P1", pass: null };
 }
 
-function createPlay(name) {
+function createPlay(name, kind, court) {
   const play = {
     id: "play-" + Math.random().toString(36).slice(2, 10),
     name,
-    steps: [defaultStep()],
+    kind: kind === "defense" ? "defense" : "offense",
+    court: court === "full" ? "full" : "half",
+    steps: [defaultStep(kind)],
   };
+  if (play.kind === "defense") play.defense = true;
   plays.push(play);
   save();
   return play;
@@ -1835,13 +1964,20 @@ function segmentPhases(step) {
   const ownerMoveLate = !!(ownerMove && pass && passOrder === 1);
   const passInMain = !!(pass && !receiverMoves && passOrder === 1);
   const moverIds = Object.keys(step.moves);
+  // in defensive plays the attack acts first and the defence reacts in
+  // its own closing phase
+  const defKind = playKind(currentPlay()) === "defense";
+  const attackMovers = defKind
+    ? moverIds.filter((id) => !DEFENDER_IDS.includes(id))
+    : moverIds;
   const phases = [];
-  const hasMain = moverIds.some((id) => !receivers.has(id) && !(id === owner && ownerMoveLate)) ||
+  const hasMain = attackMovers.some((id) => !receivers.has(id) && !(id === owner && ownerMoveLate)) ||
     passInMain;
   if (hasMain) phases.push("main");
-  if (moverIds.some((id) => receivers.has(id) && !(id === owner && ownerMoveLate))) phases.push("recv");
+  if (attackMovers.some((id) => receivers.has(id) && !(id === owner && ownerMoveLate))) phases.push("recv");
   if (pass && !passInMain) phases.push("pass");
   if (ownerMoveLate) phases.push("ownermove");
+  if (defKind && moverIds.some((id) => DEFENDER_IDS.includes(id))) phases.push("defense");
   return { phases, receivers, owner, ownerMoveLate, passInMain };
 }
 
@@ -1894,6 +2030,7 @@ function positionsAt(t) {
     const m = from.moves[id];
     let u;
     if (m && id === owner && ownerMoveLate) u = easeInOutCubic(localU("ownermove"));
+    else if (m && DEFENDER_IDS.includes(id) && phases.includes("defense")) u = easeInOutCubic(localU("defense"));
     else if (m) u = easeInOutCubic(localU(receivers.has(id) ? "recv" : "main"));
     else u = easeInOutCubic(frac);
     out[id] = m && m.via
@@ -2031,9 +2168,9 @@ function moveToken(tokenId, p) {
   if (currentStep > 0 && steps[currentStep - 1].moves[tokenId]) {
     steps[currentStep - 1].moves[tokenId].to = { ...p };
   }
-  // A defender dragged mid-play carries the new spot into the following
-  // steps that still sat on the old one, so playback never glides back.
-  if (DEFENDER_IDS.includes(tokenId)) {
+  // A silent mover dragged mid-play carries the new spot into the
+  // following steps that still sat on the old one — no gliding back.
+  if (isSilentMover(currentPlay(), tokenId)) {
     for (let i = currentStep + 1; i < steps.length; i++) {
       const q = steps[i].pos[tokenId];
       if (!q || Math.hypot(q.x - prevPos.x, q.y - prevPos.y) > 0.01) break;
@@ -2093,6 +2230,7 @@ function syncBallChain() {
 function renderAll() {
   playNameEl.value = currentPlay().name;
   sizeNameInput();
+  $("defenseBtn").hidden = playKind(currentPlay()) === "defense";
   $("defenseBtn").classList.toggle("on", !!currentPlay().defense);
   renderStepChips();
   buildTokens();
@@ -2170,6 +2308,7 @@ $("resetAllBtn").addEventListener("click", resetAllPlay);
 function toggleDefense() {
   if (editLocked()) return;
   const play = currentPlay();
+  if (playKind(play) === "defense") return; // the offence is always there
   pushUndo();
   if (!play.defense) {
     play.defense = true;
@@ -2382,11 +2521,14 @@ function makeDefGhostEls(tokenId, from, to) {
   tie.setAttribute("y1", from.y);
   tie.setAttribute("x2", to.x);
   tie.setAttribute("y2", to.y);
-  tie.setAttribute("class", "def-ghost-tie");
+  tie.setAttribute("class", "def-ghost-tie" + (DEFENDER_IDS.includes(tokenId) ? "" : " off"));
   tie.dataset.token = tokenId;
+  const isDefTeam = DEFENDER_IDS.includes(tokenId);
   const x = document.createElementNS(SVG_NS, "path");
-  x.setAttribute("d", xd(to));
-  x.setAttribute("class", "def-ghost");
+  x.setAttribute("d", isDefTeam
+    ? xd(to)
+    : `M ${to.x + 1.3} ${to.y} A 1.3 1.3 0 1 0 ${to.x - 1.3} ${to.y} A 1.3 1.3 0 1 0 ${to.x + 1.3} ${to.y}`);
+  x.setAttribute("class", "def-ghost" + (isDefTeam ? "" : " off"));
   x.dataset.token = tokenId;
   const hit = document.createElementNS(SVG_NS, "circle");
   hit.setAttribute("cx", to.x);
@@ -2408,7 +2550,9 @@ function makeDefGhostEls(tokenId, from, to) {
       const p = pointerToCourt(ev);
       step.moves[tokenId].to = p;
       // reposition in place — a rebuild would kill the pointer capture
-      x.setAttribute("d", xd(p));
+      x.setAttribute("d", isDefTeam
+        ? xd(p)
+        : `M ${p.x + 1.3} ${p.y} A 1.3 1.3 0 1 0 ${p.x - 1.3} ${p.y} A 1.3 1.3 0 1 0 ${p.x + 1.3} ${p.y}`);
       hit.setAttribute("cx", p.x);
       hit.setAttribute("cy", p.y);
       tie.setAttribute("x2", p.x);
@@ -2445,6 +2589,90 @@ function preferOrder(passFirst) {
   refreshEdit();
 }
 
+// Areas of action (defensive plays): a soft rectangle per defender.
+function makeZoneEls(tokenId, z, ghost) {
+  const color = ZONE_COLORS[tokenId];
+  const rect = document.createElementNS(SVG_NS, "rect");
+  rect.setAttribute("x", z.x);
+  rect.setAttribute("y", z.y);
+  rect.setAttribute("width", z.w);
+  rect.setAttribute("height", z.h);
+  rect.setAttribute("rx", 0.8);
+  rect.setAttribute("fill", color);
+  rect.setAttribute("stroke", color);
+  rect.setAttribute("class", "zone-rect" + (ghost ? " ghost" : ""));
+  rect.dataset.token = tokenId;
+  const num = document.createElementNS(SVG_NS, "text");
+  num.setAttribute("x", z.x + z.w / 2);
+  num.setAttribute("y", z.y + z.h / 2);
+  num.setAttribute("fill", color);
+  num.setAttribute("class", "zone-num" + (ghost ? " ghost" : ""));
+  num.textContent = tokenId.slice(1);
+  return [rect, num];
+}
+
+function nearestDefenderTo(step, p) {
+  let best = null, bd = Infinity;
+  for (const id of DEFENDER_IDS) {
+    const d = Math.hypot(step.pos[id].x - p.x, step.pos[id].y - p.y);
+    if (d < bd) { bd = d; best = id; }
+  }
+  return best;
+}
+
+function renderZones(step, ghost) {
+  if (!step.zones) return;
+  for (const id of DEFENDER_IDS) {
+    const z = step.zones[id];
+    if (!z) continue;
+    const els = makeZoneEls(id, z, ghost);
+    const [rectEl, numEl] = els;
+    rectEl.addEventListener("pointerdown", (e) => {
+      if (playing || editLocked()) return;
+      if (tool === "eraser") {
+        e.preventDefault();
+        e.stopPropagation();
+        pushUndo();
+        delete currentPlay().steps[currentStep].zones[id];
+        save();
+        refreshEdit();
+        return;
+      }
+      // grab and move the whole area (any tool except the eraser, which
+      // deletes, and the pass tool, which draws over it)
+      if (tool === "pass" || playhead !== currentStep) return;
+      e.preventDefault();
+      e.stopPropagation();
+      try { rectEl.setPointerCapture(e.pointerId); } catch (_) {}
+      beginAction();
+      const zz = currentPlay().steps[currentStep].zones[id];
+      const startPt = pointerToCourt(e);
+      const orig = { x: zz.x, y: zz.y };
+      const move = (ev) => {
+        const p = pointerToCourt(ev);
+        zz.x = Math.min(Math.max(orig.x + p.x - startPt.x, CLAMP.minX), CLAMP.maxX - zz.w);
+        zz.y = Math.min(Math.max(orig.y + p.y - startPt.y, CLAMP.minY), CLAMP.maxY - zz.h);
+        rectEl.setAttribute("x", zz.x);
+        rectEl.setAttribute("y", zz.y);
+        numEl.setAttribute("x", zz.x + zz.w / 2);
+        numEl.setAttribute("y", zz.y + zz.h / 2);
+      };
+      const up = () => {
+        rectEl.removeEventListener("pointermove", move);
+        rectEl.removeEventListener("pointerup", up);
+        rectEl.removeEventListener("pointercancel", up);
+        endAction();
+        save();
+        refreshEdit();
+      };
+      rectEl.addEventListener("pointermove", move);
+      rectEl.addEventListener("pointerup", up);
+      rectEl.addEventListener("pointercancel", up);
+    });
+    for (const el of els) arrowsGroup.appendChild(el);
+  }
+}
+
 // Draw the arrows of the step the playhead is in.
 function renderArrows() {
   arrowsGroup.innerHTML = "";
@@ -2455,6 +2683,7 @@ function renderArrows() {
     : currentStep;
   const step = play.steps[stepIdx];
   const ghost = playing || playhead !== stepIdx;
+  renderZones(step, ghost && !playing); // guides stay visible in playback
   const addEls = (els) => {
     for (const el of els) {
       el.addEventListener("pointerdown", (e) => {
@@ -2519,7 +2748,7 @@ function renderArrows() {
   for (const id of idsFor(play)) {
     const m = step.moves[id];
     if (!m) continue;
-    if (DEFENDER_IDS.includes(id)) {
+    if (isSilentMover(play, id)) {
       // silent move — destination hint while paused (extra faint when
       // the playhead sits on another step), never during playback
       if (!playing) {
@@ -2584,7 +2813,7 @@ function renderHandles() {
   if (playing || editLocked() || playhead !== currentStep) return;
   const step = currentPlay().steps[currentStep];
   for (const d of defsFor(currentPlay())) {
-    if (DEFENDER_IDS.includes(d.id)) continue; // silent moves have no handles
+    if (isSilentMover(currentPlay(), d.id)) continue; // silent moves have no handles
     if (!hasArrow(step, d.id)) continue;
     // passes are straight lines: destination handle only
     const kinds = d.id === "BALL" ? ["end"] : ["end", "mid"];
@@ -2672,13 +2901,19 @@ function setTool(next) {
 // Manual placement is only for the first step; afterwards players move
 // exclusively via drawn arrows.
 function updateToolAvailability() {
-  const selectBtn = toolbar.querySelector('[data-tool="select"]');
-  // offence is placed on step 1 only, but defenders stay draggable on
-  // every step — so the select tool survives when defense is on
   const p = currentPlay();
-  const disabled = currentStep > 0 && !(p && p.defense);
+  const selectBtn = toolbar.querySelector('[data-tool="select"]');
+  // the acting team is placed on step 1 only, but the silent team stays
+  // draggable on every step — the select tool survives when one exists
+  const disabled = currentStep > 0 && contextIds(p).length === 0;
   selectBtn.disabled = disabled;
   if (disabled && tool === "select") setTool("arrow");
+  // screens are offensive, zones are defensive — they share the slot
+  const isDef = playKind(p) === "defense";
+  toolbar.querySelector('[data-tool="screen"]').hidden = isDef;
+  toolbar.querySelector('[data-tool="zone"]').hidden = !isDef;
+  if (isDef && tool === "screen") setTool("arrow");
+  if (!isDef && tool === "zone") setTool("arrow");
 }
 
 /* On small screens the toolbar folds down to the active tool; a tap
@@ -2777,6 +3012,12 @@ stageEl.addEventListener("pointerdown", (e) => {
   if (tool === "pass" && !playing && !editLocked()) {
     playhead = currentStep;
     startArrowDraw(stageEl, "BALL", e);
+    return;
+  }
+  // zone tool: draw an area anywhere; it belongs to the nearest defender
+  if (tool === "zone" && !playing && !editLocked() && playKind(currentPlay()) === "defense") {
+    playhead = currentStep;
+    startZoneDraw(stageEl, null, e);
     return;
   }
   stagePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -2914,14 +3155,21 @@ function attachTokenPointer(el, tokenId) {
       return;
     }
 
+    if (tool === "zone") {
+      if (DEFENDER_IDS.includes(tokenId) && playKind(currentPlay()) === "defense") {
+        startZoneDraw(el, tokenId, e);
+      }
+      return;
+    }
+
     if (tool === "arrow" || tool === "screen") {
       startArrowDraw(el, tokenId, e);
       return;
     }
 
-    // select tool: offence only on step 1; defenders reposition anywhere
-    // (a repositioned defender glides there in playback with no arrow)
-    if (currentStep > 0 && !DEFENDER_IDS.includes(tokenId)) return;
+    // select tool: the acting team only on step 1; the silent team
+    // repositions anywhere (it glides there in playback, no arrow)
+    if (currentStep > 0 && !isSilentMover(currentPlay(), tokenId)) return;
     try { el.setPointerCapture(e.pointerId); } catch (_) {}
     el.classList.add("dragging");
     beginAction();
@@ -2962,7 +3210,8 @@ function startArrowDraw(el, tokenId, e) {
   // but never to the ball carrier.
   const isPass = tokenId === "BALL";
   const isDefender = DEFENDER_IDS.includes(tokenId);
-  const type = tool === "screen" && !isPass && !isDefender && tokenId !== step.ball ? "screen" : "move";
+  const type = tool === "screen" && !isPass && !isDefender &&
+    playKind(currentPlay()) === "offense" && tokenId !== step.ball ? "screen" : "move";
   const start = isPass ? ballPoint(step.pos[step.ball]) : step.pos[tokenId];
   try { el.setPointerCapture(e.pointerId); } catch (_) {}
 
@@ -3001,6 +3250,55 @@ function startArrowDraw(el, tokenId, e) {
       } else {
         pushUndo();
         setMove(tokenId, { to: dest, via: null, type });
+        save();
+      }
+    }
+    refreshEdit();
+  };
+  el.addEventListener("pointermove", move);
+  el.addEventListener("pointerup", up);
+  el.addEventListener("pointercancel", up);
+}
+
+// Drag from a defender to mark their area of action: corner to corner,
+// stored per step and carried into new steps until redrawn.
+function startZoneDraw(el, tokenId, e) {
+  const start = pointerToCourt(e);
+  const step = currentPlay().steps[currentStep];
+  try { el.setPointerCapture(e.pointerId); } catch (_) {}
+  let dest = null;
+  const rectFrom = (a, b) => ({
+    x: Math.min(a.x, b.x), y: Math.min(a.y, b.y),
+    w: Math.abs(b.x - a.x), h: Math.abs(b.y - a.y),
+  });
+  // drawn from a defender the area is theirs; drawn from open court it
+  // goes to whoever is closest to its centre (live in the preview)
+  const ownerOf = (z) => tokenId ||
+    nearestDefenderTo(step, { x: z.x + z.w / 2, y: z.y + z.h / 2 });
+  const drawPreview = () => {
+    previewGroup.innerHTML = "";
+    if (!dest) return;
+    const z = rectFrom(start, dest);
+    for (const p of makeZoneEls(ownerOf(z), z, false)) {
+      p.classList.add("preview");
+      previewGroup.appendChild(p);
+    }
+  };
+  const move = (ev) => {
+    dest = pointerToCourt(ev);
+    drawPreview();
+  };
+  const up = () => {
+    el.removeEventListener("pointermove", move);
+    el.removeEventListener("pointerup", up);
+    el.removeEventListener("pointercancel", up);
+    previewGroup.innerHTML = "";
+    if (dest) {
+      const z = rectFrom(start, dest);
+      if (z.w > 2.5 && z.h > 2.5) {
+        pushUndo();
+        if (!step.zones) step.zones = {};
+        step.zones[ownerOf(z)] = z;
         save();
       }
     }
@@ -3170,12 +3468,66 @@ $("lockBtn").addEventListener("click", async () => {
   renderAll();
 });
 
-$("createNewBtn").addEventListener("click", () => {
+// New plays pick their type (offense / defense) and court (half / full).
+function openCreateModal() {
+  return new Promise((resolve) => {
+    $("createTitle").textContent = t("newPlayTitle");
+    $("createKindLabel").textContent = t("kindLabel");
+    $("createCourtLabel").textContent = t("courtLabel");
+    $("segOffense").textContent = t("kindOffense");
+    $("segDefense").textContent = t("kindDefense");
+    $("segHalf").textContent = t("courtHalf");
+    $("segFull").textContent = t("courtFull");
+    $("createCancel").textContent = t("cancel");
+    $("createGo").textContent = t("create");
+    const modal = $("createModal");
+    // defaults on every open
+    for (const seg of modal.querySelectorAll(".seg")) {
+      const btns = [...seg.querySelectorAll(".seg-btn")];
+      btns.forEach((b, i) => b.classList.toggle("active", i === 0));
+    }
+    modal.hidden = false;
+    $("createGo").focus();
+
+    const segClick = (e) => {
+      const b = e.target.closest(".seg-btn");
+      if (!b) return;
+      for (const x of b.parentElement.children) x.classList.toggle("active", x === b);
+    };
+    const close = (res) => {
+      modal.hidden = true;
+      modal.removeEventListener("click", segClick);
+      $("createGo").removeEventListener("click", onGo);
+      $("createCancel").removeEventListener("click", onCancel);
+      document.removeEventListener("keydown", onKey, true);
+      resolve(res);
+    };
+    const onGo = () => close({
+      kind: modal.querySelector("#createKindSeg .seg-btn.active").dataset.v,
+      court: modal.querySelector("#createCourtSeg .seg-btn.active").dataset.v,
+    });
+    const onCancel = () => close(null);
+    const onKey = (e) => {
+      if (e.code === "Escape") { e.stopPropagation(); onCancel(); }
+      if (e.code === "Enter") { e.stopPropagation(); onGo(); }
+    };
+    modal.addEventListener("click", segClick);
+    $("createGo").addEventListener("click", onGo);
+    $("createCancel").addEventListener("click", onCancel);
+    document.addEventListener("keydown", onKey, true);
+  });
+}
+
+$("createNewBtn").addEventListener("click", async () => {
+  const opts = await openCreateModal();
+  if (!opts) return;
   const base = t("playDefault") + " " + (plays.length + 1);
   const name = uniquePlayName(base);
-  const play = createPlay(name);
+  const play = createPlay(name, opts.kind, opts.court);
   openPlay(play.id);
   if (name !== base) showToast(t("renamedToast", name));
+  // the tour's first stop advances once the play really exists
+  if (!$("tour").hidden && tourIdx === 0) setTimeout(nextTour, 400);
 });
 
 $("selectAllCheck").addEventListener("change", (e) => {
@@ -3206,6 +3558,14 @@ $("deleteAllBtn").addEventListener("click", async () => {
 
 $("playSearch").addEventListener("input", (e) => {
   playSearch = e.target.value;
+  playPage = 0;
+  renderHome();
+});
+
+$("kindFilter").addEventListener("click", (e) => {
+  const b = e.target.closest(".seg-btn");
+  if (!b) return;
+  playKindFilter = b.dataset.v;
   playPage = 0;
   renderHome();
 });
@@ -3386,6 +3746,7 @@ function addStep() {
     moves: {},
     ball: last.pass ? last.pass.to : last.ball,
     pass: null,
+    zones: last.zones ? JSON.parse(JSON.stringify(last.zones)) : undefined,
   });
   syncBallChain();
   currentStep = steps.length - 1;
@@ -3418,7 +3779,7 @@ function deleteStepAt(i) {
 speedSelect.addEventListener("change", () => speedSelect.blur());
 
 document.addEventListener("keydown", (e) => {
-  if (!modalEl.hidden || !$("exportModal").hidden || !$("tour").hidden || !$("helpModal").hidden) return;
+  if (!modalEl.hidden || !$("exportModal").hidden || !$("createModal").hidden || !$("tour").hidden || !$("helpModal").hidden) return;
   if (editorEl.hidden) return;
   if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
   // viewer: playback keys only
@@ -3437,17 +3798,17 @@ document.addEventListener("keydown", (e) => {
     e.preventDefault();
     playing ? stopPlayback() : startPlayback();
   } else if (e.code === "Escape") {
-    if (currentStep === 0 || currentPlay().defense) setTool("select");
+    if (currentStep === 0 || contextIds(currentPlay()).length) setTool("select");
   } else if (e.code === "ArrowLeft") {
     $("prevBtn").click();
   } else if (e.code === "ArrowRight") {
     $("nextBtn").click();
   } else if (e.code === "Digit1") {
-    if (currentStep === 0 || currentPlay().defense) setTool("select");
+    if (currentStep === 0 || contextIds(currentPlay()).length) setTool("select");
   } else if (e.code === "Digit2") {
     setTool("arrow");
   } else if (e.code === "Digit3") {
-    setTool("screen");
+    setTool(playKind(currentPlay()) === "defense" ? "zone" : "screen");
   } else if (e.code === "Digit4") {
     setTool("pass");
   } else if (e.code === "Digit5") {
@@ -3697,19 +4058,12 @@ function tourPlace() {
   });
 }
 
-// A restarted tour must not stack a second advance-listener on the
-// create button, so the handler is shared and re-attached.
-function tourCreateAdvance() {
-  if (!$("tour").hidden && tourIdx === 0) setTimeout(nextTour, 400);
-}
-
 function startTour() {
   tourIdx = 0;
   $("tour").hidden = false;
   tourPlace();
-  // the first stop advances when the user actually creates a play
-  $("createNewBtn").removeEventListener("click", tourCreateAdvance);
-  $("createNewBtn").addEventListener("click", tourCreateAdvance, { once: true });
+  // the first stop advances from inside the create flow, once the play
+  // really exists (the creation modal sits in between)
 }
 
 function endTour() {

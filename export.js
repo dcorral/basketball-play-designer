@@ -12,6 +12,7 @@ const exportFormatEl = $("exportFormat");
 
 let exportRunning = false;
 let exportAborted = false;
+let exportQueue = null; // play ids for a bulk export from the home screen
 
 /* ---------------- Canvas scene renderer ---------------- */
 
@@ -511,6 +512,7 @@ function exUpdateFormatUI() {
 exportFormatEl.addEventListener("change", exUpdateFormatUI);
 
 $("exportBtn").addEventListener("click", () => {
+  exportQueue = null;
   stopPlayback();
   exportAborted = false;
   exportStatusEl.hidden = true;
@@ -518,6 +520,16 @@ $("exportBtn").addEventListener("click", () => {
   exUpdateFormatUI();
   exportModalEl.hidden = false;
 });
+
+// Bulk export from the home screen: same modal, then one file per play.
+function openExportModalFor(ids) {
+  exportQueue = ids;
+  exportAborted = false;
+  exportStatusEl.hidden = true;
+  exportGoBtn.disabled = false;
+  exUpdateFormatUI();
+  exportModalEl.hidden = false;
+}
 
 $("exportCancel").addEventListener("click", () => {
   exportAborted = true;
@@ -542,9 +554,22 @@ exportGoBtn.addEventListener("click", async () => {
   };
   try {
     const fmt = exportFormatEl.value;
-    if (fmt === "gif") await exportGif(opts);
-    else if (fmt === "video") await exportVideo(opts);
-    else await exportPdf();
+    const runOne = async () => {
+      if (fmt === "gif") await exportGif(opts);
+      else if (fmt === "video") await exportVideo(opts);
+      else await exportPdf();
+    };
+    if (exportQueue && exportQueue.length) {
+      const prevId = currentPlayId;
+      for (const id of exportQueue) {
+        if (exportAborted) break;
+        currentPlayId = id;
+        await runOne();
+      }
+      currentPlayId = prevId;
+    } else {
+      await runOne();
+    }
     if (!exportAborted) {
       exStatus(t("exportDone"));
       setTimeout(() => { exportModalEl.hidden = true; }, 900);

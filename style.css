@@ -234,6 +234,38 @@ body {
 
 #deleteSelectedTop svg { width: 17px; height: 17px; }
 
+.bulk-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.bulk-actions .card-del { margin-left: 0; }
+
+.bulk-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 7px;
+  display: flex;
+  flex: none;
+}
+
+.bulk-btn svg { width: 17px; height: 17px; }
+
+.bulk-btn:hover { background: rgba(255, 255, 255, 0.08); color: var(--text); }
+
+.card-lock {
+  flex: none;
+  display: flex;
+  color: var(--muted);
+}
+
+.card-lock svg { width: 13px; height: 13px; }
+
 .card-del:hover { background: #e0525226; }
 
 .play-card.dragging-card {
@@ -482,6 +514,19 @@ body.view-only #exportBtn,
 body.view-only #shareBtn { display: none !important; }
 
 body.view-only #viewEditBtn { display: inline-flex; }
+body.view-only #lockBtn { display: none; }
+
+#lockBtn.locked {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+body.play-locked #toolbar,
+body.play-locked .step-actions,
+body.play-locked #handles { display: none !important; }
+
+body.play-locked .play-name { cursor: default; pointer-events: none; }
 body.view-only .play-name { cursor: default; pointer-events: none; }
 
 .modal .field {

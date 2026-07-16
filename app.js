@@ -70,6 +70,16 @@ const I18N = {
     deleteSelTitle: "Delete selected plays?",
     deleteAllBtn: "Delete all plays",
     deleteAllTitle: "Delete ALL plays?",
+    ttLock: "Lock the play (prevent edits)",
+    ttUnlock: "Unlock the play",
+    unlockTitle: "Unlock play?",
+    unlockMsg: "The play will be editable again.",
+    bulkUnlockMsg: (n) => n === 1 ? "The selected play will be editable again." : `The ${n} selected plays will be editable again.`,
+    unlockConfirm: "Unlock",
+    ttBulkLock: "Lock selected plays",
+    ttBulkUnlock: "Unlock selected plays",
+    ttBulkSave: "Export selected as GIF, video or PDF",
+    ttBulkZip: "Download selected as a .zip backup",
     deleteAllMsg: (n) => `All ${n} plays will be deleted permanently. This cannot be undone.`,
     deleteSelMsg: (n) => n === 1 ? "The selected play will be deleted permanently." : `The ${n} selected plays will be deleted permanently.`,
     resetTitle: "Reset play?",
@@ -178,6 +188,16 @@ const I18N = {
     deleteSelTitle: "¿Eliminar las jugadas seleccionadas?",
     deleteAllBtn: "Eliminar todas las jugadas",
     deleteAllTitle: "¿Eliminar TODAS las jugadas?",
+    ttLock: "Bloquear la jugada (impide editarla)",
+    ttUnlock: "Desbloquear la jugada",
+    unlockTitle: "¿Desbloquear la jugada?",
+    unlockMsg: "La jugada volverá a ser editable.",
+    bulkUnlockMsg: (n) => n === 1 ? "La jugada seleccionada volverá a ser editable." : `Las ${n} jugadas seleccionadas volverán a ser editables.`,
+    unlockConfirm: "Desbloquear",
+    ttBulkLock: "Bloquear las jugadas seleccionadas",
+    ttBulkUnlock: "Desbloquear las jugadas seleccionadas",
+    ttBulkSave: "Exportar seleccionadas como GIF, vídeo o PDF",
+    ttBulkZip: "Descargar seleccionadas como copia .zip",
     deleteAllMsg: (n) => `Se eliminarán permanentemente las ${n} jugadas. Esto no se puede deshacer.`,
     deleteSelMsg: (n) => n === 1 ? "La jugada seleccionada se eliminará permanentemente." : `Las ${n} jugadas seleccionadas se eliminarán permanentemente.`,
     resetTitle: "¿Reiniciar jugada?",
@@ -286,6 +306,16 @@ const I18N = {
     deleteSelTitle: "Eliminare le giocate selezionate?",
     deleteAllBtn: "Elimina tutte le giocate",
     deleteAllTitle: "Eliminare TUTTE le giocate?",
+    ttLock: "Blocca la giocata (impedisce le modifiche)",
+    ttUnlock: "Sblocca la giocata",
+    unlockTitle: "Sbloccare la giocata?",
+    unlockMsg: "La giocata tornerà modificabile.",
+    bulkUnlockMsg: (n) => n === 1 ? "La giocata selezionata tornerà modificabile." : `Le ${n} giocate selezionate torneranno modificabili.`,
+    unlockConfirm: "Sblocca",
+    ttBulkLock: "Blocca le giocate selezionate",
+    ttBulkUnlock: "Sblocca le giocate selezionate",
+    ttBulkSave: "Esporta le selezionate come GIF, video o PDF",
+    ttBulkZip: "Scarica le selezionate come backup .zip",
     deleteAllMsg: (n) => `Tutte le ${n} giocate verranno eliminate definitivamente. Non si può annullare.`,
     deleteSelMsg: (n) => n === 1 ? "La giocata selezionata verrà eliminata definitivamente." : `Le ${n} giocate selezionate verranno eliminate definitivamente.`,
     resetTitle: "Azzerare la giocata?",
@@ -393,6 +423,16 @@ const I18N = {
     deleteSelTitle: "Удалить выбранные комбинации?",
     deleteAllBtn: "Удалить все комбинации",
     deleteAllTitle: "Удалить ВСЕ комбинации?",
+    ttLock: "Заблокировать комбинацию (запретить изменения)",
+    ttUnlock: "Разблокировать комбинацию",
+    unlockTitle: "Разблокировать комбинацию?",
+    unlockMsg: "Комбинацию снова можно будет редактировать.",
+    bulkUnlockMsg: (n) => n === 1 ? "Выбранную комбинацию снова можно будет редактировать." : `Выбранные комбинации (${n}) снова можно будет редактировать.`,
+    unlockConfirm: "Разблокировать",
+    ttBulkLock: "Заблокировать выбранные комбинации",
+    ttBulkUnlock: "Разблокировать выбранные комбинации",
+    ttBulkSave: "Экспортировать выбранные как GIF, видео или PDF",
+    ttBulkZip: "Скачать выбранные как резервную копию .zip",
     deleteAllMsg: (n) => `Все комбинации (${n}) будут удалены навсегда. Это нельзя отменить.`,
     deleteSelMsg: (n) => n === 1 ? "Выбранная комбинация будет удалена навсегда." : `Выбранные комбинации (${n}) будут удалены навсегда.`,
     resetTitle: "Сбросить комбинацию?",
@@ -500,6 +540,16 @@ const I18N = {
     deleteSelTitle: "删除所选战术？",
     deleteAllBtn: "删除全部战术",
     deleteAllTitle: "删除全部战术？",
+    ttLock: "锁定战术（禁止编辑）",
+    ttUnlock: "解锁战术",
+    unlockTitle: "解锁战术？",
+    unlockMsg: "该战术将恢复可编辑状态。",
+    bulkUnlockMsg: (n) => `选中的 ${n} 套战术将恢复可编辑状态。`,
+    unlockConfirm: "解锁",
+    ttBulkLock: "锁定所选战术",
+    ttBulkUnlock: "解锁所选战术",
+    ttBulkSave: "将所选导出为 GIF、视频或 PDF",
+    ttBulkZip: "将所选下载为 .zip 备份",
     deleteAllMsg: (n) => `全部 ${n} 套战术将被永久删除，且无法撤销。`,
     deleteSelMsg: (n) => `选中的 ${n} 套战术将被永久删除。`,
     resetTitle: "重置战术？",
@@ -607,6 +657,16 @@ const I18N = {
     deleteSelTitle: "Obrisati izabrane akcije?",
     deleteAllBtn: "Obriši sve akcije",
     deleteAllTitle: "Obrisati SVE akcije?",
+    ttLock: "Zaključaj akciju (sprečava izmene)",
+    ttUnlock: "Otključaj akciju",
+    unlockTitle: "Otključati akciju?",
+    unlockMsg: "Akcija će ponovo moći da se menja.",
+    bulkUnlockMsg: (n) => n === 1 ? "Izabrana akcija će ponovo moći da se menja." : `Izabrane akcije (${n}) će ponovo moći da se menjaju.`,
+    unlockConfirm: "Otključaj",
+    ttBulkLock: "Zaključaj izabrane akcije",
+    ttBulkUnlock: "Otključaj izabrane akcije",
+    ttBulkSave: "Izvezi izabrane kao GIF, video ili PDF",
+    ttBulkZip: "Preuzmi izabrane kao .zip rezervnu kopiju",
     deleteAllMsg: (n) => `Svih ${n} akcija biće trajno obrisano. Ovo se ne može poništiti.`,
     deleteSelMsg: (n) => n === 1 ? "Izabrana akcija biće trajno obrisana." : `Izabrane akcije (${n}) biće trajno obrisane.`,
     resetTitle: "Resetovati akciju?",
@@ -714,6 +774,16 @@ const I18N = {
     deleteSelTitle: "Izbrišem izbrane akcije?",
     deleteAllBtn: "Izbriši vse akcije",
     deleteAllTitle: "Izbrišem VSE akcije?",
+    ttLock: "Zakleni akcijo (prepreči urejanje)",
+    ttUnlock: "Odkleni akcijo",
+    unlockTitle: "Odklenem akcijo?",
+    unlockMsg: "Akcijo bo spet mogoče urejati.",
+    bulkUnlockMsg: (n) => n === 1 ? "Izbrano akcijo bo spet mogoče urejati." : `Izbrane akcije (${n}) bo spet mogoče urejati.`,
+    unlockConfirm: "Odkleni",
+    ttBulkLock: "Zakleni izbrane akcije",
+    ttBulkUnlock: "Odkleni izbrane akcije",
+    ttBulkSave: "Izvozi izbrane kot GIF, video ali PDF",
+    ttBulkZip: "Prenesi izbrane kot varnostno kopijo .zip",
     deleteAllMsg: (n) => `Vseh ${n} akcij bo trajno izbrisanih. Tega ni mogoče razveljaviti.`,
     deleteSelMsg: (n) => n === 1 ? "Izbrana akcija bo trajno izbrisana." : `Izbrane akcije (${n}) bodo trajno izbrisane.`,
     resetTitle: "Ponastavim akcijo?",
@@ -821,6 +891,16 @@ const I18N = {
     deleteSelTitle: "Διαγραφή επιλεγμένων συστημάτων;",
     deleteAllBtn: "Διαγραφή όλων των συστημάτων",
     deleteAllTitle: "Διαγραφή ΟΛΩΝ των συστημάτων;",
+    ttLock: "Κλείδωμα συστήματος (αποτρέπει αλλαγές)",
+    ttUnlock: "Ξεκλείδωμα συστήματος",
+    unlockTitle: "Ξεκλείδωμα συστήματος;",
+    unlockMsg: "Το σύστημα θα είναι ξανά επεξεργάσιμο.",
+    bulkUnlockMsg: (n) => n === 1 ? "Το επιλεγμένο σύστημα θα είναι ξανά επεξεργάσιμο." : `Τα ${n} επιλεγμένα συστήματα θα είναι ξανά επεξεργάσιμα.`,
+    unlockConfirm: "Ξεκλείδωμα",
+    ttBulkLock: "Κλείδωμα επιλεγμένων συστημάτων",
+    ttBulkUnlock: "Ξεκλείδωμα επιλεγμένων συστημάτων",
+    ttBulkSave: "Εξαγωγή επιλεγμένων ως GIF, βίντεο ή PDF",
+    ttBulkZip: "Λήψη επιλεγμένων ως αντίγραφο .zip",
     deleteAllMsg: (n) => `Και τα ${n} συστήματα θα διαγραφούν οριστικά. Δεν μπορεί να αναιρεθεί.`,
     deleteSelMsg: (n) => n === 1 ? "Το επιλεγμένο σύστημα θα διαγραφεί οριστικά." : `Τα ${n} επιλεγμένα συστήματα θα διαγραφούν οριστικά.`,
     resetTitle: "Επαναφορά συστήματος;",
@@ -982,8 +1062,12 @@ function applyLang() {
   fmtOpts[1].text = t("fmtVideo");
   fmtOpts[2].text = t("fmtPdf");
 
-  if (!editorEl.hidden && currentPlay()) renderAll();
-  else renderHome();
+  if (!editorEl.hidden && currentPlay()) {
+    if (!viewPlay) applyLockState();
+    renderAll();
+  } else {
+    renderHome();
+  }
 }
 
 for (const id of ["langHome", "langEditor"]) {
@@ -1148,7 +1232,7 @@ function load() {
 function showHome() {
   playing = false;
   viewPlay = null;
-  document.body.classList.remove("playing", "view-only");
+  document.body.classList.remove("playing", "view-only", "play-locked");
   playNameEl.readOnly = false;
   editorEl.hidden = true;
   homeEl.hidden = false;
@@ -1160,6 +1244,7 @@ function openPlay(id) {
   viewPlay = null;
   document.body.classList.remove("view-only");
   playNameEl.readOnly = false;
+  applyLockState();
   currentStep = 0;
   playhead = 0;
   playing = false;
@@ -1176,6 +1261,7 @@ function openPlay(id) {
 // Read-only viewer for a shared play: court, name and playback only.
 function openViewer(play) {
   viewPlay = play;
+  document.body.classList.remove("play-locked");
   document.body.classList.add("view-only");
   playNameEl.readOnly = true;
   currentStep = 0;
@@ -1214,6 +1300,18 @@ function updateDeleteSelected() {
   const topBtn = $("deleteSelectedTop");
   topBtn.hidden = selectedPlayIds.size === 0;
   topBtn.title = t("deleteSelected", selectedPlayIds.size);
+  const none = selectedPlayIds.size === 0;
+  $("saveSelectedBtn").hidden = none;
+  $("saveSelectedBtn").title = t("ttBulkSave");
+  $("zipSelectedBtn").hidden = none;
+  $("zipSelectedBtn").title = t("ttBulkZip");
+  const lockBulk = $("lockSelectedBtn");
+  lockBulk.hidden = none;
+  const sel = plays.filter((p) => selectedPlayIds.has(p.id));
+  const allLocked = sel.length > 0 && sel.every((p) => p.locked);
+  lockBulk.title = t(allLocked ? "ttBulkUnlock" : "ttBulkLock");
+  lockBulk.querySelector(".ic-locked").style.display = allLocked ? "none" : "";
+  lockBulk.querySelector(".ic-open").style.display = allLocked ? "" : "none";
   $("selectAllRow").hidden = filteredPlays().length < 2;
   $("selectAllLabel").textContent = t("selectAll");
   const visible = visiblePlays();
@@ -1286,6 +1384,15 @@ function renderHome() {
       badge.textContent = t("importedBadge");
     }
 
+    let lockIc = null;
+    if (p.locked) {
+      lockIc = document.createElement("span");
+      lockIc.className = "card-lock";
+      lockIc.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11 V7 a4 4 0 0 1 8 0 v4"/></svg>';
+    }
+
     const del = document.createElement("button");
     del.className = "card-del";
     del.title = t("ttDelete");
@@ -1310,8 +1417,10 @@ function renderHome() {
     meta.className = "meta";
     meta.textContent = p.steps.length + " " + (p.steps.length === 1 ? t("stepSingular") : t("stepPlural"));
 
-    if (badge) card.append(check, grip, name, badge, meta, del);
-    else card.append(check, grip, name, meta, del);
+    card.append(check, grip, name);
+    if (lockIc) card.append(lockIc);
+    if (badge) card.append(badge);
+    card.append(meta, del);
     card.addEventListener("click", () => {
       if (cardDragJustEnded) return;
       openPlay(p.id);
@@ -1391,6 +1500,12 @@ function createPlay(name) {
 
 function currentPlay() {
   return viewPlay || plays.find((p) => p.id === currentPlayId);
+}
+
+// Editing is blocked in the shared viewer and on locked plays.
+function editLocked() {
+  const p = currentPlay();
+  return !!(viewPlay || (p && p.locked));
 }
 
 // Play names are unique: collisions get a -N suffix (first free number).
@@ -1654,6 +1769,7 @@ function restoreState(json) {
 }
 
 function doUndo() {
+  if (editLocked()) return;
   if (!undoStack.length) return;
   stopPlayback();
   redoStack.push(snapshotState());
@@ -1662,6 +1778,7 @@ function doUndo() {
 }
 
 function doRedo() {
+  if (editLocked()) return;
   if (!redoStack.length) return;
   stopPlayback();
   undoStack.push(snapshotState());
@@ -1796,7 +1913,7 @@ function renderStepChips() {
     // Deletable: the last step, or any step with no drawn actions (an empty
     // step's positions equal the next step's, so removing it keeps every
     // surrounding arrow valid).
-    const deletable = !viewPlay && steps.length > 1 &&
+    const deletable = !editLocked() && steps.length > 1 &&
       (i === steps.length - 1 || !hasMoves(steps[i]));
     if (deletable) {
       const del = document.createElement("span");
@@ -1953,7 +2070,7 @@ function makeArrowEls(tokenId, a, move, ghost) {
 
 // Give one of the ball carrier's two actions preference (make it happen first).
 function preferOrder(passFirst) {
-  if (viewPlay) return;
+  if (editLocked()) return;
   const step = currentPlay().steps[currentStep];
   if (!step.pass || !step.moves[step.ball]) return;
   const want = passFirst ? 1 : 2;
@@ -1977,7 +2094,7 @@ function renderArrows() {
   const addEls = (els) => {
     for (const el of els) {
       el.addEventListener("pointerdown", (e) => {
-        if (tool !== "eraser" || playing) return;
+        if (tool !== "eraser" || playing || editLocked()) return;
         e.preventDefault();
         e.stopPropagation();
         eraseMove(el.dataset.token);
@@ -2004,7 +2121,7 @@ function renderArrows() {
         preferOrder(passFirst);
       });
       el.addEventListener("pointerdown", (e) => {
-        if (tool === "eraser" || playing || viewPlay) return;
+        if (tool === "eraser" || playing || editLocked()) return;
         const sx = e.clientX, sy = e.clientY;
         const timer = setTimeout(() => preferOrder(passFirst), 450);
         const cancel = () => {
@@ -2052,7 +2169,7 @@ function renderArrows() {
   }
 
   // one-time hint the first time a player has two ordered actions
-  if (dual && !playing && !viewPlay && !localStorage.getItem("playbook-order-help")) {
+  if (dual && !playing && !editLocked() && !localStorage.getItem("playbook-order-help")) {
     localStorage.setItem("playbook-order-help", "1");
     showToast(t("orderHelp"));
   }
@@ -2089,7 +2206,7 @@ function hasArrow(step, tokenId) {
 // paused on a step (the eraser deletes the arrow instead).
 function renderHandles() {
   handlesEl.innerHTML = "";
-  if (playing || viewPlay || playhead !== currentStep) return;
+  if (playing || editLocked() || playhead !== currentStep) return;
   const step = currentPlay().steps[currentStep];
   for (const d of TOKEN_DEFS) {
     if (!hasArrow(step, d.id)) continue;
@@ -2365,7 +2482,7 @@ function eraseMove(tokenId) {
 
 function attachTokenPointer(el, tokenId) {
   el.addEventListener("pointerdown", (e) => {
-    if (playing || viewPlay) return;
+    if (playing || editLocked()) return;
     // Editing always happens on an exact step.
     playhead = currentStep;
     e.preventDefault();
@@ -2596,6 +2713,37 @@ function tick(now) {
 
 /* ================= Wiring ================= */
 
+function applyLockState() {
+  const p = viewPlay ? null : currentPlay();
+  const locked = !!(p && p.locked);
+  document.body.classList.toggle("play-locked", locked);
+  if (!viewPlay) playNameEl.readOnly = locked;
+  const b = $("lockBtn");
+  b.classList.toggle("locked", locked);
+  b.querySelector(".ic-locked").style.display = locked ? "" : "none";
+  b.querySelector(".ic-open").style.display = locked ? "none" : "";
+  b.title = t(locked ? "ttUnlock" : "ttLock");
+}
+
+$("lockBtn").addEventListener("click", async () => {
+  const p = currentPlay();
+  if (!p || viewPlay) return;
+  if (!p.locked) {
+    p.locked = true;
+  } else {
+    const ok = await openModal({
+      title: t("unlockTitle"),
+      message: t("unlockMsg"),
+      confirmLabel: t("unlockConfirm"),
+    });
+    if (!ok) return;
+    p.locked = false;
+  }
+  save();
+  applyLockState();
+  renderAll();
+});
+
 $("createNewBtn").addEventListener("click", () => {
   const base = t("playDefault") + " " + (plays.length + 1);
   const name = uniquePlayName(base);
@@ -2658,6 +2806,34 @@ async function deleteSelectedPlays() {
 $("deleteSelectedBtn").addEventListener("click", deleteSelectedPlays);
 $("deleteSelectedTop").addEventListener("click", deleteSelectedPlays);
 
+$("lockSelectedBtn").addEventListener("click", async () => {
+  const sel = plays.filter((p) => selectedPlayIds.has(p.id));
+  if (!sel.length) return;
+  const allLocked = sel.every((p) => p.locked);
+  if (allLocked) {
+    const ok = await openModal({
+      title: t("unlockTitle"),
+      message: t("bulkUnlockMsg", sel.length),
+      confirmLabel: t("unlockConfirm"),
+    });
+    if (!ok) return;
+    sel.forEach((p) => { p.locked = false; });
+  } else {
+    sel.forEach((p) => { p.locked = true; });
+  }
+  save();
+  renderHome();
+});
+
+$("zipSelectedBtn").addEventListener("click", () => {
+  const sel = plays.filter((p) => selectedPlayIds.has(p.id));
+  if (sel.length) exportBackup(sel);
+});
+
+$("saveSelectedBtn").addEventListener("click", () => {
+  if (selectedPlayIds.size) openExportModalFor([...selectedPlayIds]);
+});
+
 $("backBtn").addEventListener("click", showHome);
 
 /* ---- inline rename ---- */
@@ -2669,7 +2845,7 @@ function sizeNameInput() {
 function commitRename() {
   const p = currentPlay();
   if (!p) return;
-  if (viewPlay) {
+  if (editLocked()) {
     playNameEl.value = p.name;
     return;
   }
@@ -2710,6 +2886,7 @@ $("deletePlayBtn").addEventListener("click", async () => {
 });
 
 async function resetAllPlay() {
+  if (editLocked()) return;
   const ok = await openModal({
     title: t("resetTitle"),
     message: t("resetMsg"),
@@ -2771,6 +2948,7 @@ scrubber.addEventListener("input", () => {
 // A new step requires the last one to have actions — otherwise the play
 // would contain two consecutive steps where nothing happens.
 function addStep() {
+  if (editLocked()) return;
   stopPlayback();
   const steps0 = currentPlay().steps;
   if (!hasMoves(steps0[steps0.length - 1])) return;
@@ -2933,6 +3111,7 @@ async function importFromLink() {
     if (!raw || !raw.name || !Array.isArray(raw.steps) || !raw.steps.length) throw new Error("bad");
     const p = normalizePassTimings(migrateBall(migratePlay(raw)));
     p.id = "play-" + Math.random().toString(36).slice(2, 10); // always a fresh copy
+    delete p.locked; // a received copy is the recipient's to edit
     if (m[1] === "v") openViewer(p);
     else await addSharedPlay(p);
   } catch (_) {

@@ -130,9 +130,12 @@ async function readZip(buffer) {
 
 /* ---------------- Backup logic ---------------- */
 
-function exportBackup() {
+// With no argument every play is exported; a subset (e.g. the plays
+// selected on the home screen) can be passed explicitly.
+function exportBackup(subset) {
+  const list = Array.isArray(subset) && subset.length ? subset : plays;
   const json = JSON.stringify(
-    { app: "playbook", version: 3, exportedAt: new Date().toISOString(), plays },
+    { app: "playbook", version: 3, exportedAt: new Date().toISOString(), plays: list },
     null,
     2
   );
@@ -173,7 +176,7 @@ async function importBackup(buffer) {
 
 /* ---------------- Wiring ---------------- */
 
-$("exportAllBtn").addEventListener("click", exportBackup);
+$("exportAllBtn").addEventListener("click", () => exportBackup());
 
 $("importAllBtn").addEventListener("click", () => $("importFile").click());
 

@@ -26,6 +26,11 @@
     <div class="home-inner">
       <img src="assets/logo.png" alt="Cejudos" class="home-logo">
       <h1 id="homeTitle">Cejudo's Playbook</h1>
+      <button id="createNewBtn" class="create-new">＋ CREATE NEW</button>
+      <div class="backup-row">
+        <button id="exportAllBtn" class="btn">⤓ Export all (.zip)</button>
+        <button id="importAllBtn" class="btn">⤒ Import (.zip)</button>
+      </div>
       <input id="playSearch" class="play-search" type="search" autocomplete="off" spellcheck="false" hidden>
       <div id="selectAllRow" class="select-all-row" hidden>
         <input type="checkbox" id="selectAllCheck" class="card-check">
@@ -39,11 +44,6 @@
         <button id="pageNext" class="btn">›</button>
       </div>
       <button id="deleteSelectedBtn" class="btn btn-danger-solid" hidden></button>
-      <button id="createNewBtn" class="create-new">＋ CREATE NEW</button>
-      <div class="backup-row">
-        <button id="exportAllBtn" class="btn">⤓ Export all (.zip)</button>
-        <button id="importAllBtn" class="btn">⤒ Import (.zip)</button>
-      </div>
     </div>
     <input id="importFile" type="file" accept=".zip,application/zip" hidden>
   </div>
@@ -321,5 +321,6 @@
   <script src="app.js"></script>
   <script src="export.js"></script>
   <script src="backup.js"></script>
+
 </body>
 </html>

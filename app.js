@@ -3108,3 +3108,10 @@ showHome();
 const arrivedViaShareLink = /^#(p|v)=/.test(location.hash);
 importFromLink();
 if (!arrivedViaShareLink && !localStorage.getItem(WIZ_FLAG)) startTour();
+
+// Offline support: cache the app shell so the playbook works without a connection.
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}

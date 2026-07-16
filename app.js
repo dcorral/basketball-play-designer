@@ -204,7 +204,8 @@ const I18N = {
     helpTourBtn: "Restart the tour",
     tourSkip: "Skip tour", tourNext: "Next", tourDone: "Done!",
     tourTexts: [
-      "Welcome! Let's build your first play — click the highlighted button and pick its type (offense or defense) and court size.",
+      "Welcome! Let's build your first play — click the highlighted button.",
+      "Pick what kind of play this is — offense or defense — and whether it uses half or the full court, then hit Create.",
       "This is your court. Drag the players and the ball to their starting spots (out of bounds works too).",
       "Your toolbar: movement arrows, screens, passes and the eraser. Drag from a player to draw their cut, or use the pass tool to throw from anywhere. Drag the grip to move it.",
       "In defensive plays this tool shades each defender\u2019s area of action — drag anywhere on the court to draw one, and drag the area to move it.",
@@ -339,7 +340,8 @@ const I18N = {
     helpTourBtn: "Reiniciar el tour",
     tourSkip: "Saltar tour", tourNext: "Siguiente", tourDone: "¡Listo!",
     tourTexts: [
-      "¡Bienvenido! Vamos a crear tu primera jugada — pulsa el botón resaltado y elige su tipo (ataque o defensa) y el tamaño de pista.",
+      "¡Bienvenido! Vamos a crear tu primera jugada — pulsa el botón resaltado.",
+      "Elige qué tipo de jugada es — ataque o defensa — y si usa media pista o la pista completa; después pulsa Crear.",
       "Esta es tu pista. Arrastra a los jugadores y el balón a sus posiciones iniciales (también vale fuera de la pista).",
       "Tu barra de herramientas: flechas de movimiento, bloqueos, pases y el borrador. Arrastra desde un jugador para dibujar su corte, o usa la herramienta de pase desde cualquier punto. Muévela arrastrando su agarre.",
       "En las jugadas defensivas esta herramienta sombrea el área de acción de cada defensor — arrastra en cualquier punto para dibujarla y arrástrala para moverla.",
@@ -485,7 +487,8 @@ const I18N = {
     helpTourBtn: "Riavvia il tour",
     tourSkip: "Salta il tour", tourNext: "Avanti", tourDone: "Fatto!",
     tourTexts: [
-      "Benvenuto! Creiamo la tua prima giocata — clicca il pulsante evidenziato e scegli tipo (attacco o difesa) e campo.",
+      "Benvenuto! Creiamo la tua prima giocata — clicca il pulsante evidenziato.",
+      "Scegli il tipo di giocata — attacco o difesa — e se usa metà campo o il campo intero, poi premi Crea.",
       "Questo è il tuo campo. Trascina i giocatori e il pallone nelle posizioni iniziali (anche fuori dal campo).",
       "La barra degli strumenti: frecce di movimento, blocchi, passaggi e gomma. Trascina da un giocatore per il suo taglio, o usa lo strumento passaggio da qualsiasi punto. Spostala trascinando la presa.",
       "Nelle giocate difensive questo strumento evidenzia l\u2019area di azione di ogni difensore — trascina ovunque per disegnarla e trascina l\u2019area per spostarla.",
@@ -619,7 +622,8 @@ const I18N = {
     helpTourBtn: "Запустить тур заново",
     tourSkip: "Пропустить тур", tourNext: "Далее", tourDone: "Готово!",
     tourTexts: [
-      "Добро пожаловать! Создадим вашу первую комбинацию — нажмите подсвеченную кнопку и выберите тип (нападение или защита) и размер площадки.",
+      "Добро пожаловать! Создадим вашу первую комбинацию — нажмите подсвеченную кнопку.",
+      "Выберите тип комбинации — нападение или защита — и половину или всю площадку, затем нажмите «Создать».",
       "Это ваша площадка. Перетащите игроков и мяч на начальные позиции (можно и за пределы площадки).",
       "Панель инструментов: стрелки движения, заслоны, передачи и ластик. Тяните от игрока, чтобы нарисовать рывок, или используйте инструмент передачи из любой точки. Панель можно перетащить за захват.",
       "В защитных комбинациях этот инструмент выделяет зону ответственности каждого защитника — тяните в любом месте площадки, чтобы нарисовать её, и перетаскивайте зону, чтобы сдвинуть.",
@@ -753,7 +757,8 @@ const I18N = {
     helpTourBtn: "重新开始教程",
     tourSkip: "跳过教程", tourNext: "下一步", tourDone: "完成！",
     tourTexts: [
-      "欢迎！让我们创建你的第一套战术 — 点击高亮按钮，并选择类型（进攻或防守）和场地大小。",
+      "欢迎！让我们创建你的第一套战术 — 点击高亮按钮。",
+      "选择战术类型——进攻或防守——以及使用半场还是全场，然后点击创建。",
       "这是你的球场。将球员和球拖到初始位置（也可以放在场外）。",
       "工具栏：移动箭头、掩护、传球和橡皮擦。从球员拖出画切入路线，或用传球工具在任意位置传球。拖动手柄可移动工具栏。",
       "在防守战术中，此工具会标出每名防守球员的负责区域——在球场任意位置拖动即可绘制，拖动区域可移动它。",
@@ -887,7 +892,8 @@ const I18N = {
     helpTourBtn: "Ponovo pokreni vodič",
     tourSkip: "Preskoči vodič", tourNext: "Dalje", tourDone: "Gotovo!",
     tourTexts: [
-      "Dobro došao! Napravimo tvoju prvu akciju — klikni istaknuto dugme i izaberi tip (napad ili odbrana) i veličinu terena.",
+      "Dobro došao! Napravimo tvoju prvu akciju — klikni istaknuto dugme.",
+      "Izaberi kakva je akcija — napad ili odbrana — i da li koristi pola ili ceo teren, pa pritisni Napravi.",
       "Ovo je tvoj teren. Prevuci igrače i loptu na početne pozicije (može i van terena).",
       "Traka sa alatima: strelice kretanja, blokovi, dodavanja i gumica. Prevuci od igrača da nacrtaš utrčavanje, ili koristi alat za dodavanje sa bilo kog mesta. Pomeri traku prevlačenjem držača.",
       "U odbrambenim akcijama ovaj alat boji zonu delovanja svakog odbrambenog igrača — prevuci bilo gde da je nacrtaš i prevuci zonu da je pomeriš.",
@@ -1021,7 +1027,8 @@ const I18N = {
     helpTourBtn: "Ponovno zaženi vodič",
     tourSkip: "Preskoči vodič", tourNext: "Naprej", tourDone: "Končano!",
     tourTexts: [
-      "Dobrodošel! Ustvarimo tvojo prvo akcijo — klikni označeni gumb ter izberi vrsto (napad ali obramba) in velikost igrišča.",
+      "Dobrodošel! Ustvarimo tvojo prvo akcijo — klikni označeni gumb.",
+      "Izberi vrsto akcije — napad ali obramba — in ali uporablja polovico ali celo igrišče, nato pritisni Ustvari.",
       "To je tvoje igrišče. Povleci igralce in žogo na začetne položaje (lahko tudi izven igrišča).",
       "Orodna vrstica: puščice gibanja, blokade, podaje in radirka. Povleci od igralca za vtekanje ali uporabi orodje za podajo od koderkoli. Vrstico premakneš z vlečenjem ročaja.",
       "Pri obrambnih akcijah to orodje obarva območje delovanja vsakega obrambnega igralca — povleci kjerkoli, da ga narišeš, in povleci območje, da ga premakneš.",
@@ -1155,7 +1162,8 @@ const I18N = {
     helpTourBtn: "Επανεκκίνηση ξενάγησης",
     tourSkip: "Παράλειψη", tourNext: "Επόμενο", tourDone: "Έτοιμο!",
     tourTexts: [
-      "Καλώς ήρθες! Ας φτιάξουμε το πρώτο σου σύστημα — πάτησε το φωτισμένο κουμπί και διάλεξε τύπο (επίθεση ή άμυνα) και μέγεθος γηπέδου.",
+      "Καλώς ήρθες! Ας φτιάξουμε το πρώτο σου σύστημα — πάτησε το φωτισμένο κουμπί.",
+      "Διάλεξε τι είδους σύστημα είναι — επίθεση ή άμυνα — και αν χρησιμοποιεί μισό ή ολόκληρο γήπεδο, μετά πάτησε Δημιουργία.",
       "Αυτό είναι το γήπεδό σου. Σύρε τους παίκτες και την μπάλα στις αρχικές θέσεις (και εκτός γηπέδου).",
       "Η εργαλειοθήκη: βέλη κίνησης, σκριν, πάσες και γόμα. Σύρε από παίκτη για κόψιμο ή χρησιμοποίησε το εργαλείο πάσας από οπουδήποτε. Μετακίνησέ τη σέρνοντας τη λαβή της.",
       "Στα αμυντικά συστήματα αυτό το εργαλείο χρωματίζει την περιοχή ευθύνης κάθε αμυντικού — σύρε οπουδήποτε για να τη σχεδιάσεις και σύρε την περιοχή για να τη μετακινήσεις.",
@@ -3535,15 +3543,21 @@ function openCreateModal() {
 }
 
 $("createNewBtn").addEventListener("click", async () => {
+  // during the tour, the spotlight follows the flow: button -> form -> court
+  const touring = () => !$("tour").hidden;
+  const modalOpening = touring() && tourIdx === 0;
+  if (modalOpening) setTimeout(nextTour, 150); // onto the type/court form
   const opts = await openCreateModal();
-  if (!opts) return;
+  if (!opts) {
+    if (touring() && tourIdx === 1) { tourIdx = 0; tourPlace(); }
+    return;
+  }
   const base = t("playDefault") + " " + (plays.length + 1);
   const name = uniquePlayName(base);
   const play = createPlay(name, opts.kind, opts.court);
   openPlay(play.id);
   if (name !== base) showToast(t("renamedToast", name));
-  // the tour's first stop advances once the play really exists
-  if (!$("tour").hidden && tourIdx === 0) setTimeout(nextTour, 400);
+  if (touring() && tourIdx === 1) setTimeout(nextTour, 400);
 });
 
 $("selectAllCheck").addEventListener("change", (e) => {
@@ -4012,6 +4026,7 @@ const WIZ_FLAG = "playbook-welcomed";
 // user clicks the element itself.
 const tourDefs = [
   { sel: "#createNewBtn", action: true },
+  { sel: "#createModal .modal", action: true },
   { sel: "#stage" },
   { sel: "#toolbar" },
   { sel: '[data-tool="zone"]' },
@@ -4029,7 +4044,12 @@ function tourPlace() {
   const toolbarStop = def.sel === "#toolbar" || def.sel.includes("data-tool");
   if (SMALL_MQ.matches) setToolbarFolded(!toolbarStop);
   const el = document.querySelector(def.sel);
-  if (!el || el.offsetParent === null && def.sel !== "#toolbar") {
+  // the modal sits in a fixed overlay (offsetParent is null even when
+  // visible), so it gets its own visibility check
+  const missing = def.sel.includes("createModal")
+    ? $("createModal").hidden
+    : !el || (el.offsetParent === null && def.sel !== "#toolbar");
+  if (missing) {
     // target missing — move on
     nextTour();
     return;

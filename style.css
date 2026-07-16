@@ -439,6 +439,29 @@ body {
 
 .card-del:hover { background: #e0525226; }
 
+.step-chip.step-defense {
+  background: #31435e;
+  color: #b9cdea;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-actions .step-chip.step-defense { padding: 6px 28px; }
+
+.step-chip.step-defense svg {
+  width: 19px;
+  height: 19px;
+  display: block;
+}
+
+.step-chip.step-defense:hover { background: #3c5474; }
+
+.step-chip.step-defense.on {
+  background: #b32821;
+  color: #fff;
+}
+
 .play-card.dragging-card {
   opacity: 0.93;
   z-index: 10;
@@ -1056,6 +1079,36 @@ select:hover, .btn:hover { border-color: #5a5a63; }
   border: 2px solid #cfe2ff;
 }
 
+.token.defense {
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.token.defense::before,
+.token.defense::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 110%;
+  height: 16%;
+  border-radius: 99px;
+  background: #b32821;
+  box-shadow: 0 1px 3px #0009;
+}
+
+.token.defense::before { transform: translate(-50%, -50%) rotate(45deg); }
+.token.defense::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+.token.defense .dnum {
+  position: relative;
+  z-index: 2;
+  font-size: clamp(8px, 1.7vmin, 15px);
+  text-shadow: 0 1px 2px #000d, 0 0 3px #000a;
+}
+
 .token.ball {
   width: 3.9%;
   background: radial-gradient(circle at 35% 30%, #ff9c50, #d35f14);
@@ -1223,6 +1276,27 @@ input[type="range"]::-moz-range-thumb {
   background: #e3e5e9;
 }
 
+/* small screens: JS adds .vertical (always) and .folded (collapsed) */
+.toolbar.vertical { flex-direction: column; align-items: stretch; }
+
+.toolbar.vertical .tool-sep {
+  width: auto;
+  height: 1px;
+  align-self: stretch;
+  margin: 3px 5px;
+}
+
+.toolbar.vertical .tool-grip {
+  width: auto;
+  height: 15px;
+  align-self: stretch;
+}
+
+.toolbar.vertical .tool-grip svg { transform: rotate(90deg); }
+
+.toolbar.folded .tool:not(.active) { display: none; }
+.toolbar.folded .tool-sep { display: none; }
+
 .tool-grip {
   width: 16px;
   align-self: stretch;
@@ -1278,6 +1352,37 @@ body[data-tool="eraser"] .screen-cap {
 .arrow-path.ball-path {
   stroke-dasharray: 1.2 1;
 }
+
+.arrow-path.def { stroke: #b32821; }
+
+/* silent defender moves: faint X at the destination while editing */
+.def-ghost {
+  stroke: #b32821;
+  stroke-width: 0.85;
+  opacity: 0.45;
+  fill: none;
+  stroke-linecap: round;
+}
+
+.def-ghost-hit { fill: none; stroke: none; cursor: grab; }
+
+.def-ghost-tie {
+  stroke: #b32821;
+  stroke-width: 0.3;
+  stroke-dasharray: 0.7 1.5;
+  stroke-linecap: round;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.def-ghost-tie.ghost { opacity: 0.08; }
+
+.def-ghost { cursor: grab; }
+
+body[data-tool="eraser"] .def-ghost,
+body[data-tool="eraser"] .def-ghost-hit { cursor: pointer; }
+
+.def-ghost.ghost { opacity: 0.18; }
 
 .arrow-path.screen { stroke: #ffd166; }
 

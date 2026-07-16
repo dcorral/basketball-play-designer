@@ -127,6 +127,12 @@
 
     <div class="step-actions">
       <button id="addStepBtn" class="step-chip step-add" title="Next step">＋</button>
+      <button id="defenseBtn" class="step-chip step-defense" title="Show / hide defenders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2.5 L20 5.5 V11 C20 16.6 16.6 20.3 12 21.8 C7.4 20.3 4 16.6 4 11 V5.5 Z"/>
+          <path d="M9.3 8.8 L14.7 14.6 M14.7 8.8 L9.3 14.6"/>
+        </svg>
+      </button>
       <button id="resetAllBtn" class="step-chip step-reset" title="Reset all">↺</button>
     </div>
 
@@ -193,6 +199,10 @@
             <marker id="arrowHead" viewBox="0 0 10 10" refX="8" refY="5"
                     markerWidth="5" markerHeight="5" orient="auto-start-reverse">
               <path d="M 0 0 L 10 5 L 0 10 z" fill="#1a1a1a"/>
+            </marker>
+            <marker id="arrowHeadDef" viewBox="0 0 10 10" refX="8" refY="5"
+                    markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#b32821"/>
             </marker>
           </defs>
           <g id="arrowsGroup"></g>

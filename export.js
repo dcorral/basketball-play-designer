@@ -40,7 +40,7 @@ function exPoint(p, W, H) {
   };
 }
 
-function exDrawArrow(ctx, W, H, a, m, isBall, ghost, dribble) {
+function exDrawArrow(ctx, W, H, a, m, isBall, ghost, dribble, defender) {
   const A = exPoint(a, W, H);
   const B = exPoint(m.to, W, H);
   const C = m.via ? exPoint(m.via, W, H) : null;
@@ -49,7 +49,7 @@ function exDrawArrow(ctx, W, H, a, m, isBall, ghost, dribble) {
 
   ctx.save();
   ctx.globalAlpha = ghost ? 0.45 : 0.92;
-  ctx.strokeStyle = m.type === "screen" ? "#ffd166" : "#1a1a1a";
+  ctx.strokeStyle = m.type === "screen" ? "#ffd166" : defender ? "#b32821" : "#1a1a1a";
   ctx.fillStyle = ctx.strokeStyle;
   ctx.lineWidth = W * 0.007;
   ctx.lineCap = "round";
@@ -113,6 +113,23 @@ function exDrawToken(ctx, W, H, def, p) {
     ctx.moveTo(c.x - r, c.y); ctx.lineTo(c.x + r, c.y);
     ctx.moveTo(c.x, c.y - r); ctx.lineTo(c.x, c.y + r);
     ctx.stroke();
+  } else if (def.type === "defense") {
+    const sX = r * 0.92;
+    ctx.strokeStyle = "#b32821";
+    ctx.lineWidth = r * 0.42;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(c.x - sX, c.y - sX); ctx.lineTo(c.x + sX, c.y + sX);
+    ctx.moveTo(c.x + sX, c.y - sX); ctx.lineTo(c.x - sX, c.y + sX);
+    ctx.stroke();
+    ctx.font = `700 ${Math.round(r * 0.9)}px system-ui, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.strokeStyle = "rgba(0,0,0,0.6)";
+    ctx.lineWidth = r * 0.26;
+    ctx.strokeText(def.label, c.x, c.y + r * 0.04);
+    ctx.fillStyle = "#fff";
+    ctx.fillText(def.label, c.x, c.y + r * 0.04);
   } else {
     const g = ctx.createRadialGradient(c.x - r * 0.35, c.y - r * 0.45, r * 0.2, c.x, c.y, r);
     g.addColorStop(0, "#4d8fe0");
@@ -140,7 +157,8 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label, s
     const step = currentPlay().steps[arrowsStepIdx];
     const dual = !!(step.pass && step.moves[step.ball]);
     const passOrder = dual ? passOrderOf(step) : 1;
-    for (const id of PLAYER_IDS) {
+    for (const id of idsFor(currentPlay())) {
+      if (DEFENDER_IDS.includes(id)) continue; // silent moves — never drawn
       const m = step.moves[id];
       if (m) exDrawArrow(ctx, W, H, step.pos[id], m, false,
         ghost || (dual && id === step.ball && passOrder === 1),
@@ -155,7 +173,7 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label, s
       }, true, ghost || (dual && passOrder === 2));
     }
   }
-  for (const d of TOKEN_DEFS) exDrawToken(ctx, W, H, d, posMap[d.id]);
+  for (const d of defsFor(currentPlay())) exDrawToken(ctx, W, H, d, posMap[d.id]);
 
   if (label) {
     // play name, bottom left

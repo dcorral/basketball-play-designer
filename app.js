@@ -63,6 +63,9 @@ const I18N = {
     newPlayTitle: "New play", renameTitle: "Rename play",
     deleteTitle: "Delete play?",
     deleteMsg: (n) => `"${n}" will be deleted permanently.`,
+    deleteSelected: (n) => `Delete selected (${n})`,
+    deleteSelTitle: "Delete selected plays?",
+    deleteSelMsg: (n) => n === 1 ? "The selected play will be deleted permanently." : `The ${n} selected plays will be deleted permanently.`,
     resetTitle: "Reset play?",
     resetMsg: "All steps and arrows will be removed. The starting positions of step 1 are kept.",
     untitled: "Untitled play", playDefault: "Play",
@@ -162,6 +165,9 @@ const I18N = {
     newPlayTitle: "Nueva jugada", renameTitle: "Renombrar jugada",
     deleteTitle: "¿Eliminar jugada?",
     deleteMsg: (n) => `"${n}" se eliminará permanentemente.`,
+    deleteSelected: (n) => `Eliminar seleccionadas (${n})`,
+    deleteSelTitle: "¿Eliminar las jugadas seleccionadas?",
+    deleteSelMsg: (n) => n === 1 ? "La jugada seleccionada se eliminará permanentemente." : `Las ${n} jugadas seleccionadas se eliminarán permanentemente.`,
     resetTitle: "¿Reiniciar jugada?",
     resetMsg: "Se eliminarán todos los pasos y flechas. Se mantendrán las posiciones iniciales del paso 1.",
     untitled: "Jugada sin nombre", playDefault: "Jugada",
@@ -261,6 +267,9 @@ const I18N = {
     newPlayTitle: "Nuova giocata", renameTitle: "Rinomina giocata",
     deleteTitle: "Eliminare la giocata?",
     deleteMsg: (n) => `"${n}" verrà eliminata definitivamente.`,
+    deleteSelected: (n) => `Elimina selezionate (${n})`,
+    deleteSelTitle: "Eliminare le giocate selezionate?",
+    deleteSelMsg: (n) => n === 1 ? "La giocata selezionata verrà eliminata definitivamente." : `Le ${n} giocate selezionate verranno eliminate definitivamente.`,
     resetTitle: "Azzerare la giocata?",
     resetMsg: "Tutti i passi e le frecce verranno rimossi. Le posizioni iniziali del passo 1 vengono mantenute.",
     untitled: "Giocata senza nome", playDefault: "Giocata",
@@ -359,6 +368,9 @@ const I18N = {
     newPlayTitle: "Новая комбинация", renameTitle: "Переименовать комбинацию",
     deleteTitle: "Удалить комбинацию?",
     deleteMsg: (n) => `«${n}» будет удалена навсегда.`,
+    deleteSelected: (n) => `Удалить выбранные (${n})`,
+    deleteSelTitle: "Удалить выбранные комбинации?",
+    deleteSelMsg: (n) => n === 1 ? "Выбранная комбинация будет удалена навсегда." : `Выбранные комбинации (${n}) будут удалены навсегда.`,
     resetTitle: "Сбросить комбинацию?",
     resetMsg: "Все шаги и стрелки будут удалены. Начальные позиции шага 1 сохранятся.",
     untitled: "Без названия", playDefault: "Комбинация",
@@ -457,6 +469,9 @@ const I18N = {
     newPlayTitle: "新战术", renameTitle: "重命名战术",
     deleteTitle: "删除战术？",
     deleteMsg: (n) => `“${n}”将被永久删除。`,
+    deleteSelected: (n) => `删除所选（${n}）`,
+    deleteSelTitle: "删除所选战术？",
+    deleteSelMsg: (n) => `选中的 ${n} 套战术将被永久删除。`,
     resetTitle: "重置战术？",
     resetMsg: "所有步骤和箭头将被删除，仅保留第 1 步的初始位置。",
     untitled: "未命名战术", playDefault: "战术",
@@ -555,6 +570,9 @@ const I18N = {
     newPlayTitle: "Nova akcija", renameTitle: "Preimenuj akciju",
     deleteTitle: "Obrisati akciju?",
     deleteMsg: (n) => `„${n}" će biti trajno obrisana.`,
+    deleteSelected: (n) => `Obriši izabrane (${n})`,
+    deleteSelTitle: "Obrisati izabrane akcije?",
+    deleteSelMsg: (n) => n === 1 ? "Izabrana akcija biće trajno obrisana." : `Izabrane akcije (${n}) biće trajno obrisane.`,
     resetTitle: "Resetovati akciju?",
     resetMsg: "Svi koraci i strelice biće uklonjeni. Početne pozicije koraka 1 se zadržavaju.",
     untitled: "Akcija bez imena", playDefault: "Akcija",
@@ -653,6 +671,9 @@ const I18N = {
     newPlayTitle: "Nova akcija", renameTitle: "Preimenuj akcijo",
     deleteTitle: "Izbrišem akcijo?",
     deleteMsg: (n) => `»${n}« bo trajno izbrisana.`,
+    deleteSelected: (n) => `Izbriši izbrane (${n})`,
+    deleteSelTitle: "Izbrišem izbrane akcije?",
+    deleteSelMsg: (n) => n === 1 ? "Izbrana akcija bo trajno izbrisana." : `Izbrane akcije (${n}) bodo trajno izbrisane.`,
     resetTitle: "Ponastavim akcijo?",
     resetMsg: "Vsi koraki in puščice bodo odstranjeni. Začetni položaji koraka 1 se ohranijo.",
     untitled: "Akcija brez imena", playDefault: "Akcija",
@@ -751,6 +772,9 @@ const I18N = {
     newPlayTitle: "Νέο σύστημα", renameTitle: "Μετονομασία συστήματος",
     deleteTitle: "Διαγραφή συστήματος;",
     deleteMsg: (n) => `Το «${n}» θα διαγραφεί οριστικά.`,
+    deleteSelected: (n) => `Διαγραφή επιλεγμένων (${n})`,
+    deleteSelTitle: "Διαγραφή επιλεγμένων συστημάτων;",
+    deleteSelMsg: (n) => n === 1 ? "Το επιλεγμένο σύστημα θα διαγραφεί οριστικά." : `Τα ${n} επιλεγμένα συστήματα θα διαγραφούν οριστικά.`,
     resetTitle: "Επαναφορά συστήματος;",
     resetMsg: "Όλα τα βήματα και τα βέλη θα αφαιρεθούν. Οι αρχικές θέσεις του βήματος 1 διατηρούνται.",
     untitled: "Σύστημα χωρίς όνομα", playDefault: "Σύστημα",
@@ -1118,6 +1142,15 @@ function openViewer(play) {
 }
 
 let cardDragJustEnded = false;
+const selectedPlayIds = new Set();
+
+function updateDeleteSelected() {
+  const ids = new Set(plays.map((p) => p.id));
+  for (const id of [...selectedPlayIds]) if (!ids.has(id)) selectedPlayIds.delete(id);
+  const btn = $("deleteSelectedBtn");
+  btn.hidden = selectedPlayIds.size === 0;
+  btn.textContent = t("deleteSelected", selectedPlayIds.size);
+}
 
 function renderHome() {
   playListEl.innerHTML = "";
@@ -1126,6 +1159,17 @@ function renderHome() {
     const card = document.createElement("div");
     card.className = "play-card";
     card.dataset.id = p.id;
+
+    const check = document.createElement("input");
+    check.type = "checkbox";
+    check.className = "card-check";
+    check.checked = selectedPlayIds.has(p.id);
+    check.addEventListener("click", (e) => e.stopPropagation());
+    check.addEventListener("change", () => {
+      if (check.checked) selectedPlayIds.add(p.id);
+      else selectedPlayIds.delete(p.id);
+      updateDeleteSelected();
+    });
 
     const grip = document.createElement("span");
     grip.className = "card-grip";
@@ -1172,14 +1216,15 @@ function renderHome() {
     meta.className = "meta";
     meta.textContent = p.steps.length + " " + (p.steps.length === 1 ? t("stepSingular") : t("stepPlural"));
 
-    if (badge) card.append(grip, name, badge, meta, del);
-    else card.append(grip, name, meta, del);
+    if (badge) card.append(check, grip, name, badge, meta, del);
+    else card.append(check, grip, name, meta, del);
     card.addEventListener("click", () => {
       if (cardDragJustEnded) return;
       openPlay(p.id);
     });
     playListEl.appendChild(card);
   }
+  updateDeleteSelected();
 }
 
 // Drag the grip to reorder plays in the list.
@@ -2463,6 +2508,22 @@ $("createNewBtn").addEventListener("click", () => {
   const play = createPlay(name);
   openPlay(play.id);
   if (name !== base) showToast(t("renamedToast", name));
+});
+
+$("deleteSelectedBtn").addEventListener("click", async () => {
+  const n = selectedPlayIds.size;
+  if (!n) return;
+  const ok = await openModal({
+    title: t("deleteSelTitle"),
+    message: t("deleteSelMsg", n),
+    confirmLabel: t("deleteConfirm"),
+    danger: true,
+  });
+  if (!ok) return;
+  plays = plays.filter((p) => !selectedPlayIds.has(p.id));
+  selectedPlayIds.clear();
+  save();
+  renderHome();
 });
 
 $("backBtn").addEventListener("click", showHome);

@@ -94,6 +94,14 @@ body {
 
 .play-list:empty { display: none; }
 
+.card-check {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
 .card-badge {
   flex: none;
   font-size: 10px;

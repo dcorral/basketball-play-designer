@@ -1183,6 +1183,9 @@ function updateDeleteSelected() {
   const btn = $("deleteSelectedBtn");
   btn.hidden = selectedPlayIds.size === 0;
   btn.textContent = t("deleteSelected", selectedPlayIds.size);
+  const topBtn = $("deleteSelectedTop");
+  topBtn.hidden = selectedPlayIds.size === 0;
+  topBtn.title = t("deleteSelected", selectedPlayIds.size);
   const filtered = filteredPlays();
   $("selectAllRow").hidden = filtered.length < 2;
   $("selectAllLabel").textContent = t("selectAll");
@@ -2587,7 +2590,7 @@ $("playSearch").addEventListener("input", (e) => {
 $("pagePrev").addEventListener("click", () => { playPage--; renderHome(); });
 $("pageNext").addEventListener("click", () => { playPage++; renderHome(); });
 
-$("deleteSelectedBtn").addEventListener("click", async () => {
+async function deleteSelectedPlays() {
   const n = selectedPlayIds.size;
   if (!n) return;
   const ok = await openModal({
@@ -2601,7 +2604,10 @@ $("deleteSelectedBtn").addEventListener("click", async () => {
   selectedPlayIds.clear();
   save();
   renderHome();
-});
+}
+
+$("deleteSelectedBtn").addEventListener("click", deleteSelectedPlays);
+$("deleteSelectedTop").addEventListener("click", deleteSelectedPlays);
 
 $("backBtn").addEventListener("click", showHome);
 

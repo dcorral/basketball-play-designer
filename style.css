@@ -218,6 +218,8 @@ body {
 
 .card-del svg { width: 15px; height: 15px; }
 
+#deleteSelectedTop svg { width: 17px; height: 17px; }
+
 .card-del:hover { background: #e0525226; }
 
 .play-card.dragging-card {

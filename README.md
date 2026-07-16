@@ -28,7 +28,8 @@ Creating a play in three steps — placing the players, drawing screens, cuts an
 - **Share by link** — any play becomes a URL: view-only by default (with an *Edit* hand-off button), or editable directly. No server involved; the play is compressed into the link itself.
 - **Export** — animated GIF, video (MP4/WebM) or a printable PDF with one 2×2 grid of steps per page.
 - **Backup** — export all plays as a `.zip` and import them on another device (imported plays get a badge, never overwrite anything).
-- **Organized home screen** — search, pagination, drag-to-reorder, multi-select with per-page select-all, and bulk delete.
+- **Lockable plays** — a padlock button in the editor freezes a play against accidental edits; unlocking asks for confirmation. Locked plays still play back, export and share.
+- **Organized home screen** — search, pagination, drag-to-reorder, and multi-select with per-page select-all plus bulk actions: export each selected play as GIF/video/PDF, download them as a `.zip`, lock/unlock them, or delete them.
 - **8 languages** — English, Spanish, Italian, Russian, Chinese, Serbian, Slovenian and Greek, via the flag selector.
 - **Works offline** — a service worker caches the whole app (exports included); installable on a phone as a standalone app.
 - **Interactive tour** — a skippable guided walkthrough on first visit, restartable any time from the **?** help menu.
@@ -44,7 +45,8 @@ Creating a play in three steps — placing the players, drawing screens, cuts an
 7. **Next step ＋** — commits the drawn arrows: the next step starts where the arrows end. Steps without actions (and the last one) can be deleted from their bin bubble. **↺ Reset all** clears every step after a confirmation.
 8. **Playback** — play/pause (Space), prev/next step (←/→), scrub the timeline, change speed. Players follow their drawn paths, curves included; arrows on the last step play immediately without committing.
 9. **Rename** — click the play's name in the top bar and type.
-10. **Undo / redo** — ↶ ↷ in the toolbar, or Ctrl/Cmd+Z and Ctrl/Cmd+Shift+Z (or Ctrl+Y). Covers drags, arrows, curves, erases, steps, resets and renames.
+10. **Lock** — the padlock in the top bar makes the play read-only (no drawing, dragging, renaming or step changes); click it again and confirm to unlock.
+11. **Undo / redo** — ↶ ↷ in the toolbar, or Ctrl/Cmd+Z and Ctrl/Cmd+Shift+Z (or Ctrl+Y). Covers drags, arrows, curves, erases, steps, resets and renames.
 
 Keyboard: **1–4** select tools, **Esc** back to select, **Space** play/pause, **←/→** change step, **Ctrl+Z / Ctrl+Shift+Z / Ctrl+Y** undo & redo.
 

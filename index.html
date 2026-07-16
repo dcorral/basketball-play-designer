@@ -234,9 +234,13 @@
         <svg viewBox="0 0 24 24"><path d="M4 12 H 16 M19 5 V 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <span class="knum">3</span>
       </button>
-      <button class="tool" data-tool="eraser" title="Eraser — click an arrow or a player to remove its arrow (4)">
-        <svg viewBox="0 0 24 24"><path d="M14.5 4.5 l 5 5 L10 19 H6 v-4 z M5 20 h 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <button class="tool" data-tool="pass" title="Pass — drag anywhere on the court; the line starts at the ball (4)">
+        <svg viewBox="0 0 24 24"><path d="M4 12 H7 M10 12 H13 M16 12 H18 M12 6 l 6 6 -6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span class="knum">4</span>
+      </button>
+      <button class="tool" data-tool="eraser" title="Eraser — click an arrow or a player to remove its arrow (5)">
+        <svg viewBox="0 0 24 24"><path d="M14.5 4.5 l 5 5 L10 19 H6 v-4 z M5 20 h 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="knum">5</span>
       </button>
       <div class="tool-sep"></div>
       <button id="undoBtn" class="tool" disabled title="Undo (Ctrl+Z)">
@@ -313,6 +317,7 @@
     <div class="modal">
       <h2 id="modalTitle"></h2>
       <p id="modalMsg"></p>
+      <div id="modalQr" class="modal-qr" hidden></div>
       <label id="modalCheckWrap" class="modal-check" hidden>
         <input type="checkbox" id="modalCheck">
         <span id="modalCheckLabel"></span>

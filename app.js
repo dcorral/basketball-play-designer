@@ -80,6 +80,8 @@ const I18N = {
     ttBulkUnlock: "Unlock selected plays",
     ttBulkSave: "Export selected as GIF, video or PDF",
     ttBulkZip: "Download selected as a .zip backup",
+    ttDuplicate: "Duplicate play",
+    duplicatedToast: (n) => `Copy created: "${n}".`,
     deleteAllMsg: (n) => `All ${n} plays will be deleted permanently. This cannot be undone.`,
     deleteSelMsg: (n) => n === 1 ? "The selected play will be deleted permanently." : `The ${n} selected plays will be deleted permanently.`,
     resetTitle: "Reset play?",
@@ -104,7 +106,8 @@ const I18N = {
     ttSelect: "Select / move players (1) — only on step 1",
     ttArrow: "Movement arrow — drag from a player to where they cut (2)",
     ttScreen: "Screen / block — drag from the screener to where they set it (3)",
-    ttEraser: "Eraser — click an arrow or a player to remove its arrow (4)",
+    ttPass: "Pass — drag anywhere on the court; the line starts at the ball (4)",
+    ttEraser: "Eraser — click an arrow or a player to remove its arrow (5)",
     ttBack: "Back to all plays", ttRename: "Rename current play",
     ttExport: "Export as GIF, video or PDF", ttDelete: "Delete current play",
     ttDeleteStep: "Delete current step", ttResetAll: "Clear all steps",
@@ -146,7 +149,7 @@ const I18N = {
     helpSections: [
       { h: "Plays", b: "The home screen lists your plays: tap one to open it, drag the dots to reorder, use the bin to delete. Rename a play by clicking its name in the editor." },
       { h: "Players and the ball", b: "On step 1, drag players anywhere (out of bounds too). The ball always belongs to a player — drag it to hand it to someone else." },
-      { h: "Drawing tools", b: "Toolbar (drag its grip to move it anywhere): 1 select, 2 movement arrow, 3 screen, 4 eraser. Drag from a player to draw their cut or screen; drag from the ball to pass. Keyboard 1–4 switches tools." },
+      { h: "Drawing tools", b: "Toolbar (drag its grip to move it anywhere): 1 select, 2 movement arrow, 3 screen, 4 pass, 5 eraser. Drag from a player to draw their cut or screen. With the pass tool, drag anywhere — the line always starts at the ball. The carrier\u2019s dribble draws as a wavy line. Keyboard 1–5 switches tools." },
       { h: "Editing arrows", b: "Round handle bends a cut, square handle moves its end, and a screen's red bar rotates with its gold handle. The eraser removes an arrow by clicking it or its player." },
       { h: "Passes", b: "Passes snap to a teammate and are always straight. If the receiver has a movement, the ball is delivered at the END of that movement. Screeners can never receive, and the ball carrier can never screen." },
       { h: "Two actions, one player", b: "When the carrier has a pass and a movement, the lighter line happens second. Double-click (or long-press) a line to make it go first — moving first means dribbling there before passing." },
@@ -198,6 +201,8 @@ const I18N = {
     ttBulkUnlock: "Desbloquear las jugadas seleccionadas",
     ttBulkSave: "Exportar seleccionadas como GIF, vídeo o PDF",
     ttBulkZip: "Descargar seleccionadas como copia .zip",
+    ttDuplicate: "Duplicar jugada",
+    duplicatedToast: (n) => `Copia creada: "${n}".`,
     deleteAllMsg: (n) => `Se eliminarán permanentemente las ${n} jugadas. Esto no se puede deshacer.`,
     deleteSelMsg: (n) => n === 1 ? "La jugada seleccionada se eliminará permanentemente." : `Las ${n} jugadas seleccionadas se eliminarán permanentemente.`,
     resetTitle: "¿Reiniciar jugada?",
@@ -222,7 +227,8 @@ const I18N = {
     ttSelect: "Seleccionar / mover jugadores (1) — solo en el paso 1",
     ttArrow: "Flecha de movimiento — arrastra desde un jugador hasta donde corta (2)",
     ttScreen: "Bloqueo — arrastra desde el bloqueador hasta donde lo pone (3)",
-    ttEraser: "Borrador — pulsa una flecha o un jugador para quitar su flecha (4)",
+    ttPass: "Pase — arrastra en cualquier punto de la pista; la línea sale del balón (4)",
+    ttEraser: "Borrador — pulsa una flecha o un jugador para quitar su flecha (5)",
     ttBack: "Volver a todas las jugadas", ttRename: "Renombrar la jugada",
     ttExport: "Exportar como GIF, vídeo o PDF", ttDelete: "Eliminar la jugada",
     ttDeleteStep: "Eliminar el paso actual", ttResetAll: "Borrar todos los pasos",
@@ -264,7 +270,7 @@ const I18N = {
     helpSections: [
       { h: "Jugadas", b: "La pantalla de inicio lista tus jugadas: toca una para abrirla, arrastra los puntos para reordenar y usa la papelera para borrar. Renombra una jugada pulsando su nombre en el editor." },
       { h: "Jugadores y balón", b: "En el paso 1 arrastra a los jugadores a cualquier sitio (también fuera de la pista). El balón siempre pertenece a un jugador — arrástralo para dárselo a otro." },
-      { h: "Herramientas de dibujo", b: "Barra de herramientas (muévela arrastrando su agarre): 1 seleccionar, 2 flecha de movimiento, 3 bloqueo, 4 borrador. Arrastra desde un jugador para dibujar su corte o bloqueo; desde el balón para pasar. Teclas 1–4 cambian de herramienta." },
+      { h: "Herramientas de dibujo", b: "Barra de herramientas (muévela arrastrando su agarre): 1 seleccionar, 2 flecha de movimiento, 3 bloqueo, 4 pase, 5 borrador. Arrastra desde un jugador para dibujar su corte o bloqueo. Con la herramienta de pase, arrastra en cualquier punto: la línea siempre sale del balón. El bote del jugador con balón se dibuja como línea ondulada. Teclas 1–5 cambian de herramienta." },
       { h: "Editar flechas", b: "El tirador redondo curva un corte, el cuadrado mueve su destino, y la barra roja del bloqueo gira con su tirador dorado. El borrador elimina una flecha pulsándola o pulsando a su jugador." },
       { h: "Pases", b: "Los pases se ajustan a un compañero y siempre son rectos. Si el receptor tiene un movimiento, el balón le llega al FINAL de ese movimiento. Un bloqueador nunca puede recibir, y el que lleva el balón nunca puede bloquear." },
       { h: "Dos acciones, un jugador", b: "Cuando el portador tiene pase y movimiento, la línea más tenue ocurre después. Doble clic (o mantener pulsado) sobre una línea hace que vaya primero — moverse primero significa botar hasta allí antes de pasar." },
@@ -316,6 +322,8 @@ const I18N = {
     ttBulkUnlock: "Sblocca le giocate selezionate",
     ttBulkSave: "Esporta le selezionate come GIF, video o PDF",
     ttBulkZip: "Scarica le selezionate come backup .zip",
+    ttDuplicate: "Duplica giocata",
+    duplicatedToast: (n) => `Copia creata: "${n}".`,
     deleteAllMsg: (n) => `Tutte le ${n} giocate verranno eliminate definitivamente. Non si può annullare.`,
     deleteSelMsg: (n) => n === 1 ? "La giocata selezionata verrà eliminata definitivamente." : `Le ${n} giocate selezionate verranno eliminate definitivamente.`,
     resetTitle: "Azzerare la giocata?",
@@ -340,7 +348,8 @@ const I18N = {
     ttSelect: "Seleziona / muovi i giocatori (1) — solo nel passo 1",
     ttArrow: "Freccia di movimento — trascina da un giocatore (2)",
     ttScreen: "Blocco — trascina dal bloccante (3)",
-    ttEraser: "Gomma — clicca una freccia o un giocatore (4)",
+    ttPass: "Passaggio — trascina ovunque sul campo; la linea parte dal pallone (4)",
+    ttEraser: "Gomma — clicca una freccia o un giocatore (5)",
     ttBack: "Torna alle giocate", ttRename: "Rinomina la giocata",
     ttExport: "Esporta come GIF, video o PDF", ttDelete: "Elimina la giocata",
     ttDeleteStep: "Elimina il passo", ttResetAll: "Cancella tutti i passi",
@@ -393,7 +402,7 @@ const I18N = {
     helpSections: [
       { h: "Giocate", b: "La schermata iniziale elenca le tue giocate: toccane una per aprirla, trascina i puntini per riordinare, usa il cestino per eliminare. Rinomina una giocata cliccando il suo nome nell'editor." },
       { h: "Giocatori e pallone", b: "Nel passo 1 trascina i giocatori ovunque (anche fuori dal campo). Il pallone appartiene sempre a un giocatore — trascinalo per darlo a un altro." },
-      { h: "Strumenti di disegno", b: "Barra degli strumenti (spostala trascinando la presa): 1 seleziona, 2 freccia di movimento, 3 blocco, 4 gomma. Trascina da un giocatore per il suo taglio o blocco; dal pallone per passare. Tasti 1–4 per cambiare strumento." },
+      { h: "Strumenti di disegno", b: "Barra degli strumenti (spostala trascinando la presa): 1 seleziona, 2 freccia di movimento, 3 blocco, 4 passaggio, 5 gomma. Trascina da un giocatore per il suo taglio o blocco. Con lo strumento passaggio trascina ovunque: la linea parte sempre dal pallone. Il palleggio del portatore si disegna come linea ondulata. Tasti 1–5 per cambiare strumento." },
       { h: "Modificare le frecce", b: "La maniglia rotonda curva un taglio, quella quadrata sposta la destinazione, e la barra rossa del blocco ruota con la maniglia dorata. La gomma elimina una freccia cliccandola o cliccando il suo giocatore." },
       { h: "Passaggi", b: "I passaggi si agganciano a un compagno e sono sempre rettilinei. Se il ricevitore ha un movimento, il pallone arriva alla FINE di quel movimento. Chi blocca non può mai ricevere e chi ha il pallone non può mai bloccare." },
       { h: "Due azioni, un giocatore", b: "Quando il portatore ha passaggio e movimento, la linea più chiara avviene dopo. Doppio clic (o pressione prolungata) su una linea la fa andare per prima — muoversi prima significa palleggiare fin lì prima di passare." },
@@ -433,6 +442,8 @@ const I18N = {
     ttBulkUnlock: "Разблокировать выбранные комбинации",
     ttBulkSave: "Экспортировать выбранные как GIF, видео или PDF",
     ttBulkZip: "Скачать выбранные как резервную копию .zip",
+    ttDuplicate: "Дублировать комбинацию",
+    duplicatedToast: (n) => `Создана копия: «${n}».`,
     deleteAllMsg: (n) => `Все комбинации (${n}) будут удалены навсегда. Это нельзя отменить.`,
     deleteSelMsg: (n) => n === 1 ? "Выбранная комбинация будет удалена навсегда." : `Выбранные комбинации (${n}) будут удалены навсегда.`,
     resetTitle: "Сбросить комбинацию?",
@@ -457,7 +468,8 @@ const I18N = {
     ttSelect: "Выбор / перемещение игроков (1) — только на шаге 1",
     ttArrow: "Стрелка движения — тяните от игрока (2)",
     ttScreen: "Заслон — тяните от ставящего заслон (3)",
-    ttEraser: "Ластик — нажмите на стрелку или игрока (4)",
+    ttPass: "Передача — тяните в любом месте площадки; линия идёт от мяча (4)",
+    ttEraser: "Ластик — нажмите на стрелку или игрока (5)",
     ttBack: "Ко всем комбинациям", ttRename: "Переименовать комбинацию",
     ttExport: "Экспорт в GIF, видео или PDF", ttDelete: "Удалить комбинацию",
     ttDeleteStep: "Удалить шаг", ttResetAll: "Очистить все шаги",
@@ -510,7 +522,7 @@ const I18N = {
     helpSections: [
       { h: "Комбинации", b: "На главном экране — список ваших комбинаций: нажмите, чтобы открыть, перетащите за точки для изменения порядка, корзина удаляет. Переименовать можно, щёлкнув по названию в редакторе." },
       { h: "Игроки и мяч", b: "На шаге 1 перетаскивайте игроков куда угодно (в том числе за пределы площадки). Мяч всегда принадлежит игроку — перетащите его, чтобы передать другому." },
-      { h: "Инструменты", b: "Панель (перемещается за захват): 1 выбор, 2 стрелка движения, 3 заслон, 4 ластик. Тяните от игрока для рывка или заслона; от мяча — для передачи. Клавиши 1–4 переключают инструменты." },
+      { h: "Инструменты", b: "Панель (перемещается за захват): 1 выбор, 2 стрелка движения, 3 заслон, 4 передача, 5 ластик. Тяните от игрока для рывка или заслона. С инструментом передачи тяните где угодно — линия всегда идёт от мяча. Ведение мяча рисуется волнистой линией. Клавиши 1–5 переключают инструменты." },
       { h: "Редактирование стрелок", b: "Круглая ручка изгибает рывок, квадратная переносит его конец, а красная планка заслона поворачивается золотой ручкой. Ластик удаляет стрелку щелчком по ней или по игроку." },
       { h: "Передачи", b: "Передачи «прилипают» к партнёру и всегда прямые. Если у получателя есть движение, мяч приходит в КОНЕЦ этого движения. Ставящий заслон не может получать мяч, а владеющий мячом — ставить заслон." },
       { h: "Два действия у игрока", b: "Если у владеющего мячом есть передача и движение, бледная линия происходит второй. Двойной щелчок (или долгое нажатие) делает линию первой — сначала двигаться значит вести мяч туда перед передачей." },
@@ -550,6 +562,8 @@ const I18N = {
     ttBulkUnlock: "解锁所选战术",
     ttBulkSave: "将所选导出为 GIF、视频或 PDF",
     ttBulkZip: "将所选下载为 .zip 备份",
+    ttDuplicate: "复制战术",
+    duplicatedToast: (n) => `已创建副本："${n}"。`,
     deleteAllMsg: (n) => `全部 ${n} 套战术将被永久删除，且无法撤销。`,
     deleteSelMsg: (n) => `选中的 ${n} 套战术将被永久删除。`,
     resetTitle: "重置战术？",
@@ -574,7 +588,8 @@ const I18N = {
     ttSelect: "选择 / 移动球员（1）— 仅限第 1 步",
     ttArrow: "移动箭头 — 从球员拖出（2）",
     ttScreen: "掩护 — 从掩护者拖出（3）",
-    ttEraser: "橡皮擦 — 点击箭头或球员（4）",
+    ttPass: "传球 — 在球场任意位置拖动；虚线自动从球出发（4）",
+    ttEraser: "橡皮擦 — 点击箭头或球员（5）",
     ttBack: "返回全部战术", ttRename: "重命名战术",
     ttExport: "导出为 GIF、视频或 PDF", ttDelete: "删除战术",
     ttDeleteStep: "删除此步", ttResetAll: "清除所有步骤",
@@ -627,7 +642,7 @@ const I18N = {
     helpSections: [
       { h: "战术", b: "主屏幕列出你的战术：点按打开，拖动圆点排序，垃圾桶删除。在编辑器中点击名称即可重命名。" },
       { h: "球员与球", b: "在第 1 步可将球员拖到任意位置（包括场外）。球始终属于某位球员 — 拖动球即可交给他人。" },
-      { h: "绘图工具", b: "工具栏（拖动手柄可移动）：1 选择，2 移动箭头，3 掩护，4 橡皮擦。从球员拖出画切入或掩护；从球拖出传球。按键 1–4 切换工具。" },
+      { h: "绘图工具", b: "工具栏（拖动手柄可移动）：1 选择，2 移动箭头，3 掩护，4 传球，5 橡皮擦。从球员拖出画切入或掩护。使用传球工具时在任意位置拖动，虚线自动从球出发。持球人的运球以波浪线表示。按键 1–5 切换工具。" },
       { h: "编辑箭头", b: "圆形手柄弯曲路线，方形手柄移动终点，掩护的红色横杆用金色手柄旋转。橡皮擦点击箭头或球员即可删除。" },
       { h: "传球", b: "传球会吸附到队友且始终为直线。若接球者有移动，球会送到该移动的终点。掩护者不能接球，持球者不能掩护。" },
       { h: "一名球员两个动作", b: "当持球者既传球又移动时，较浅的线后发生。双击（或长按）某条线让它先执行 — 先移动即运球到位后再传。" },
@@ -667,6 +682,8 @@ const I18N = {
     ttBulkUnlock: "Otključaj izabrane akcije",
     ttBulkSave: "Izvezi izabrane kao GIF, video ili PDF",
     ttBulkZip: "Preuzmi izabrane kao .zip rezervnu kopiju",
+    ttDuplicate: "Dupliraj akciju",
+    duplicatedToast: (n) => `Kopija napravljena: „${n}".`,
     deleteAllMsg: (n) => `Svih ${n} akcija biće trajno obrisano. Ovo se ne može poništiti.`,
     deleteSelMsg: (n) => n === 1 ? "Izabrana akcija biće trajno obrisana." : `Izabrane akcije (${n}) biće trajno obrisane.`,
     resetTitle: "Resetovati akciju?",
@@ -691,7 +708,8 @@ const I18N = {
     ttSelect: "Izaberi / pomeri igrače (1) — samo u koraku 1",
     ttArrow: "Strelica kretanja — prevuci od igrača (2)",
     ttScreen: "Blok — prevuci od igrača koji blokira (3)",
-    ttEraser: "Gumica — klikni strelicu ili igrača (4)",
+    ttPass: "Dodavanje — prevuci bilo gde na terenu; linija kreće od lopte (4)",
+    ttEraser: "Gumica — klikni strelicu ili igrača (5)",
     ttBack: "Nazad na akcije", ttRename: "Preimenuj akciju",
     ttExport: "Izvezi kao GIF, video ili PDF", ttDelete: "Obriši akciju",
     ttDeleteStep: "Obriši korak", ttResetAll: "Obriši sve korake",
@@ -744,7 +762,7 @@ const I18N = {
     helpSections: [
       { h: "Akcije", b: "Početni ekran prikazuje tvoje akcije: dodirni jednu da je otvoriš, prevuci tačkice za redosled, kanta briše. Preimenuj klikom na ime u editoru." },
       { h: "Igrači i lopta", b: "U koraku 1 prevlači igrače bilo gde (i van terena). Lopta uvek pripada igraču — prevuci je da je daš drugom." },
-      { h: "Alati za crtanje", b: "Traka (pomeraš je za držač): 1 izbor, 2 strelica kretanja, 3 blok, 4 gumica. Prevuci od igrača za utrčavanje ili blok; od lopte za dodavanje. Tasteri 1–4 menjaju alate." },
+      { h: "Alati za crtanje", b: "Traka (pomeraš je za držač): 1 izbor, 2 strelica kretanja, 3 blok, 4 dodavanje, 5 gumica. Prevuci od igrača za utrčavanje ili blok. Sa alatom za dodavanje prevuci bilo gde — linija uvek kreće od lopte. Dribling igrača s loptom crta se talasastom linijom. Tasteri 1–5 menjaju alate." },
       { h: "Izmena strelica", b: "Okrugla ručica krivi liniju, kvadratna pomera cilj, a crvena prečka bloka rotira se zlatnom ručicom. Gumica briše strelicu klikom na nju ili na igrača." },
       { h: "Dodavanja", b: "Dodavanja se lepe za saigrača i uvek su prava. Ako primalac ima kretanje, lopta stiže na KRAJ tog kretanja. Bloker nikad ne prima loptu, a igrač s loptom nikad ne blokira." },
       { h: "Dve radnje, jedan igrač", b: "Kad igrač s loptom ima i dodavanje i kretanje, svetlija linija se dešava druga. Dupli klik (ili duži pritisak) stavlja liniju na prvo mesto — prvo kretanje znači driblanje do tamo pre dodavanja." },
@@ -784,6 +802,8 @@ const I18N = {
     ttBulkUnlock: "Odkleni izbrane akcije",
     ttBulkSave: "Izvozi izbrane kot GIF, video ali PDF",
     ttBulkZip: "Prenesi izbrane kot varnostno kopijo .zip",
+    ttDuplicate: "Podvoji akcijo",
+    duplicatedToast: (n) => `Kopija ustvarjena: »${n}«.`,
     deleteAllMsg: (n) => `Vseh ${n} akcij bo trajno izbrisanih. Tega ni mogoče razveljaviti.`,
     deleteSelMsg: (n) => n === 1 ? "Izbrana akcija bo trajno izbrisana." : `Izbrane akcije (${n}) bodo trajno izbrisane.`,
     resetTitle: "Ponastavim akcijo?",
@@ -808,7 +828,8 @@ const I18N = {
     ttSelect: "Izberi / premakni igralce (1) — samo v koraku 1",
     ttArrow: "Puščica gibanja — povleci od igralca (2)",
     ttScreen: "Blokada — povleci od blokerja (3)",
-    ttEraser: "Radirka — klikni puščico ali igralca (4)",
+    ttPass: "Podaja — povleci kjerkoli na igrišču; črta se začne pri žogi (4)",
+    ttEraser: "Radirka — klikni puščico ali igralca (5)",
     ttBack: "Nazaj na akcije", ttRename: "Preimenuj akcijo",
     ttExport: "Izvozi kot GIF, video ali PDF", ttDelete: "Izbriši akcijo",
     ttDeleteStep: "Izbriši korak", ttResetAll: "Počisti vse korake",
@@ -861,7 +882,7 @@ const I18N = {
     helpSections: [
       { h: "Akcije", b: "Začetni zaslon prikazuje tvoje akcije: tapni za odpiranje, povleci pikice za razvrščanje, koš izbriše. Preimenuješ s klikom na ime v urejevalniku." },
       { h: "Igralci in žoga", b: "V koraku 1 povleci igralce kamorkoli (tudi izven igrišča). Žoga vedno pripada igralcu — povleci jo, da jo predaš drugemu." },
-      { h: "Orodja za risanje", b: "Vrstica (premikaš jo za ročaj): 1 izbira, 2 puščica gibanja, 3 blokada, 4 radirka. Povleci od igralca za vtekanje ali blokado; od žoge za podajo. Tipke 1–4 preklapljajo orodja." },
+      { h: "Orodja za risanje", b: "Vrstica (premikaš jo za ročaj): 1 izbira, 2 puščica gibanja, 3 blokada, 4 podaja, 5 radirka. Povleci od igralca za vtekanje ali blokado. Z orodjem za podajo povleci kjerkoli — črta se vedno začne pri žogi. Vodenje žoge se riše z valovito črto. Tipke 1–5 preklapljajo orodja." },
       { h: "Urejanje puščic", b: "Okrogla ročica ukrivi pot, kvadratna premakne cilj, rdečo prečko blokade pa vrtiš z zlato ročico. Radirka odstrani puščico s klikom nanjo ali na igralca." },
       { h: "Podaje", b: "Podaje se pripnejo soigralcu in so vedno ravne. Če ima prejemnik gibanje, žoga prispe na KONEC tega gibanja. Bloker nikoli ne more prejeti žoge, igralec z žogo pa nikoli blokirati." },
       { h: "Dve akciji, en igralec", b: "Ko ima igralec z žogo podajo in gibanje, se svetlejša črta zgodi druga. Dvojni klik (ali dolg pritisk) postavi črto na prvo mesto — najprej gibanje pomeni vodenje žoge do tja pred podajo." },
@@ -901,6 +922,8 @@ const I18N = {
     ttBulkUnlock: "Ξεκλείδωμα επιλεγμένων συστημάτων",
     ttBulkSave: "Εξαγωγή επιλεγμένων ως GIF, βίντεο ή PDF",
     ttBulkZip: "Λήψη επιλεγμένων ως αντίγραφο .zip",
+    ttDuplicate: "Αντιγραφή συστήματος",
+    duplicatedToast: (n) => `Δημιουργήθηκε αντίγραφο: «${n}».`,
     deleteAllMsg: (n) => `Και τα ${n} συστήματα θα διαγραφούν οριστικά. Δεν μπορεί να αναιρεθεί.`,
     deleteSelMsg: (n) => n === 1 ? "Το επιλεγμένο σύστημα θα διαγραφεί οριστικά." : `Τα ${n} επιλεγμένα συστήματα θα διαγραφούν οριστικά.`,
     resetTitle: "Επαναφορά συστήματος;",
@@ -925,7 +948,8 @@ const I18N = {
     ttSelect: "Επιλογή / μετακίνηση παικτών (1) — μόνο στο βήμα 1",
     ttArrow: "Βέλος κίνησης — σύρε από έναν παίκτη (2)",
     ttScreen: "Σκριν — σύρε από αυτόν που το βάζει (3)",
-    ttEraser: "Γόμα — κλικ σε βέλος ή παίκτη (4)",
+    ttPass: "Πάσα — σύρε οπουδήποτε στο γήπεδο· η γραμμή ξεκινά από την μπάλα (4)",
+    ttEraser: "Γόμα — κλικ σε βέλος ή παίκτη (5)",
     ttBack: "Πίσω στα συστήματα", ttRename: "Μετονομασία συστήματος",
     ttExport: "Εξαγωγή ως GIF, βίντεο ή PDF", ttDelete: "Διαγραφή συστήματος",
     ttDeleteStep: "Διαγραφή βήματος", ttResetAll: "Καθαρισμός όλων των βημάτων",
@@ -978,7 +1002,7 @@ const I18N = {
     helpSections: [
       { h: "Συστήματα", b: "Η αρχική οθόνη δείχνει τα συστήματά σου: πάτησε ένα για άνοιγμα, σύρε τις κουκκίδες για αναδιάταξη, ο κάδος διαγράφει. Μετονόμασε πατώντας το όνομα στον επεξεργαστή." },
       { h: "Παίκτες και μπάλα", b: "Στο βήμα 1 σύρε τους παίκτες οπουδήποτε (και εκτός γηπέδου). Η μπάλα ανήκει πάντα σε έναν παίκτη — σύρε τη για να τη δώσεις σε άλλον." },
-      { h: "Εργαλεία σχεδίασης", b: "Εργαλειοθήκη (μετακινείται από τη λαβή): 1 επιλογή, 2 βέλος κίνησης, 3 σκριν, 4 γόμα. Σύρε από παίκτη για κόψιμο ή σκριν· από την μπάλα για πάσα. Πλήκτρα 1–4 αλλάζουν εργαλείο." },
+      { h: "Εργαλεία σχεδίασης", b: "Εργαλειοθήκη (μετακινείται από τη λαβή): 1 επιλογή, 2 βέλος κίνησης, 3 σκριν, 4 πάσα, 5 γόμα. Σύρε από παίκτη για κόψιμο ή σκριν. Με το εργαλείο πάσας σύρε οπουδήποτε — η γραμμή ξεκινά πάντα από την μπάλα. Η ντρίμπλα του κατόχου σχεδιάζεται ως κυματιστή γραμμή. Πλήκτρα 1–5 αλλάζουν εργαλείο." },
       { h: "Επεξεργασία βελών", b: "Η στρογγυλή λαβή καμπυλώνει τη διαδρομή, η τετράγωνη μετακινεί τον προορισμό, και η κόκκινη μπάρα του σκριν περιστρέφεται με τη χρυσή λαβή. Η γόμα σβήνει βέλος με κλικ σε αυτό ή στον παίκτη του." },
       { h: "Πάσες", b: "Οι πάσες κουμπώνουν σε συμπαίκτη και είναι πάντα ευθείες. Αν ο παραλήπτης κινείται, η μπάλα φτάνει στο ΤΕΛΟΣ της κίνησης. Όποιος βάζει σκριν δεν παίρνει ποτέ πάσα, κι ο κάτοχος της μπάλας δεν βάζει ποτέ σκριν." },
       { h: "Δύο ενέργειες, ένας παίκτης", b: "Όταν ο κάτοχος έχει πάσα και κίνηση, η πιο αχνή γραμμή γίνεται δεύτερη. Διπλό κλικ (ή παρατεταμένο πάτημα) βάζει τη γραμμή πρώτη — κίνηση πρώτα σημαίνει ντρίμπλα ως εκεί πριν την πάσα." },
@@ -1052,7 +1076,7 @@ function applyLang() {
   };
   for (const [id, key] of Object.entries(titles)) $(id).title = t(key);
 
-  const toolTitles = { select: "ttSelect", arrow: "ttArrow", screen: "ttScreen", eraser: "ttEraser" };
+  const toolTitles = { select: "ttSelect", arrow: "ttArrow", screen: "ttScreen", pass: "ttPass", eraser: "ttEraser" };
   for (const [toolName, key] of Object.entries(toolTitles)) {
     toolbar.querySelector(`[data-tool="${toolName}"]`).title = t(key);
   }
@@ -1103,11 +1127,15 @@ $("toastClose").addEventListener("click", hideToast);
 
 // openModal resolves with the input text (or true when there is no input),
 // or null if cancelled.
-function openModal({ title, message = "", input = false, value = "", confirmLabel = "OK", danger = false, noCancel = false, checkboxLabel = null }) {
+function openModal({ title, message = "", input = false, value = "", confirmLabel = "OK", danger = false, noCancel = false, checkboxLabel = null, qr = null }) {
   return new Promise((resolve) => {
     $("modalTitle").textContent = title;
     $("modalMsg").textContent = message;
     $("modalMsg").hidden = !message;
+    const qrEl = $("modalQr");
+    qrEl.hidden = true;
+    qrEl.innerHTML = "";
+    if (qr) renderQrInto(qrEl, qr);
     $("modalCancel").hidden = noCancel;
     $("modalCheckWrap").hidden = !checkboxLabel;
     if (checkboxLabel) {
@@ -1322,6 +1350,33 @@ function updateDeleteSelected() {
   $("deleteAllBtn").textContent = t("deleteAllBtn");
 }
 
+// Tiny static render of a play's first step for its card. The export
+// renderer does the drawing; the court raster is shared across cards.
+let thumbCourt = null;
+function drawCardThumb(canvas, play) {
+  if (typeof exRasterizeCourt !== "function") {
+    // export.js loads after app.js — retry once everything is in
+    window.addEventListener("load", () => drawCardThumb(canvas, play), { once: true });
+    return;
+  }
+  (thumbCourt ||= exRasterizeCourt(canvas.width, canvas.height))
+    .then((img) => {
+      if (!canvas.isConnected) return;
+      const step = play.steps[0];
+      const posMap = {};
+      for (const id of PLAYER_IDS) posMap[id] = step.pos[id];
+      posMap.BALL = ballPoint(step.pos[step.ball]);
+      const prev = currentPlayId;
+      currentPlayId = play.id; // exDrawScene reads arrows via currentPlay()
+      try {
+        exDrawScene(canvas.getContext("2d"), canvas.width, canvas.height, img, posMap, 0, false, null);
+      } finally {
+        currentPlayId = prev;
+      }
+    })
+    .catch(() => {});
+}
+
 function renderHome() {
   playListEl.innerHTML = "";
   $("exportAllBtn").hidden = plays.length === 0;
@@ -1384,6 +1439,32 @@ function renderHome() {
       badge.textContent = t("importedBadge");
     }
 
+    const thumb = document.createElement("canvas");
+    thumb.className = "card-thumb";
+    thumb.width = 108;
+    thumb.height = Math.round(108 * VB.h / VB.w);
+    drawCardThumb(thumb, p);
+
+    const dup = document.createElement("button");
+    dup.className = "card-dup";
+    dup.title = t("ttDuplicate");
+    dup.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15 H4.5 A1.5 1.5 0 0 1 3 13.5 V4.5 A1.5 1.5 0 0 1 4.5 3 H13.5 A1.5 1.5 0 0 1 15 4.5 V5"/></svg>';
+    dup.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const copy = JSON.parse(JSON.stringify(p));
+      copy.id = "play-" + Math.random().toString(36).slice(2, 10);
+      delete copy.locked;
+      delete copy.imported;
+      copy.name = uniquePlayName(p.name);
+      const idx = plays.findIndex((x) => x.id === p.id);
+      plays.splice(idx + 1, 0, copy);
+      save();
+      renderHome();
+      showToast(t("duplicatedToast", copy.name));
+    });
+
     let lockIc = null;
     if (p.locked) {
       lockIc = document.createElement("span");
@@ -1417,10 +1498,10 @@ function renderHome() {
     meta.className = "meta";
     meta.textContent = p.steps.length + " " + (p.steps.length === 1 ? t("stepSingular") : t("stepPlural"));
 
-    card.append(check, grip, name);
+    card.append(check, grip, thumb, name);
     if (lockIc) card.append(lockIc);
     if (badge) card.append(badge);
-    card.append(meta, del);
+    card.append(meta, dup, del);
     card.addEventListener("click", () => {
       if (cardDragJustEnded) return;
       openPlay(p.id);
@@ -2025,6 +2106,50 @@ function arrowPathD(a, via, b) {
     : `M ${a.x} ${a.y} L ${b.x} ${b.y}`;
 }
 
+// The classic dribble squiggle: points along the (possibly curved) path,
+// offset perpendicular by a sine wave that tapers at both ends. The tail
+// stays on the path so the arrowhead sits clean.
+function wavyPoints(a, via, b) {
+  const pt = (u) => via
+    ? { x: (1 - u) * (1 - u) * a.x + 2 * (1 - u) * u * via.x + u * u * b.x,
+        y: (1 - u) * (1 - u) * a.y + 2 * (1 - u) * u * via.y + u * u * b.y }
+    : { x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u };
+  let len = 0, prev = pt(0);
+  for (let i = 1; i <= 24; i++) {
+    const p = pt(i / 24);
+    len += Math.hypot(p.x - prev.x, p.y - prev.y);
+    prev = p;
+  }
+  if (len < 4) return [a, b];
+  const waves = Math.max(Math.round(len / 2.1), 2);
+  const N = waves * 10;
+  const amp = 0.55;
+  const pts = [a];
+  for (let i = 1; i < N; i++) {
+    const u = i / N;
+    const p = pt(u);
+    const q = pt(Math.min(u + 0.01, 1));
+    let tx = q.x - p.x, ty = q.y - p.y;
+    const tl = Math.hypot(tx, ty) || 1;
+    tx /= tl; ty /= tl;
+    const off = Math.sin(u * waves * 2 * Math.PI) * amp * Math.sin(Math.PI * u);
+    pts.push({ x: p.x - ty * off, y: p.y + tx * off });
+  }
+  pts.push(b);
+  return pts;
+}
+
+function wavyPathD(a, via, b) {
+  const pts = wavyPoints(a, via, b);
+  return "M " + pts.map((p) => `${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(" L ");
+}
+
+// A move by the ball carrier is a dribble unless the pass leaves first.
+function isDribbleMove(step, id, m) {
+  return m.type === "move" && id === step.ball &&
+    (!step.pass || passOrderOf(step) === 2);
+}
+
 // Direction of the path as it arrives at its destination.
 function endTangent(a, via, b) {
   const src = via || a;
@@ -2042,10 +2167,12 @@ function screenBarDir(a, m) {
   return { x: -t.y, y: t.x };
 }
 
-function makeArrowEls(tokenId, a, move, ghost) {
+function makeArrowEls(tokenId, a, move, ghost, dribble) {
   const els = [];
   const path = document.createElementNS(SVG_NS, "path");
-  path.setAttribute("d", arrowPathD(a, move.via, move.to));
+  path.setAttribute("d", dribble
+    ? wavyPathD(a, move.via, move.to)
+    : arrowPathD(a, move.via, move.to));
   let cls = "arrow-path " + move.type;
   if (tokenId === "BALL") cls += " ball-path";
   if (ghost) cls += " ghost";
@@ -2156,7 +2283,8 @@ function renderArrows() {
     const m = step.moves[id];
     if (!m) continue;
     const isDualMove = dual && id === step.ball;
-    const els = makeArrowEls(id, step.pos[id], m, ghost || (isDualMove && passOrder === 1));
+    const els = makeArrowEls(id, step.pos[id], m,
+      ghost || (isDualMove && passOrder === 1), isDribbleMove(step, id, m));
     addEls(els);
     if (isDualMove) addOrderHandlers(els, false);
   }
@@ -2362,6 +2490,13 @@ stageEl.addEventListener("pointerdown", (e) => {
   // order lines keep their own dblclick/long-press — capturing here would
   // retarget those events to the stage and swallow them
   if (e.target.closest(".token, .handle, .order-line")) return;
+  // pass tool: the line always starts at the ball, so any drag on the
+  // court draws a pass — no need to hit the ball itself
+  if (tool === "pass" && !playing && !editLocked()) {
+    playhead = currentStep;
+    startArrowDraw(stageEl, "BALL", e);
+    return;
+  }
   stagePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   try { stageEl.setPointerCapture(e.pointerId); } catch (_) {}
 });
@@ -2492,6 +2627,11 @@ function attachTokenPointer(el, tokenId) {
       return;
     }
 
+    if (tool === "pass") {
+      startArrowDraw(el, "BALL", e);
+      return;
+    }
+
     if (tool === "arrow" || tool === "screen") {
       startArrowDraw(el, tokenId, e);
       return;
@@ -2499,7 +2639,7 @@ function attachTokenPointer(el, tokenId) {
 
     // select tool: drag the token (initial placement only)
     if (currentStep > 0) return;
-    el.setPointerCapture(e.pointerId);
+    try { el.setPointerCapture(e.pointerId); } catch (_) {}
     el.classList.add("dragging");
     beginAction();
     const move = (ev) => {
@@ -2540,13 +2680,15 @@ function startArrowDraw(el, tokenId, e) {
   const isPass = tokenId === "BALL";
   const type = tool === "screen" && !isPass && tokenId !== step.ball ? "screen" : "move";
   const start = isPass ? ballPoint(step.pos[step.ball]) : step.pos[tokenId];
-  el.setPointerCapture(e.pointerId);
+  try { el.setPointerCapture(e.pointerId); } catch (_) {}
 
   let dest = null;
   const drawPreview = () => {
     previewGroup.innerHTML = "";
     if (!dest) return;
-    for (const p of makeArrowEls(tokenId, start, { to: dest, via: null, type }, false)) {
+    const dribble = !isPass && type === "move" && tokenId === step.ball &&
+      (!step.pass || passOrderOf(step) === 2);
+    for (const p of makeArrowEls(tokenId, start, { to: dest, via: null, type }, false, dribble)) {
       p.classList.add("preview");
       previewGroup.appendChild(p);
     }
@@ -3023,6 +3165,8 @@ document.addEventListener("keydown", (e) => {
   } else if (e.code === "Digit3") {
     setTool("screen");
   } else if (e.code === "Digit4") {
+    setTool("pass");
+  } else if (e.code === "Digit5") {
     setTool("eraser");
   }
 });
@@ -3057,6 +3201,42 @@ async function decodeSharePlay(s) {
   return JSON.parse(await new Response(stream).text());
 }
 
+// qr.js (vendored qrcode-generator, MIT) is injected on first use.
+let qrLibPromise = null;
+function loadQrLib() {
+  if (window.qrcode) return Promise.resolve();
+  if (!qrLibPromise) {
+    qrLibPromise = new Promise((resolve, reject) => {
+      const sc = document.createElement("script");
+      sc.src = "qr.js";
+      sc.onload = resolve;
+      sc.onerror = () => {
+        qrLibPromise = null;
+        reject(new Error("qr.js failed to load"));
+      };
+      document.head.appendChild(sc);
+    });
+  }
+  return qrLibPromise;
+}
+
+async function renderQrInto(el, text) {
+  try {
+    await loadQrLib();
+    const qr = window.qrcode(0, "L");
+    qr.addData(text);
+    qr.make();
+    const img = document.createElement("img");
+    img.src = qr.createDataURL(4, 8);
+    img.alt = "QR";
+    el.appendChild(img);
+    el.hidden = false;
+  } catch (_) {
+    // link too long for a QR (or the lib failed) — the text link still works
+    el.hidden = true;
+  }
+}
+
 $("shareBtn").addEventListener("click", async () => {
   const res = await openModal({
     title: t("shareTitle"),
@@ -3071,13 +3251,20 @@ $("shareBtn").addEventListener("click", async () => {
     try { await navigator.share({ title: currentPlay().name, url }); } catch (_) { /* cancelled */ }
     return;
   }
+  let msg = "";
   try {
     await navigator.clipboard.writeText(url);
-    showToast(t("shareCopiedMsg"));
-  } catch (_) {
-    // clipboard unavailable — show the link for manual copy
-    openModal({ title: t("shareLinkTitle"), input: true, value: url, confirmLabel: "OK", noCancel: true });
-  }
+    msg = t("shareCopiedMsg");
+  } catch (_) { /* clipboard unavailable — the link is still shown below */ }
+  openModal({
+    title: t("shareLinkTitle"),
+    message: msg,
+    input: true,
+    value: url,
+    confirmLabel: "OK",
+    noCancel: true,
+    qr: url,
+  });
 });
 
 // Add a shared play to the collection (with a duplicate check).

@@ -40,7 +40,7 @@ function exPoint(p, W, H) {
   };
 }
 
-function exDrawArrow(ctx, W, H, a, m, isBall, ghost) {
+function exDrawArrow(ctx, W, H, a, m, isBall, ghost, dribble) {
   const A = exPoint(a, W, H);
   const B = exPoint(m.to, W, H);
   const C = m.via ? exPoint(m.via, W, H) : null;
@@ -59,9 +59,17 @@ function exDrawArrow(ctx, W, H, a, m, isBall, ghost) {
   const shorten = m.type === "move" ? headLen * 0.8 : 0;
   const Bs = { x: B.x - t.x * shorten, y: B.y - t.y * shorten };
   ctx.beginPath();
-  ctx.moveTo(A.x, A.y);
-  if (C) ctx.quadraticCurveTo(C.x, C.y, Bs.x, Bs.y);
-  else ctx.lineTo(Bs.x, Bs.y);
+  if (dribble) {
+    // dribble squiggle — same generator the editor uses
+    const pts = wavyPoints(a, m.via, m.to).map((p) => exPoint(p, W, H));
+    pts[pts.length - 1] = Bs;
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+  } else {
+    ctx.moveTo(A.x, A.y);
+    if (C) ctx.quadraticCurveTo(C.x, C.y, Bs.x, Bs.y);
+    else ctx.lineTo(Bs.x, Bs.y);
+  }
   ctx.stroke();
   ctx.setLineDash([]);
 
@@ -135,7 +143,8 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label, s
     for (const id of PLAYER_IDS) {
       const m = step.moves[id];
       if (m) exDrawArrow(ctx, W, H, step.pos[id], m, false,
-        ghost || (dual && id === step.ball && passOrder === 1));
+        ghost || (dual && id === step.ball && passOrder === 1),
+        isDribbleMove(step, id, m));
     }
     if (step.pass) {
       const ends = passEndpoints(step);

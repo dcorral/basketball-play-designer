@@ -5,7 +5,7 @@
    last version seen. Everything the app needs (including the GIF
    worker) is precached so exports work offline too. */
 
-const CACHE = "playbook-v1";
+const CACHE = "playbook-v2";
 
 const SHELL = [
   "./",
@@ -16,6 +16,7 @@ const SHELL = [
   "backup.js",
   "gif.js",
   "gif.worker.js",
+  "qr.js",
   "manifest.webmanifest",
   "assets/logo.png",
   "assets/favicon.ico",

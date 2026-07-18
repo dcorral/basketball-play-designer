@@ -111,6 +111,11 @@
           <rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11 V7 a4 4 0 0 1 8 0 v4"/>
         </svg>
       </button>
+      <button id="deletePlayBtn" class="btn btn-danger-solid icon-btn" title="Delete current play">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7 H20 M10 4 H14 M6.5 7 L7.5 20 H16.5 L17.5 7 M10 11 V16 M14 11 V16"/>
+        </svg>
+      </button>
       <button id="viewEditBtn" class="btn btn-primary icon-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
@@ -160,6 +165,22 @@
           <path d="M4 7 V17"/>
         </svg>
       </label>
+    </div>
+
+    <!-- size panel: drops below the toolbar on desktop, bottom card on phones -->
+    <div id="sizePanel" class="size-panel" hidden>
+      <div class="size-team" id="sizeTeamSeg" hidden>
+        <button type="button" id="sizeTeamA" class="st-btn a active" title="Attack">A</button>
+        <button type="button" id="sizeTeamD" class="st-btn d" title="Defense">D</button>
+      </div>
+      <label class="mc-item mc-size" id="tokenSizeWrap" title="Player size">
+        <span class="size-wrap">
+          <input type="range" id="tokenSizeRange" min="0.75" max="1.6" step="0.05" value="1" list="tokenSizeTicks">
+          <span class="size-tick"></span>
+        </span>
+        <datalist id="tokenSizeTicks"><option value="1"></option></datalist>
+      </label>
+      <button id="sizePanelClose" class="size-close" title="Close">✕</button>
     </div>
 
     <main class="stage-wrap">
@@ -220,7 +241,6 @@
           <!-- full-court mode: the far half is the near one, rotated -->
           <g id="fullMarks" style="display:none">
             <use href="#halfMarks" transform="rotate(180 25 47)"/>
-            <circle cx="25" cy="47" r="6" fill="none" stroke="#f6f0e8" stroke-width="0.35"/>
           </g>
         </svg>
 
@@ -299,6 +319,12 @@
         <svg viewBox="0 0 24 24"><path d="M14.5 4.5 l 5 5 L10 19 H6 v-4 z M5 20 h 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span class="knum">6</span>
       </button>
+      <button id="sizeBtn" class="tool" title="Player size">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="10.5" cy="10.5" r="5.7"/>
+          <path d="M14.8 14.8 L20 20"/>
+        </svg>
+      </button>
       <div class="tool-sep"></div>
       <button id="undoBtn" class="tool" disabled title="Undo (Ctrl+Z)">
         <svg viewBox="0 0 24 24"><path d="M8 5 L3 10 L8 15 M3 10 H14.5 a4.75 4.75 0 0 1 0 9.5 H10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -325,14 +351,6 @@
       </select>
     </footer>
 
-    <div class="delete-row">
-      <button id="deletePlayBtn" class="btn btn-danger-solid icon-btn" title="Delete current play">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 7 H20 M10 4 H14 M6.5 7 L7.5 20 H16.5 L17.5 7 M10 11 V16 M14 11 V16"/>
-        </svg>
-        <span id="deletePlayLabel">Delete</span>
-      </button>
-    </div>
   </div>
 
   <!-- ============ Interactive tour ============ -->
@@ -400,6 +418,12 @@
         <button id="modalOk" class="btn btn-primary">OK</button>
       </div>
     </div>
+  </div>
+
+  <!-- ============ Undo-delete notification ============ -->
+  <div id="undoToast" class="undo-toast" hidden>
+    <span id="undoToastMsg"></span>
+    <button id="undoToastClose" class="undo-close" title="Dismiss">✕</button>
   </div>
 
   <!-- ============ New play modal ============ -->

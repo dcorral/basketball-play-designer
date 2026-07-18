@@ -145,6 +145,45 @@ body {
 
 .delete-all:hover { color: #ff8a8a; }
 
+/* undo-delete notification: tap = undo, X or swipe = dismiss */
+.undo-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  z-index: 260;
+  display: flex;
+  align-items: stretch;
+  background: var(--panel);
+  border: 1px solid #56565f;
+  border-radius: 12px;
+  box-shadow: 0 14px 40px #000c;
+  cursor: pointer;
+  user-select: none;
+  touch-action: pan-y;
+  max-width: min(430px, calc(100vw - 24px));
+}
+
+.undo-toast span {
+  padding: 13px 14px;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.undo-close {
+  background: none;
+  border: none;
+  border-left: 1px solid #3c3c42;
+  color: var(--muted);
+  font-size: 15px;
+  padding: 0 14px;
+  cursor: pointer;
+  border-radius: 0 12px 12px 0;
+  flex: none;
+}
+
+.undo-close:hover { background: rgba(255, 255, 255, 0.08); color: var(--text); }
+
 .select-all-row {
   display: flex;
   align-items: center;
@@ -729,7 +768,7 @@ body {
 
 body.view-only #toolbar,
 body.view-only .step-actions,
-body.view-only .delete-row,
+body.view-only #deletePlayBtn,
 body.view-only #handles,
 body.view-only #exportBtn,
 body.view-only #shareBtn { display: none !important; }
@@ -922,15 +961,6 @@ select:hover, .btn:hover { border-color: #5a5a63; }
   font-size: 15px;
 }
 
-/* delete-play lives in its own section, separated from the player */
-.delete-row {
-  display: flex;
-  justify-content: center;
-  padding: 11px 0 13px;
-  background: var(--bg);
-  border-top: 1px solid #34343b;
-}
-
 .step-chips::-webkit-scrollbar { height: 5px; width: 5px; }
 .step-chips::-webkit-scrollbar-track { background: transparent; }
 .step-chips::-webkit-scrollbar-thumb { background: #3c3c42; border-radius: 3px; }
@@ -1083,7 +1113,7 @@ select:hover, .btn:hover { border-color: #5a5a63; }
 .token {
   position: absolute;
   pointer-events: auto;
-  width: 5.8%;
+  width: calc(5.8% * var(--tok, 1));
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   border-radius: 50%;
@@ -1091,7 +1121,7 @@ select:hover, .btn:hover { border-color: #5a5a63; }
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 1em;
+  font-size: calc(1em * var(--tok, 1));
   line-height: 1;
   overflow: hidden;
   color: #fff;
@@ -1109,37 +1139,14 @@ select:hover, .btn:hover { border-color: #5a5a63; }
 }
 
 .token.defense {
-  background: none;
-  border: none;
-  box-shadow: none;
-  border-radius: 0;
-}
-
-.token.defense::before,
-.token.defense::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 110%;
-  height: 16%;
-  border-radius: 99px;
-  background: #b32821;
-  box-shadow: 0 1px 3px #0009;
-}
-
-.token.defense::before { transform: translate(-50%, -50%) rotate(45deg); }
-.token.defense::after { transform: translate(-50%, -50%) rotate(-45deg); }
-
-.token.defense .dnum {
-  position: relative;
-  z-index: 2;
-  font-size: 0.8em;
-  text-shadow: 0 1px 2px #000d, 0 0 3px #000a;
+  background: radial-gradient(circle at 35% 30%, #e05a50, #a32620);
+  border: 2px solid #f4c5c0;
+  width: calc(5.8% * var(--tokD, 1));
+  font-size: calc(1em * var(--tokD, 1));
 }
 
 .token.ball {
-  width: 3.9%;
+  width: calc(3.9% * var(--tok, 1));
   background: radial-gradient(circle at 35% 30%, #ff9c50, #d35f14);
   border: 2px solid #7a3c0c;
 }
@@ -1288,6 +1295,151 @@ input[type="range"]::-moz-range-thumb {
 
 .mc-item svg { width: 15px; height: 15px; }
 
+.size-panel {
+  position: fixed;
+  z-index: 65;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fdfdfd;
+  color: #3d4148;
+  border-radius: 10px;
+  padding: 8px 12px;
+  box-shadow: 0 4px 18px #0007;
+}
+
+.size-panel .mc-item { color: #3d4148; }
+
+.size-team { display: flex; gap: 4px; }
+
+.st-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f0f0f4;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.st-btn.a {
+  color: #2b5ea8;
+  border: 1px solid rgba(43, 94, 168, 0.55);
+}
+
+.st-btn.d {
+  color: #a32620;
+  border: 1px solid rgba(163, 38, 32, 0.55);
+}
+
+.st-btn.a.active {
+  background: #2b5ea8;
+  border-color: #2b5ea8;
+  color: #fff;
+}
+
+.st-btn.d.active {
+  background: #a32620;
+  border-color: #a32620;
+  color: #fff;
+}
+
+.size-close {
+  background: none;
+  border: none;
+  color: #6a6e75;
+  font-size: 15px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 7px;
+}
+
+.size-close:hover { background: #ececf1; }
+
+.mc-size .size-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: 1;
+}
+
+/* bare line + small solid red dot */
+.size-panel .mc-item { flex: 1; }
+
+.mc-size input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 16px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.mc-size input[type="range"]::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 1px;
+  background: #b6b9bf;
+}
+
+.mc-size input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  margin-top: -5px;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: none;
+}
+
+.mc-size input[type="range"]::-moz-range-track {
+  height: 2px;
+  border-radius: 1px;
+  background: #b6b9bf;
+}
+
+.mc-size input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: none;
+}
+
+/* mark on the track at the default size (1.0 = 29.4% of the range) */
+.mc-size .size-tick {
+  position: absolute;
+  left: calc(8px + (100% - 16px) * 0.294);
+  bottom: -3px;
+  width: 2px;
+  height: 6px;
+  border-radius: 1px;
+  background: #9a9aa4;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .size-panel {
+    left: 12px !important;
+    right: 12px;
+    top: auto !important;
+    bottom: 84px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    box-shadow: 0 10px 34px #000b;
+  }
+
+  .mc-size input[type="range"] { height: 26px; }
+
+  /* a dot you can still grab with a finger */
+  .mc-size input[type="range"]::-webkit-slider-thumb { width: 18px; height: 18px; margin-top: -8px; }
+  .mc-size input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; }
+}
+
 /* ---------- Toolbar (floating over everything, drag anywhere) ---------- */
 .toolbar {
   position: fixed;
@@ -1355,6 +1507,9 @@ input[type="range"]::-moz-range-thumb {
 
 .toolbar.folded .tool:not(.active) { display: none; }
 .toolbar.folded .tool-sep { display: none; }
+
+/* size bar in use: the collapsed toolbar keeps only the loupe */
+.toolbar.folded.size-open .tool.active:not(#sizeBtn) { display: none; }
 
 .tool-grip {
   width: 16px;
@@ -1638,8 +1793,9 @@ body[data-tool="eraser"] .def-ghost-hit { cursor: pointer; }
 
   .stage-wrap { padding: 8px; }
   /* bigger touch targets: players and ball grow on small screens */
-  .token { width: 7.6%; font-size: 1.2em; }
-  .token.ball { width: 5.2%; }
+  .token { width: calc(7.6% * var(--tok, 1)); font-size: calc(1.2em * var(--tok, 1)); }
+  .token.defense { width: calc(7.6% * var(--tokD, 1)); font-size: calc(1.2em * var(--tokD, 1)); }
+  .token.ball { width: calc(5.2% * var(--tok, 1)); }
 
   /* play cards: tighter row so the action icons never overflow */
   .play-card { gap: 6px; padding: 10px 4px 10px 10px; }

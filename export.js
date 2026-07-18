@@ -95,7 +95,8 @@ function exDrawArrow(ctx, W, H, a, m, isBall, ghost, dribble, defender) {
 
 function exDrawToken(ctx, W, H, def, p) {
   const c = exPoint(p, W, H);
-  const r = def.type === "ball" ? W * 0.0195 : W * 0.029;
+  const scale = def.type === "defense" ? defTokenScale() : tokenScale();
+  const r = (def.type === "ball" ? W * 0.0195 : W * 0.029) * scale;
   ctx.save();
   if (def.type === "ball") {
     const g = ctx.createRadialGradient(c.x - r * 0.3, c.y - r * 0.4, r * 0.2, c.x, c.y, r);
@@ -114,22 +115,21 @@ function exDrawToken(ctx, W, H, def, p) {
     ctx.moveTo(c.x, c.y - r); ctx.lineTo(c.x, c.y + r);
     ctx.stroke();
   } else if (def.type === "defense") {
-    const sX = r * 0.92;
-    ctx.strokeStyle = "#b32821";
-    ctx.lineWidth = r * 0.42;
-    ctx.lineCap = "round";
+    const g = ctx.createRadialGradient(c.x - r * 0.35, c.y - r * 0.45, r * 0.2, c.x, c.y, r);
+    g.addColorStop(0, "#e05a50");
+    g.addColorStop(1, "#a32620");
+    ctx.fillStyle = g;
     ctx.beginPath();
-    ctx.moveTo(c.x - sX, c.y - sX); ctx.lineTo(c.x + sX, c.y + sX);
-    ctx.moveTo(c.x + sX, c.y - sX); ctx.lineTo(c.x - sX, c.y + sX);
+    ctx.arc(c.x, c.y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#f4c5c0";
+    ctx.lineWidth = r * 0.16;
     ctx.stroke();
-    ctx.font = `700 ${Math.round(r * 0.9)}px system-ui, sans-serif`;
+    ctx.fillStyle = "#fff";
+    ctx.font = `700 ${Math.round(r * 1.15)}px system-ui, sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.strokeStyle = "rgba(0,0,0,0.6)";
-    ctx.lineWidth = r * 0.26;
-    ctx.strokeText(def.label, c.x, c.y + r * 0.04);
-    ctx.fillStyle = "#fff";
-    ctx.fillText(def.label, c.x, c.y + r * 0.04);
+    ctx.fillText(def.label, c.x, c.y + r * 0.06);
   } else {
     const g = ctx.createRadialGradient(c.x - r * 0.35, c.y - r * 0.45, r * 0.2, c.x, c.y, r);
     g.addColorStop(0, "#4d8fe0");
@@ -199,7 +199,7 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label, s
       const prm = step.moves[step.pass.to];
       const bCenter = prm ? prm.to : step.pos[step.pass.to];
       exDrawArrow(ctx, W, H, ends.a, {
-        to: shortenTo(ends.a, bCenter, RECEIVER_GAP),
+        to: shortenTo(ends.a, bCenter, receiverGap()),
         via: null,
         type: "move",
       }, true, ghost || (dual && passOrder === 2));
@@ -211,7 +211,7 @@ function exDrawScene(ctx, W, H, courtImg, posMap, arrowsStepIdx, ghost, label, s
       maybes.forEach((mp, mi) => {
         const rm = step.moves[mp.to];
         const aCourt = ballPoint(om && passOrderOf(step) === 2 ? om.to : step.pos[step.ball]);
-        const bM = exPoint(shortenTo(aCourt, rm ? rm.to : step.pos[mp.to], RECEIVER_GAP), W, H);
+        const bM = exPoint(shortenTo(aCourt, rm ? rm.to : step.pos[mp.to], receiverGap()), W, H);
         ctx.save();
         ctx.globalAlpha = ghost ? 0.25 : 0.55;
         ctx.strokeStyle = mi === 0 ? MAYBE_MAIN : MAYBE_ALT;

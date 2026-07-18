@@ -73,6 +73,14 @@ function applyCourtMode(play) {
   $("floorRect2").setAttribute("height", full ? 94 : 54);
   $("halfExtras").style.display = full ? "none" : "";
   $("fullMarks").style.display = full ? "" : "none";
+  // on the full court the logo reads as a subtle parquet inlay (bigger,
+  // faded, no centre circle) so it never fights the pieces at midcourt
+  const logo = $("teamLogo");
+  logo.setAttribute("opacity", full ? "0.32" : "0.92");
+  logo.setAttribute("x", full ? "14.5" : "18.25");
+  logo.setAttribute("y", full ? "35.3" : "39.5");
+  logo.setAttribute("width", full ? "21" : "13.5");
+  logo.setAttribute("height", full ? "23.4" : "15");
   stageEl.style.aspectRatio = `${VB.w} / ${VB.h}`;
   stageEl.style.width = `min(100cqw, calc(100cqh * ${VB.w} / ${VB.h}))`;
   // token numbers scale with the stage, not the viewport — otherwise a
@@ -147,6 +155,7 @@ const I18N = {
     duplicatedToast: (n) => `Copy created: "${n}".`,
     deleteAllMsg: (n) => `All ${n} plays will be deleted permanently. This cannot be undone.`,
     deleteSelMsg: (n) => n === 1 ? "The selected play will be deleted permanently." : `The ${n} selected plays will be deleted permanently.`,
+    undoDeleteMsg: (n) => n === 1 ? "Play deleted — tap here to undo." : `${n} plays deleted — tap here to undo.`,
     resetTitle: "Reset play?",
     resetMsg: "All steps and arrows will be removed. The starting positions of step 1 are kept.",
     untitled: "Untitled play", playDefault: "Play",
@@ -172,6 +181,7 @@ const I18N = {
     ttPass: "Pass — drag anywhere on the court; the line starts at the ball (4)",
     ttMaybePass: "Possible pass — the first drawn is the main option (green), the rest blue (5)",
     ttMaybeToggle: "Animate possible passes",
+    ttTokenSize: "Player size",
     ttMaybeShow: "Show possible passes",
     legCut: "Movement", legDribble: "Dribble", legScreen: "Screen", legPass: "Pass",
     legMain: "Main pass option", legOption: "Pass option", legDefender: "Defender movement", legZone: "Zone of action",
@@ -289,6 +299,7 @@ const I18N = {
     duplicatedToast: (n) => `Copia creada: "${n}".`,
     deleteAllMsg: (n) => `Se eliminarán permanentemente las ${n} jugadas. Esto no se puede deshacer.`,
     deleteSelMsg: (n) => n === 1 ? "La jugada seleccionada se eliminará permanentemente." : `Las ${n} jugadas seleccionadas se eliminarán permanentemente.`,
+    undoDeleteMsg: (n) => n === 1 ? "Jugada eliminada — toca aquí para deshacer." : `${n} jugadas eliminadas — toca aquí para deshacer.`,
     resetTitle: "¿Reiniciar jugada?",
     resetMsg: "Se eliminarán todos los pasos y flechas. Se mantendrán las posiciones iniciales del paso 1.",
     untitled: "Jugada sin nombre", playDefault: "Jugada",
@@ -314,6 +325,7 @@ const I18N = {
     ttPass: "Pase — arrastra en cualquier punto de la pista; la línea sale del balón (4)",
     ttMaybePass: "Pase posible — el primero dibujado es la opción principal (verde), el resto en azul (5)",
     ttMaybeToggle: "Animar pases posibles",
+    ttTokenSize: "Tamaño de los jugadores",
     ttMaybeShow: "Mostrar pases posibles",
     legCut: "Movimiento", legDribble: "Bote", legScreen: "Bloqueo", legPass: "Pase",
     legMain: "Pase posible principal", legOption: "Pase posible", legDefender: "Movimiento defensivo", legZone: "Zona de acción",
@@ -431,6 +443,7 @@ const I18N = {
     duplicatedToast: (n) => `Copia creata: "${n}".`,
     deleteAllMsg: (n) => `Tutte le ${n} giocate verranno eliminate definitivamente. Non si può annullare.`,
     deleteSelMsg: (n) => n === 1 ? "La giocata selezionata verrà eliminata definitivamente." : `Le ${n} giocate selezionate verranno eliminate definitivamente.`,
+    undoDeleteMsg: (n) => n === 1 ? "Giocata eliminata — tocca qui per annullare." : `${n} giocate eliminate — tocca qui per annullare.`,
     resetTitle: "Azzerare la giocata?",
     resetMsg: "Tutti i passi e le frecce verranno rimossi. Le posizioni iniziali del passo 1 vengono mantenute.",
     untitled: "Giocata senza nome", playDefault: "Giocata",
@@ -456,6 +469,7 @@ const I18N = {
     ttPass: "Passaggio — trascina ovunque sul campo; la linea parte dal pallone (4)",
     ttMaybePass: "Passaggio possibile — il primo disegnato è l\u2019opzione principale (verde), gli altri in blu (5)",
     ttMaybeToggle: "Anima i passaggi possibili",
+    ttTokenSize: "Dimensione dei giocatori",
     ttMaybeShow: "Mostra i passaggi possibili",
     legCut: "Movimento", legDribble: "Palleggio", legScreen: "Blocco", legPass: "Passaggio",
     legMain: "Opzione principale", legOption: "Altra opzione", legDefender: "Movimento difensivo", legZone: "Area di azione",
@@ -572,6 +586,7 @@ const I18N = {
     duplicatedToast: (n) => `Создана копия: «${n}».`,
     deleteAllMsg: (n) => `Все комбинации (${n}) будут удалены навсегда. Это нельзя отменить.`,
     deleteSelMsg: (n) => n === 1 ? "Выбранная комбинация будет удалена навсегда." : `Выбранные комбинации (${n}) будут удалены навсегда.`,
+    undoDeleteMsg: (n) => n === 1 ? "Комбинация удалена — нажмите здесь, чтобы отменить." : `Удалено комбинаций: ${n} — нажмите здесь, чтобы отменить.`,
     resetTitle: "Сбросить комбинацию?",
     resetMsg: "Все шаги и стрелки будут удалены. Начальные позиции шага 1 сохранятся.",
     untitled: "Без названия", playDefault: "Комбинация",
@@ -597,6 +612,7 @@ const I18N = {
     ttPass: "Передача — тяните в любом месте площадки; линия идёт от мяча (4)",
     ttMaybePass: "Возможная передача — первая нарисованная — главный вариант (зелёная), остальные синие (5)",
     ttMaybeToggle: "Анимировать возможные передачи",
+    ttTokenSize: "Размер игроков",
     ttMaybeShow: "Показывать возможные передачи",
     legCut: "Движение", legDribble: "Ведение", legScreen: "Заслон", legPass: "Передача",
     legMain: "Основной вариант", legOption: "Другой вариант", legDefender: "Движение защитника", legZone: "Зона действий",
@@ -713,6 +729,7 @@ const I18N = {
     duplicatedToast: (n) => `已创建副本："${n}"。`,
     deleteAllMsg: (n) => `全部 ${n} 套战术将被永久删除，且无法撤销。`,
     deleteSelMsg: (n) => `选中的 ${n} 套战术将被永久删除。`,
+    undoDeleteMsg: (n) => n === 1 ? "战术已删除 — 点击此处撤销。" : `已删除 ${n} 套战术 — 点击此处撤销。`,
     resetTitle: "重置战术？",
     resetMsg: "所有步骤和箭头将被删除，仅保留第 1 步的初始位置。",
     untitled: "未命名战术", playDefault: "战术",
@@ -738,6 +755,7 @@ const I18N = {
     ttPass: "传球 — 在球场任意位置拖动；虚线自动从球出发（4）",
     ttMaybePass: "潜在传球 — 最先画的是主要选项（绿色），其余为蓝色（5）",
     ttMaybeToggle: "播放潜在传球动画",
+    ttTokenSize: "球员大小",
     ttMaybeShow: "显示潜在传球",
     legCut: "移动", legDribble: "运球", legScreen: "掩护", legPass: "传球",
     legMain: "主要传球选项", legOption: "其他选项", legDefender: "防守移动", legZone: "负责区域",
@@ -854,6 +872,7 @@ const I18N = {
     duplicatedToast: (n) => `Kopija napravljena: „${n}".`,
     deleteAllMsg: (n) => `Svih ${n} akcija biće trajno obrisano. Ovo se ne može poništiti.`,
     deleteSelMsg: (n) => n === 1 ? "Izabrana akcija biće trajno obrisana." : `Izabrane akcije (${n}) biće trajno obrisane.`,
+    undoDeleteMsg: (n) => n === 1 ? "Akcija obrisana — dodirni ovde da poništiš." : `Obrisano akcija: ${n} — dodirni ovde da poništiš.`,
     resetTitle: "Resetovati akciju?",
     resetMsg: "Svi koraci i strelice biće uklonjeni. Početne pozicije koraka 1 se zadržavaju.",
     untitled: "Akcija bez imena", playDefault: "Akcija",
@@ -879,6 +898,7 @@ const I18N = {
     ttPass: "Dodavanje — prevuci bilo gde na terenu; linija kreće od lopte (4)",
     ttMaybePass: "Mogući pas — prvi nacrtani je glavna opcija (zelena), ostali su plavi (5)",
     ttMaybeToggle: "Animiraj moguće pasove",
+    ttTokenSize: "Veličina igrača",
     ttMaybeShow: "Prikaži moguće pasove",
     legCut: "Kretanje", legDribble: "Dribling", legScreen: "Blok", legPass: "Pas",
     legMain: "Glavna opcija pasa", legOption: "Druga opcija", legDefender: "Kretanje odbrane", legZone: "Zona delovanja",
@@ -995,6 +1015,7 @@ const I18N = {
     duplicatedToast: (n) => `Kopija ustvarjena: »${n}«.`,
     deleteAllMsg: (n) => `Vseh ${n} akcij bo trajno izbrisanih. Tega ni mogoče razveljaviti.`,
     deleteSelMsg: (n) => n === 1 ? "Izbrana akcija bo trajno izbrisana." : `Izbrane akcije (${n}) bodo trajno izbrisane.`,
+    undoDeleteMsg: (n) => n === 1 ? "Akcija izbrisana — tapni tukaj za razveljavitev." : `Izbrisanih akcij: ${n} — tapni tukaj za razveljavitev.`,
     resetTitle: "Ponastavim akcijo?",
     resetMsg: "Vsi koraki in puščice bodo odstranjeni. Začetni položaji koraka 1 se ohranijo.",
     untitled: "Akcija brez imena", playDefault: "Akcija",
@@ -1020,6 +1041,7 @@ const I18N = {
     ttPass: "Podaja — povleci kjerkoli na igrišču; črta se začne pri žogi (4)",
     ttMaybePass: "Možna podaja — prva narisana je glavna možnost (zelena), ostale so modre (5)",
     ttMaybeToggle: "Animiraj možne podaje",
+    ttTokenSize: "Velikost igralcev",
     ttMaybeShow: "Prikaži možne podaje",
     legCut: "Gibanje", legDribble: "Vodenje", legScreen: "Blokada", legPass: "Podaja",
     legMain: "Glavna možna podaja", legOption: "Možna podaja", legDefender: "Gibanje obrambe", legZone: "Območje delovanja",
@@ -1136,6 +1158,7 @@ const I18N = {
     duplicatedToast: (n) => `Δημιουργήθηκε αντίγραφο: «${n}».`,
     deleteAllMsg: (n) => `Και τα ${n} συστήματα θα διαγραφούν οριστικά. Δεν μπορεί να αναιρεθεί.`,
     deleteSelMsg: (n) => n === 1 ? "Το επιλεγμένο σύστημα θα διαγραφεί οριστικά." : `Τα ${n} επιλεγμένα συστήματα θα διαγραφούν οριστικά.`,
+    undoDeleteMsg: (n) => n === 1 ? "Το σύστημα διαγράφηκε — πάτησε εδώ για αναίρεση." : `Διαγράφηκαν ${n} συστήματα — πάτησε εδώ για αναίρεση.`,
     resetTitle: "Επαναφορά συστήματος;",
     resetMsg: "Όλα τα βήματα και τα βέλη θα αφαιρεθούν. Οι αρχικές θέσεις του βήματος 1 διατηρούνται.",
     untitled: "Σύστημα χωρίς όνομα", playDefault: "Σύστημα",
@@ -1161,6 +1184,7 @@ const I18N = {
     ttPass: "Πάσα — σύρε οπουδήποτε στο γήπεδο· η γραμμή ξεκινά από την μπάλα (4)",
     ttMaybePass: "Πιθανή πάσα — η πρώτη που σχεδιάζεις είναι η κύρια επιλογή (πράσινη), οι υπόλοιπες μπλε (5)",
     ttMaybeToggle: "Κίνηση πιθανών πασών",
+    ttTokenSize: "Μέγεθος παικτών",
     ttMaybeShow: "Εμφάνιση πιθανών πασών",
     legCut: "Κίνηση", legDribble: "Ντρίμπλα", legScreen: "Σκριν", legPass: "Πάσα",
     legMain: "Κύρια πιθανή πάσα", legOption: "Πιθανή πάσα", legDefender: "Κίνηση αμυντικού", legZone: "Περιοχή ευθύνης",
@@ -1283,7 +1307,7 @@ function applyLang() {
 
   const texts = {
     createNewBtn: "createNew", backBtn: "back",
-    deletePlayLabel: "deletePlay", viewEditLabel: "viewEdit",
+    viewEditLabel: "viewEdit",
     modalCancel: "cancel", exportCancel: "cancel", exportGo: "exportGo",
     exportTitle: "exportTitle", exportFormatLabel: "formatLabel",
     exportMoveLabel: "moveDur", exportPauseLabel: "pauseDur",
@@ -1301,7 +1325,7 @@ function applyLang() {
     exportAllBtn: "ttExportAll", importAllBtn: "ttImportAll",
     addStepBtn: "nextStep", resetAllBtn: "ttResetAll", defenseBtn: "ttDefense",
     zoomIn: "ttZoomIn", zoomOut: "ttZoomOut", zoomLabel: "ttZoomReset",
-    maybeTogWrap: "ttMaybeToggle", maybeShowWrap: "ttMaybeShow",
+    maybeTogWrap: "ttMaybeToggle", maybeShowWrap: "ttMaybeShow", tokenSizeWrap: "ttTokenSize",
   };
   for (const [id, key] of Object.entries(titles)) $(id).title = t(key);
 
@@ -1795,9 +1819,7 @@ function renderHome() {
         danger: true,
       });
       if (!ok) return;
-      plays = plays.filter((x) => x.id !== p.id);
-      save();
-      renderHome();
+      deletePlaysWithUndo([p.id]);
     });
 
     const meta = document.createElement("span");
@@ -1960,7 +1982,10 @@ function toPercent(pos) {
 /* ================= Timeline model ================= */
 
 function ballPoint(p) {
-  return { x: p.x + BALL_OFFSET.x, y: p.y + BALL_OFFSET.y };
+  // the offset grows with the token size (plus a little extra) so the
+  // ball always sits beside the carrier's number, never on top of it
+  const k = tokenScale() * 1.16;
+  return { x: p.x + BALL_OFFSET.x * k, y: p.y + BALL_OFFSET.y * k };
 }
 
 function hasMoves(step) {
@@ -2166,7 +2191,12 @@ let pendingSnapshot = null;
 
 function snapshotState() {
   const p = currentPlay();
-  return JSON.stringify({ name: p.name, steps: p.steps, defense: !!p.defense, currentStep });
+  return JSON.stringify({
+    name: p.name, steps: p.steps, defense: !!p.defense,
+    tokenScale: p.tokenScale != null ? p.tokenScale : null,
+    defTokenScale: p.defTokenScale != null ? p.defTokenScale : null,
+    currentStep,
+  });
 }
 
 function pushUndo() {
@@ -2201,6 +2231,8 @@ function restoreState(json) {
   p.name = snap.name;
   p.steps = snap.steps;
   p.defense = !!snap.defense;
+  if (snap.tokenScale != null) p.tokenScale = snap.tokenScale; else delete p.tokenScale;
+  if (snap.defTokenScale != null) p.defTokenScale = snap.defTokenScale; else delete p.defTokenScale;
   currentStep = Math.min(snap.currentStep, p.steps.length - 1);
   playhead = currentStep;
   save();
@@ -2506,8 +2538,7 @@ function buildTokens() {
     const el = document.createElement("div");
     el.className = "token " + def.type;
     el.dataset.id = def.id;
-    if (def.type === "defense") el.innerHTML = '<span class="dnum">' + def.label + "</span>";
-    else el.textContent = def.label;
+    el.textContent = def.label;
     attachTokenPointer(el, def.id);
     tokensEl.appendChild(el);
   }
@@ -2574,7 +2605,18 @@ function isDribbleMove(step, id, m) {
 
 // Pull a line's endpoint back towards its origin so the tip lands just
 // in front of the receiver's circle instead of underneath it.
-const RECEIVER_GAP = 2.9;
+function tokenScale() {
+  const p = currentPlay();
+  return (p && p.tokenScale) || 1;
+}
+function defTokenScale() {
+  const p = currentPlay();
+  if (!p) return 1;
+  return p.defTokenScale != null ? p.defTokenScale : (p.tokenScale || 1);
+}
+function receiverGap() {
+  return 2.9 * tokenScale();
+}
 function shortenTo(a, b, dist) {
   const dx = b.x - a.x, dy = b.y - a.y;
   const len = Math.hypot(dx, dy);
@@ -2637,10 +2679,9 @@ function makeArrowEls(tokenId, a, move, ghost, dribble) {
 // move, click it with the eraser to remove it, or redraw with the
 // arrow tool to replace it.
 function makeDefGhostEls(tokenId, from, to) {
-  const s = 1.15;
+  const s = 1.3 * (DEFENDER_IDS.includes(tokenId) ? defTokenScale() : tokenScale());
   const xd = (p) =>
-    `M ${p.x - s} ${p.y - s} L ${p.x + s} ${p.y + s} ` +
-    `M ${p.x + s} ${p.y - s} L ${p.x - s} ${p.y + s}`;
+    `M ${p.x + s} ${p.y} A ${s} ${s} 0 1 0 ${p.x - s} ${p.y} A ${s} ${s} 0 1 0 ${p.x + s} ${p.y}`;
   // whisper-thin tie back to where the defender starts the step
   const tie = document.createElementNS(SVG_NS, "line");
   tie.setAttribute("x1", from.x);
@@ -2651,9 +2692,7 @@ function makeDefGhostEls(tokenId, from, to) {
   tie.dataset.token = tokenId;
   const isDefTeam = DEFENDER_IDS.includes(tokenId);
   const x = document.createElementNS(SVG_NS, "path");
-  x.setAttribute("d", isDefTeam
-    ? xd(to)
-    : `M ${to.x + 1.3} ${to.y} A 1.3 1.3 0 1 0 ${to.x - 1.3} ${to.y} A 1.3 1.3 0 1 0 ${to.x + 1.3} ${to.y}`);
+  x.setAttribute("d", xd(to));
   x.setAttribute("class", "def-ghost" + (isDefTeam ? "" : " off"));
   x.dataset.token = tokenId;
   const hit = document.createElementNS(SVG_NS, "circle");
@@ -2676,9 +2715,7 @@ function makeDefGhostEls(tokenId, from, to) {
       const p = pointerToCourt(ev);
       step.moves[tokenId].to = p;
       // reposition in place — a rebuild would kill the pointer capture
-      x.setAttribute("d", isDefTeam
-        ? xd(p)
-        : `M ${p.x + 1.3} ${p.y} A 1.3 1.3 0 1 0 ${p.x - 1.3} ${p.y} A 1.3 1.3 0 1 0 ${p.x + 1.3} ${p.y}`);
+      x.setAttribute("d", xd(p));
       hit.setAttribute("cx", p.x);
       hit.setAttribute("cy", p.y);
       tie.setAttribute("x2", p.x);
@@ -2894,7 +2931,7 @@ function renderArrows() {
     const { a } = passEndpoints(step);
     const prm = step.moves[step.pass.to];
     const bCenter = prm ? prm.to : step.pos[step.pass.to];
-    const els = makeArrowEls("BALL", a, { to: shortenTo(a, bCenter, RECEIVER_GAP), via: null, type: "move" },
+    const els = makeArrowEls("BALL", a, { to: shortenTo(a, bCenter, receiverGap()), via: null, type: "move" },
       ghost || (dual && passOrder === 2));
     addEls(els);
     if (dual) addOrderHandlers(els, true);
@@ -2907,7 +2944,7 @@ function renderArrows() {
     const aM = ballPoint(ownerMove && passOrderOf(step) === 2 ? ownerMove.to : step.pos[step.ball]);
     maybes.forEach((mp, idx) => {
       const rm = step.moves[mp.to];
-      const bM = shortenTo(aM, rm ? rm.to : step.pos[mp.to], RECEIVER_GAP);
+      const bM = shortenTo(aM, rm ? rm.to : step.pos[mp.to], receiverGap());
       const path = document.createElementNS(SVG_NS, "path");
       path.setAttribute("d", arrowPathD(aM, null, bM));
       path.setAttribute("class", "arrow-path move ball-path maybe" +
@@ -2948,7 +2985,7 @@ function handlePoint(step, tokenId, kind) {
     // the pass line stops short of the receiver, and its handle must sit
     // on the visible tip, not on the old full-length endpoint
     const prm = step.moves[step.pass.to];
-    to = shortenTo(a, prm ? prm.to : step.pos[step.pass.to], RECEIVER_GAP);
+    to = shortenTo(a, prm ? prm.to : step.pos[step.pass.to], receiverGap());
     via = null; // passes are straight
   } else {
     const m = step.moves[tokenId];
@@ -3052,6 +3089,9 @@ function updateMaybeControls() {
   $("maybeShowTog").disabled = !anyMaybes;
   $("maybeTog").checked = !p.probeOff;
   $("maybeTog").disabled = !anyMaybes || !!p.maybesHidden;
+  $("tokenSizeRange").value = String(sizeTeams.A ? tokenScale() : defTokenScale());
+  stageEl.style.setProperty("--tok", String(tokenScale()));
+  stageEl.style.setProperty("--tokD", String(defTokenScale()));
 }
 
 function refreshEdit() {
@@ -3788,13 +3828,10 @@ $("deleteAllBtn").addEventListener("click", async () => {
     danger: true,
   });
   if (!ok) return;
-  plays = [];
-  selectedPlayIds.clear();
   playSearch = "";
   $("playSearch").value = "";
   playPage = 0;
-  save();
-  renderHome();
+  deletePlaysWithUndo(plays.map((p) => p.id));
 });
 
 $("playSearch").addEventListener("input", (e) => {
@@ -3814,6 +3851,88 @@ $("kindFilter").addEventListener("click", (e) => {
 $("pagePrev").addEventListener("click", () => { playPage--; renderHome(); });
 $("pageNext").addEventListener("click", () => { playPage++; renderHome(); });
 
+/* Deleted plays linger for 10 seconds behind an undo notification:
+   tap the notification to restore them, swipe it away or hit its X to
+   let them go. */
+let pendingDelete = null;
+
+function finalizePendingDelete() {
+  if (!pendingDelete) return;
+  clearTimeout(pendingDelete.timer);
+  pendingDelete = null;
+  $("undoToast").hidden = true;
+}
+
+function deletePlaysWithUndo(ids) {
+  finalizePendingDelete(); // an older pending delete becomes permanent
+  const idSet = new Set(ids);
+  const items = [];
+  plays.forEach((p, i) => { if (idSet.has(p.id)) items.push({ play: p, index: i }); });
+  if (!items.length) return;
+  plays = plays.filter((p) => !idSet.has(p.id));
+  for (const id of ids) selectedPlayIds.delete(id);
+  save();
+  renderHome();
+  const toast = $("undoToast");
+  $("undoToastMsg").textContent = t("undoDeleteMsg", items.length);
+  toast.hidden = false;
+  toast.style.transform = "";
+  toast.style.opacity = "";
+  pendingDelete = {
+    items,
+    timer: setTimeout(finalizePendingDelete, 10000),
+  };
+}
+
+function undoPendingDelete() {
+  if (!pendingDelete) return;
+  const items = pendingDelete.items;
+  clearTimeout(pendingDelete.timer);
+  pendingDelete = null;
+  $("undoToast").hidden = true;
+  // reinsert at the original spots (ascending keeps indices valid)
+  items.sort((a, b) => a.index - b.index);
+  for (const it of items) {
+    plays.splice(Math.min(it.index, plays.length), 0, it.play);
+  }
+  save();
+  renderHome();
+}
+
+// tap = undo; the X or a horizontal swipe = dismiss
+$("undoToastClose").addEventListener("click", (e) => {
+  e.stopPropagation();
+  finalizePendingDelete();
+});
+$("undoToast").addEventListener("pointerdown", (e) => {
+  if (e.target.closest("#undoToastClose")) return;
+  const toast = $("undoToast");
+  const sx = e.clientX;
+  let dx = 0;
+  try { toast.setPointerCapture(e.pointerId); } catch (_) {}
+  const move = (ev) => {
+    dx = ev.clientX - sx;
+    toast.style.transform = `translateX(calc(-50% + ${dx}px))`;
+    toast.style.opacity = String(Math.max(1 - Math.abs(dx) / 140, 0.15));
+  };
+  const up = () => {
+    toast.removeEventListener("pointermove", move);
+    toast.removeEventListener("pointerup", up);
+    toast.removeEventListener("pointercancel", up);
+    if (Math.abs(dx) > 60) {
+      finalizePendingDelete(); // swiped away
+    } else if (Math.abs(dx) < 8) {
+      undoPendingDelete(); // a plain tap restores
+    } else {
+      toast.style.transform = "";
+      toast.style.opacity = "";
+    }
+  };
+  toast.addEventListener("pointermove", move);
+  toast.addEventListener("pointerup", up);
+  toast.addEventListener("pointercancel", up);
+});
+
 async function deleteSelectedPlays() {
   const n = selectedPlayIds.size;
   if (!n) return;
@@ -3824,10 +3943,7 @@ async function deleteSelectedPlays() {
     danger: true,
   });
   if (!ok) return;
-  plays = plays.filter((p) => !selectedPlayIds.has(p.id));
-  selectedPlayIds.clear();
-  save();
-  renderHome();
+  deletePlaysWithUndo([...selectedPlayIds]);
 }
 
 $("maybeTog").addEventListener("change", (e) => {
@@ -3838,6 +3954,150 @@ $("maybeTog").addEventListener("change", (e) => {
   if (!viewPlay) save();
   stopPlayback();
   renderAll();
+});
+
+/* The loupe in the toolbar opens the size bar: a thin row hanging
+   under the toolbar on desktop, a bottom card on phones. When both
+   teams are on court, the A/D buttons pick which one the bar resizes. */
+let sizePanelOpen = false;
+// which teams the bar resizes — both by default, so one drag scales all
+let sizeTeams = { A: true, D: true };
+
+function updateSizeTeamSeg() {
+  const both = hasBothTeams(currentPlay());
+  $("sizeTeamSeg").hidden = !both;
+  if (!both) sizeTeams = { A: true, D: true };
+  $("sizeTeamA").classList.toggle("active", sizeTeams.A);
+  $("sizeTeamD").classList.toggle("active", sizeTeams.D);
+  $("tokenSizeRange").value = String(sizeTeams.A ? tokenScale() : defTokenScale());
+}
+
+function repositionSizePanel() {
+  if (SMALL_MQ.matches) {
+    $("sizePanel").style.left = "";
+    $("sizePanel").style.top = "";
+    return;
+  }
+  const r = toolbar.getBoundingClientRect();
+  const panel = $("sizePanel");
+  const w = Math.max(r.width, 190);
+  panel.style.width = w + "px";
+  const left = Math.min(Math.max(r.left, 8), window.innerWidth - w - 8);
+  panel.style.left = left + "px";
+  panel.style.top = (r.bottom + 6) + "px";
+}
+
+function trackSizePanel() {
+  if (!sizePanelOpen) return;
+  repositionSizePanel();
+  requestAnimationFrame(trackSizePanel);
+}
+
+function setSizePanel(open) {
+  sizePanelOpen = open;
+  $("sizePanel").hidden = !open;
+  $("sizeBtn").classList.toggle("active", open);
+  toolbar.classList.toggle("size-open", open);
+  if (open) {
+    updateSizeTeamSeg();
+    // on phones the toolbar collapses down to just the loupe while the
+    // size bar is in use
+    if (SMALL_MQ.matches) setToolbarFolded(true);
+    repositionSizePanel();
+    requestAnimationFrame(trackSizePanel);
+  }
+}
+
+$("sizeTeamSeg").addEventListener("click", (e) => {
+  const b = e.target.closest(".st-btn");
+  if (!b) return;
+  const key = b.id === "sizeTeamD" ? "D" : "A";
+  const next = { ...sizeTeams, [key]: !sizeTeams[key] };
+  if (!next.A && !next.D) return; // at least one team stays selected
+  sizeTeams = next;
+  updateSizeTeamSeg();
+});
+
+$("sizeBtn").addEventListener("click", (e) => {
+  // handled here exclusively — the toolbar's fold logic must not see it
+  e.stopPropagation();
+  setSizePanel(!sizePanelOpen);
+});
+$("sizePanelClose").addEventListener("click", () => setSizePanel(false));
+document.addEventListener("pointerdown", (e) => {
+  if (!sizePanelOpen || !SMALL_MQ.matches) return;
+  if (!e.target.closest("#sizePanel, #sizeBtn")) setSizePanel(false);
+});
+
+function applyScaleVars() {
+  stageEl.style.setProperty("--tok", String(tokenScale()));
+  stageEl.style.setProperty("--tokD", String(defTokenScale()));
+}
+
+$("tokenSizeRange").addEventListener("input", (e) => {
+  const p = currentPlay();
+  if (!p) return;
+  const v = Math.min(Math.max(parseFloat(e.target.value) || 1, 0.75), 1.6);
+  if (sizeTeams.A && sizeTeams.D) {
+    // together: one shared scale for everyone
+    if (v === 1) delete p.tokenScale;
+    else p.tokenScale = v;
+    delete p.defTokenScale;
+  } else if (sizeTeams.A) {
+    // pin the defence at its current size before the attack moves alone
+    if (p.defTokenScale == null) p.defTokenScale = defTokenScale();
+    if (v === 1) delete p.tokenScale;
+    else p.tokenScale = v;
+  } else {
+    p.defTokenScale = v;
+  }
+  applyScaleVars();
+  // pass and lane tips stop short of the (now differently sized) circles
+  renderArrows();
+  renderHandles();
+});
+
+$("tokenSizeRange").addEventListener("pointerdown", () => {
+  if (!viewPlay) beginAction();
+});
+
+$("tokenSizeRange").addEventListener("change", () => {
+  if (!viewPlay) {
+    endAction();
+    save();
+  }
+});
+
+// double tap / double click on the bar returns to the default size
+function resetTokenSize() {
+  const p = currentPlay();
+  if (!p) return;
+  if (!viewPlay) pushUndo();
+  if (sizeTeams.A && sizeTeams.D) {
+    delete p.tokenScale;
+    delete p.defTokenScale;
+  } else if (sizeTeams.A) {
+    if (p.defTokenScale == null) p.defTokenScale = defTokenScale();
+    delete p.tokenScale;
+  } else {
+    p.defTokenScale = 1;
+    if ((p.tokenScale || 1) === 1) delete p.defTokenScale;
+  }
+  updateSizeTeamSeg();
+  applyScaleVars();
+  renderArrows();
+  renderHandles();
+  if (!viewPlay) save();
+}
+$("tokenSizeWrap").addEventListener("dblclick", (e) => {
+  e.preventDefault();
+  resetTokenSize();
+});
+let lastSizeTap = 0;
+$("tokenSizeWrap").addEventListener("pointerdown", () => {
+  const now = performance.now();
+  if (now - lastSizeTap < 320) resetTokenSize();
+  lastSizeTap = now;
 });
 
 $("maybeShowTog").addEventListener("change", (e) => {
@@ -3926,10 +4186,10 @@ $("deletePlayBtn").addEventListener("click", async () => {
     danger: true,
   });
   if (!ok) return;
-  plays = plays.filter((p) => p.id !== currentPlayId);
+  const id = currentPlayId;
   currentPlayId = null;
-  save();
   showHome();
+  deletePlaysWithUndo([id]);
 });
 
 async function resetAllPlay() {

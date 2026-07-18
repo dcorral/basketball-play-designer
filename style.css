@@ -1247,6 +1247,40 @@ input[type="range"]::-moz-range-thumb {
 
 .speed-select { padding: 5px 8px; font-size: 13px; }
 
+.maybe-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 3px 0 7px;
+  color: var(--muted);
+}
+
+.maybe-controls .mc-star {
+  width: 15px;
+  height: 15px;
+  color: #27a35a;
+}
+
+.mc-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.mc-item input {
+  accent-color: var(--accent);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.mc-item input:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.mc-item svg { width: 15px; height: 15px; }
+
 /* ---------- Toolbar (floating over everything, drag anywhere) ---------- */
 .toolbar {
   position: fixed;
@@ -1373,6 +1407,17 @@ body[data-tool="eraser"] .screen-cap {
 
 .arrow-path.def { stroke: #b32821; }
 
+.arrow-path.maybe {
+  opacity: 0.55;
+  stroke: #2f86d4;
+  stroke-width: 0.26;
+  stroke-dasharray: 0.9 1.1;
+}
+
+.arrow-path.maybe.main { stroke: #27a35a; }
+
+.arrow-path.maybe.ghost { opacity: 0.2; }
+
 /* silent defender moves: faint X at the destination while editing */
 .def-ghost {
   stroke: #b32821;
@@ -1402,25 +1447,25 @@ body[data-tool="eraser"] .screen-cap {
 .zone-rect {
   /* the arrows svg is pointer-events:none — interactive children opt in */
   pointer-events: auto;
-  fill-opacity: 0.17;
-  stroke-opacity: 0.55;
-  stroke-width: 0.4;
+  fill-opacity: 0.24;
+  stroke-opacity: 0.8;
+  stroke-width: 0.45;
   stroke-dasharray: 1.4 1;
 }
 
-.zone-rect.ghost { fill-opacity: 0.08; stroke-opacity: 0.25; }
+.zone-rect.ghost { fill-opacity: 0.12; stroke-opacity: 0.35; }
 
 .zone-num {
   font-size: 4.2px;
   font-weight: 700;
   text-anchor: middle;
   dominant-baseline: central;
-  opacity: 0.5;
+  opacity: 0.62;
   pointer-events: none;
   font-family: system-ui, sans-serif;
 }
 
-.zone-num.ghost { opacity: 0.22; }
+.zone-num.ghost { opacity: 0.3; }
 
 body[data-tool="eraser"] .zone-rect { cursor: pointer; }
 body[data-tool="zone"] .zone-rect,

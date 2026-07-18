@@ -26,8 +26,11 @@ const TOKEN_DEFS = [
 const PLAYER_IDS = ["P1", "P2", "P3", "P4", "P5"];
 const DEFENDER_IDS = ["D1", "D2", "D3", "D4", "D5"];
 // soft, distinct hue per defender's area of action
+// possible passes: the first drawn is the MAIN option
+const MAYBE_MAIN = "#27a35a";
+const MAYBE_ALT = "#2f86d4";
 const ZONE_COLORS = {
-  D1: "#e8b93b", D2: "#48a9e6", D3: "#5ecf8f", D4: "#b98ae0", D5: "#ef8354",
+  D1: "#ffd400", D2: "#26a5ff", D3: "#2fe08a", D4: "#c678ff", D5: "#ff5470",
 };
 const DEFENDER_DEFS = DEFENDER_IDS.map((id, i) => ({ id, label: String(i + 1), type: "defense" }));
 
@@ -167,9 +170,14 @@ const I18N = {
     ttArrow: "Movement arrow — drag from a player to where they cut (2)",
     ttScreen: "Screen / block — drag from the screener to where they set it (3)",
     ttPass: "Pass — drag anywhere on the court; the line starts at the ball (4)",
+    ttMaybePass: "Possible pass — the first drawn is the main option (green), the rest blue (5)",
+    ttMaybeToggle: "Animate possible passes",
+    ttMaybeShow: "Show possible passes",
+    legCut: "Movement", legDribble: "Dribble", legScreen: "Screen", legPass: "Pass",
+    legMain: "Main pass option", legOption: "Pass option", legDefender: "Defender movement", legZone: "Zone of action",
     ttZone: "Zone — drag from a defender to mark their area of action (3)",
     ttDefense: "Show / hide defenders",
-    ttEraser: "Eraser — click an arrow or a player to remove its arrow (5)",
+    ttEraser: "Eraser — click an arrow or a player to remove its arrow (6)",
     ttBack: "Back to all plays", ttRename: "Rename current play",
     ttExport: "Export as GIF, video or PDF", ttDelete: "Delete current play",
     ttDeleteStep: "Delete current step", ttResetAll: "Clear all steps",
@@ -219,7 +227,7 @@ const I18N = {
     helpSections: [
       { h: "Plays", b: "The home screen lists your plays: tap one to open it, drag the dots to reorder, use the bin to delete. Rename a play by clicking its name in the editor." },
       { h: "Players and the ball", b: "On step 1, drag players anywhere (out of bounds too). The ball always belongs to a player — drag it to hand it to someone else." },
-      { h: "Drawing tools", b: "Toolbar (drag its grip to move it anywhere): 1 select, 2 movement arrow, 3 screen, 4 pass, 5 eraser. Drag from a player to draw their cut or screen. With the pass tool, drag anywhere — the line always starts at the ball. The carrier\u2019s dribble draws as a wavy line. Keyboard 1–5 switches tools." },
+      { h: "Drawing tools", b: "Toolbar (drag its grip to move it anywhere): 1 select, 2 movement arrow, 3 screen, 4 pass, 5 possible pass, 6 eraser. Drag from a player to draw their cut or screen. With the pass tool, drag anywhere — the line always starts at the ball. The carrier\u2019s dribble draws as a wavy line. Keyboard 1–6 switches tools." },
       { h: "Editing arrows", b: "Round handle bends a cut, square handle moves its end, and a screen's red bar rotates with its gold handle. The eraser removes an arrow by clicking it or its player." },
       { h: "Passes", b: "Passes snap to a teammate and are always straight. If the receiver has a movement, the ball is delivered at the END of that movement. Screeners can never receive, and the ball carrier can never screen." },
       { h: "Two actions, one player", b: "When the carrier has a pass and a movement, the lighter line happens second. Double-click (or long-press) a line to make it go first — moving first means dribbling there before passing." },
@@ -304,9 +312,14 @@ const I18N = {
     ttArrow: "Flecha de movimiento — arrastra desde un jugador hasta donde corta (2)",
     ttScreen: "Bloqueo — arrastra desde el bloqueador hasta donde lo pone (3)",
     ttPass: "Pase — arrastra en cualquier punto de la pista; la línea sale del balón (4)",
+    ttMaybePass: "Pase posible — el primero dibujado es la opción principal (verde), el resto en azul (5)",
+    ttMaybeToggle: "Animar pases posibles",
+    ttMaybeShow: "Mostrar pases posibles",
+    legCut: "Movimiento", legDribble: "Bote", legScreen: "Bloqueo", legPass: "Pase",
+    legMain: "Pase posible principal", legOption: "Pase posible", legDefender: "Movimiento defensivo", legZone: "Zona de acción",
     ttZone: "Zona — arrastra desde un defensor para marcar su área de acción (3)",
     ttDefense: "Mostrar / ocultar defensores",
-    ttEraser: "Borrador — pulsa una flecha o un jugador para quitar su flecha (5)",
+    ttEraser: "Borrador — pulsa una flecha o un jugador para quitar su flecha (6)",
     ttBack: "Volver a todas las jugadas", ttRename: "Renombrar la jugada",
     ttExport: "Exportar como GIF, vídeo o PDF", ttDelete: "Eliminar la jugada",
     ttDeleteStep: "Eliminar el paso actual", ttResetAll: "Borrar todos los pasos",
@@ -356,7 +369,7 @@ const I18N = {
     helpSections: [
       { h: "Jugadas", b: "La pantalla de inicio lista tus jugadas: toca una para abrirla, arrastra los puntos para reordenar y usa la papelera para borrar. Renombra una jugada pulsando su nombre en el editor." },
       { h: "Jugadores y balón", b: "En el paso 1 arrastra a los jugadores a cualquier sitio (también fuera de la pista). El balón siempre pertenece a un jugador — arrástralo para dárselo a otro." },
-      { h: "Herramientas de dibujo", b: "Barra de herramientas (muévela arrastrando su agarre): 1 seleccionar, 2 flecha de movimiento, 3 bloqueo, 4 pase, 5 borrador. Arrastra desde un jugador para dibujar su corte o bloqueo. Con la herramienta de pase, arrastra en cualquier punto: la línea siempre sale del balón. El bote del jugador con balón se dibuja como línea ondulada. Teclas 1–5 cambian de herramienta." },
+      { h: "Herramientas de dibujo", b: "Barra de herramientas (muévela arrastrando su agarre): 1 seleccionar, 2 flecha de movimiento, 3 bloqueo, 4 pase, 5 pase posible, 6 borrador. Arrastra desde un jugador para dibujar su corte o bloqueo. Con la herramienta de pase, arrastra en cualquier punto: la línea siempre sale del balón. El bote del jugador con balón se dibuja como línea ondulada. Teclas 1–6 cambian de herramienta." },
       { h: "Editar flechas", b: "El tirador redondo curva un corte, el cuadrado mueve su destino, y la barra roja del bloqueo gira con su tirador dorado. El borrador elimina una flecha pulsándola o pulsando a su jugador." },
       { h: "Pases", b: "Los pases se ajustan a un compañero y siempre son rectos. Si el receptor tiene un movimiento, el balón le llega al FINAL de ese movimiento. Un bloqueador nunca puede recibir, y el que lleva el balón nunca puede bloquear." },
       { h: "Dos acciones, un jugador", b: "Cuando el portador tiene pase y movimiento, la línea más tenue ocurre después. Doble clic (o mantener pulsado) sobre una línea hace que vaya primero — moverse primero significa botar hasta allí antes de pasar." },
@@ -441,9 +454,14 @@ const I18N = {
     ttArrow: "Freccia di movimento — trascina da un giocatore (2)",
     ttScreen: "Blocco — trascina dal bloccante (3)",
     ttPass: "Passaggio — trascina ovunque sul campo; la linea parte dal pallone (4)",
+    ttMaybePass: "Passaggio possibile — il primo disegnato è l\u2019opzione principale (verde), gli altri in blu (5)",
+    ttMaybeToggle: "Anima i passaggi possibili",
+    ttMaybeShow: "Mostra i passaggi possibili",
+    legCut: "Movimento", legDribble: "Palleggio", legScreen: "Blocco", legPass: "Passaggio",
+    legMain: "Opzione principale", legOption: "Altra opzione", legDefender: "Movimento difensivo", legZone: "Area di azione",
     ttZone: "Zona — trascina da un difensore per segnare la sua area di azione (3)",
     ttDefense: "Mostra / nascondi difensori",
-    ttEraser: "Gomma — clicca una freccia o un giocatore (5)",
+    ttEraser: "Gomma — clicca una freccia o un giocatore (6)",
     ttBack: "Torna alle giocate", ttRename: "Rinomina la giocata",
     ttExport: "Esporta come GIF, video o PDF", ttDelete: "Elimina la giocata",
     ttDeleteStep: "Elimina il passo", ttResetAll: "Cancella tutti i passi",
@@ -504,7 +522,7 @@ const I18N = {
     helpSections: [
       { h: "Giocate", b: "La schermata iniziale elenca le tue giocate: toccane una per aprirla, trascina i puntini per riordinare, usa il cestino per eliminare. Rinomina una giocata cliccando il suo nome nell'editor." },
       { h: "Giocatori e pallone", b: "Nel passo 1 trascina i giocatori ovunque (anche fuori dal campo). Il pallone appartiene sempre a un giocatore — trascinalo per darlo a un altro." },
-      { h: "Strumenti di disegno", b: "Barra degli strumenti (spostala trascinando la presa): 1 seleziona, 2 freccia di movimento, 3 blocco, 4 passaggio, 5 gomma. Trascina da un giocatore per il suo taglio o blocco. Con lo strumento passaggio trascina ovunque: la linea parte sempre dal pallone. Il palleggio del portatore si disegna come linea ondulata. Tasti 1–5 per cambiare strumento." },
+      { h: "Strumenti di disegno", b: "Barra degli strumenti (spostala trascinando la presa): 1 seleziona, 2 freccia di movimento, 3 blocco, 4 passaggio, 5 passaggio possibile, 6 gomma. Trascina da un giocatore per il suo taglio o blocco. Con lo strumento passaggio trascina ovunque: la linea parte sempre dal pallone. Il palleggio del portatore si disegna come linea ondulata. Tasti 1–6 per cambiare strumento." },
       { h: "Modificare le frecce", b: "La maniglia rotonda curva un taglio, quella quadrata sposta la destinazione, e la barra rossa del blocco ruota con la maniglia dorata. La gomma elimina una freccia cliccandola o cliccando il suo giocatore." },
       { h: "Passaggi", b: "I passaggi si agganciano a un compagno e sono sempre rettilinei. Se il ricevitore ha un movimento, il pallone arriva alla FINE di quel movimento. Chi blocca non può mai ricevere e chi ha il pallone non può mai bloccare." },
       { h: "Due azioni, un giocatore", b: "Quando il portatore ha passaggio e movimento, la linea più chiara avviene dopo. Doppio clic (o pressione prolungata) su una linea la fa andare per prima — muoversi prima significa palleggiare fin lì prima di passare." },
@@ -577,9 +595,14 @@ const I18N = {
     ttArrow: "Стрелка движения — тяните от игрока (2)",
     ttScreen: "Заслон — тяните от ставящего заслон (3)",
     ttPass: "Передача — тяните в любом месте площадки; линия идёт от мяча (4)",
+    ttMaybePass: "Возможная передача — первая нарисованная — главный вариант (зелёная), остальные синие (5)",
+    ttMaybeToggle: "Анимировать возможные передачи",
+    ttMaybeShow: "Показывать возможные передачи",
+    legCut: "Движение", legDribble: "Ведение", legScreen: "Заслон", legPass: "Передача",
+    legMain: "Основной вариант", legOption: "Другой вариант", legDefender: "Движение защитника", legZone: "Зона действий",
     ttZone: "Зона — тяните от защитника, чтобы обозначить его зону действий (3)",
     ttDefense: "Показать / скрыть защитников",
-    ttEraser: "Ластик — нажмите на стрелку или игрока (5)",
+    ttEraser: "Ластик — нажмите на стрелку или игрока (6)",
     ttBack: "Ко всем комбинациям", ttRename: "Переименовать комбинацию",
     ttExport: "Экспорт в GIF, видео или PDF", ttDelete: "Удалить комбинацию",
     ttDeleteStep: "Удалить шаг", ttResetAll: "Очистить все шаги",
@@ -640,7 +663,7 @@ const I18N = {
     helpSections: [
       { h: "Комбинации", b: "На главном экране — список ваших комбинаций: нажмите, чтобы открыть, перетащите за точки для изменения порядка, корзина удаляет. Переименовать можно, щёлкнув по названию в редакторе." },
       { h: "Игроки и мяч", b: "На шаге 1 перетаскивайте игроков куда угодно (в том числе за пределы площадки). Мяч всегда принадлежит игроку — перетащите его, чтобы передать другому." },
-      { h: "Инструменты", b: "Панель (перемещается за захват): 1 выбор, 2 стрелка движения, 3 заслон, 4 передача, 5 ластик. Тяните от игрока для рывка или заслона. С инструментом передачи тяните где угодно — линия всегда идёт от мяча. Ведение мяча рисуется волнистой линией. Клавиши 1–5 переключают инструменты." },
+      { h: "Инструменты", b: "Панель (перемещается за захват): 1 выбор, 2 стрелка движения, 3 заслон, 4 передача, 5 возможная передача, 6 ластик. Тяните от игрока для рывка или заслона. С инструментом передачи тяните где угодно — линия всегда идёт от мяча. Ведение мяча рисуется волнистой линией. Клавиши 1–6 переключают инструменты." },
       { h: "Редактирование стрелок", b: "Круглая ручка изгибает рывок, квадратная переносит его конец, а красная планка заслона поворачивается золотой ручкой. Ластик удаляет стрелку щелчком по ней или по игроку." },
       { h: "Передачи", b: "Передачи «прилипают» к партнёру и всегда прямые. Если у получателя есть движение, мяч приходит в КОНЕЦ этого движения. Ставящий заслон не может получать мяч, а владеющий мячом — ставить заслон." },
       { h: "Два действия у игрока", b: "Если у владеющего мячом есть передача и движение, бледная линия происходит второй. Двойной щелчок (или долгое нажатие) делает линию первой — сначала двигаться значит вести мяч туда перед передачей." },
@@ -713,9 +736,14 @@ const I18N = {
     ttArrow: "移动箭头 — 从球员拖出（2）",
     ttScreen: "掩护 — 从掩护者拖出（3）",
     ttPass: "传球 — 在球场任意位置拖动；虚线自动从球出发（4）",
+    ttMaybePass: "潜在传球 — 最先画的是主要选项（绿色），其余为蓝色（5）",
+    ttMaybeToggle: "播放潜在传球动画",
+    ttMaybeShow: "显示潜在传球",
+    legCut: "移动", legDribble: "运球", legScreen: "掩护", legPass: "传球",
+    legMain: "主要传球选项", legOption: "其他选项", legDefender: "防守移动", legZone: "负责区域",
     ttZone: "区域 — 从防守球员拖出以标记其负责区域（3）",
     ttDefense: "显示 / 隐藏防守球员",
-    ttEraser: "橡皮擦 — 点击箭头或球员（5）",
+    ttEraser: "橡皮擦 — 点击箭头或球员（6）",
     ttBack: "返回全部战术", ttRename: "重命名战术",
     ttExport: "导出为 GIF、视频或 PDF", ttDelete: "删除战术",
     ttDeleteStep: "删除此步", ttResetAll: "清除所有步骤",
@@ -776,7 +804,7 @@ const I18N = {
     helpSections: [
       { h: "战术", b: "主屏幕列出你的战术：点按打开，拖动圆点排序，垃圾桶删除。在编辑器中点击名称即可重命名。" },
       { h: "球员与球", b: "在第 1 步可将球员拖到任意位置（包括场外）。球始终属于某位球员 — 拖动球即可交给他人。" },
-      { h: "绘图工具", b: "工具栏（拖动手柄可移动）：1 选择，2 移动箭头，3 掩护，4 传球，5 橡皮擦。从球员拖出画切入或掩护。使用传球工具时在任意位置拖动，虚线自动从球出发。持球人的运球以波浪线表示。按键 1–5 切换工具。" },
+      { h: "绘图工具", b: "工具栏（拖动手柄可移动）：1 选择，2 移动箭头，3 掩护，4 传球，5 潜在传球，6 橡皮擦。从球员拖出画切入或掩护。使用传球工具时在任意位置拖动，虚线自动从球出发。持球人的运球以波浪线表示。按键 1–6 切换工具。" },
       { h: "编辑箭头", b: "圆形手柄弯曲路线，方形手柄移动终点，掩护的红色横杆用金色手柄旋转。橡皮擦点击箭头或球员即可删除。" },
       { h: "传球", b: "传球会吸附到队友且始终为直线。若接球者有移动，球会送到该移动的终点。掩护者不能接球，持球者不能掩护。" },
       { h: "一名球员两个动作", b: "当持球者既传球又移动时，较浅的线后发生。双击（或长按）某条线让它先执行 — 先移动即运球到位后再传。" },
@@ -849,9 +877,14 @@ const I18N = {
     ttArrow: "Strelica kretanja — prevuci od igrača (2)",
     ttScreen: "Blok — prevuci od igrača koji blokira (3)",
     ttPass: "Dodavanje — prevuci bilo gde na terenu; linija kreće od lopte (4)",
+    ttMaybePass: "Mogući pas — prvi nacrtani je glavna opcija (zelena), ostali su plavi (5)",
+    ttMaybeToggle: "Animiraj moguće pasove",
+    ttMaybeShow: "Prikaži moguće pasove",
+    legCut: "Kretanje", legDribble: "Dribling", legScreen: "Blok", legPass: "Pas",
+    legMain: "Glavna opcija pasa", legOption: "Druga opcija", legDefender: "Kretanje odbrane", legZone: "Zona delovanja",
     ttZone: "Zona — prevuci od odbrambenog igrača da označiš njegovu zonu (3)",
     ttDefense: "Prikaži / sakrij odbranu",
-    ttEraser: "Gumica — klikni strelicu ili igrača (5)",
+    ttEraser: "Gumica — klikni strelicu ili igrača (6)",
     ttBack: "Nazad na akcije", ttRename: "Preimenuj akciju",
     ttExport: "Izvezi kao GIF, video ili PDF", ttDelete: "Obriši akciju",
     ttDeleteStep: "Obriši korak", ttResetAll: "Obriši sve korake",
@@ -912,7 +945,7 @@ const I18N = {
     helpSections: [
       { h: "Akcije", b: "Početni ekran prikazuje tvoje akcije: dodirni jednu da je otvoriš, prevuci tačkice za redosled, kanta briše. Preimenuj klikom na ime u editoru." },
       { h: "Igrači i lopta", b: "U koraku 1 prevlači igrače bilo gde (i van terena). Lopta uvek pripada igraču — prevuci je da je daš drugom." },
-      { h: "Alati za crtanje", b: "Traka (pomeraš je za držač): 1 izbor, 2 strelica kretanja, 3 blok, 4 dodavanje, 5 gumica. Prevuci od igrača za utrčavanje ili blok. Sa alatom za dodavanje prevuci bilo gde — linija uvek kreće od lopte. Dribling igrača s loptom crta se talasastom linijom. Tasteri 1–5 menjaju alate." },
+      { h: "Alati za crtanje", b: "Traka (pomeraš je za držač): 1 izbor, 2 strelica kretanja, 3 blok, 4 dodavanje, 5 mogući pas, 6 gumica. Prevuci od igrača za utrčavanje ili blok. Sa alatom za dodavanje prevuci bilo gde — linija uvek kreće od lopte. Dribling igrača s loptom crta se talasastom linijom. Tasteri 1–6 menjaju alate." },
       { h: "Izmena strelica", b: "Okrugla ručica krivi liniju, kvadratna pomera cilj, a crvena prečka bloka rotira se zlatnom ručicom. Gumica briše strelicu klikom na nju ili na igrača." },
       { h: "Dodavanja", b: "Dodavanja se lepe za saigrača i uvek su prava. Ako primalac ima kretanje, lopta stiže na KRAJ tog kretanja. Bloker nikad ne prima loptu, a igrač s loptom nikad ne blokira." },
       { h: "Dve radnje, jedan igrač", b: "Kad igrač s loptom ima i dodavanje i kretanje, svetlija linija se dešava druga. Dupli klik (ili duži pritisak) stavlja liniju na prvo mesto — prvo kretanje znači driblanje do tamo pre dodavanja." },
@@ -985,9 +1018,14 @@ const I18N = {
     ttArrow: "Puščica gibanja — povleci od igralca (2)",
     ttScreen: "Blokada — povleci od blokerja (3)",
     ttPass: "Podaja — povleci kjerkoli na igrišču; črta se začne pri žogi (4)",
+    ttMaybePass: "Možna podaja — prva narisana je glavna možnost (zelena), ostale so modre (5)",
+    ttMaybeToggle: "Animiraj možne podaje",
+    ttMaybeShow: "Prikaži možne podaje",
+    legCut: "Gibanje", legDribble: "Vodenje", legScreen: "Blokada", legPass: "Podaja",
+    legMain: "Glavna možna podaja", legOption: "Možna podaja", legDefender: "Gibanje obrambe", legZone: "Območje delovanja",
     ttZone: "Cona — povleci od obrambnega igralca za njegovo območje delovanja (3)",
     ttDefense: "Prikaži / skrij obrambo",
-    ttEraser: "Radirka — klikni puščico ali igralca (5)",
+    ttEraser: "Radirka — klikni puščico ali igralca (6)",
     ttBack: "Nazaj na akcije", ttRename: "Preimenuj akcijo",
     ttExport: "Izvozi kot GIF, video ali PDF", ttDelete: "Izbriši akcijo",
     ttDeleteStep: "Izbriši korak", ttResetAll: "Počisti vse korake",
@@ -1048,7 +1086,7 @@ const I18N = {
     helpSections: [
       { h: "Akcije", b: "Začetni zaslon prikazuje tvoje akcije: tapni za odpiranje, povleci pikice za razvrščanje, koš izbriše. Preimenuješ s klikom na ime v urejevalniku." },
       { h: "Igralci in žoga", b: "V koraku 1 povleci igralce kamorkoli (tudi izven igrišča). Žoga vedno pripada igralcu — povleci jo, da jo predaš drugemu." },
-      { h: "Orodja za risanje", b: "Vrstica (premikaš jo za ročaj): 1 izbira, 2 puščica gibanja, 3 blokada, 4 podaja, 5 radirka. Povleci od igralca za vtekanje ali blokado. Z orodjem za podajo povleci kjerkoli — črta se vedno začne pri žogi. Vodenje žoge se riše z valovito črto. Tipke 1–5 preklapljajo orodja." },
+      { h: "Orodja za risanje", b: "Vrstica (premikaš jo za ročaj): 1 izbira, 2 puščica gibanja, 3 blokada, 4 podaja, 5 možna podaja, 6 radirka. Povleci od igralca za vtekanje ali blokado. Z orodjem za podajo povleci kjerkoli — črta se vedno začne pri žogi. Vodenje žoge se riše z valovito črto. Tipke 1–6 preklapljajo orodja." },
       { h: "Urejanje puščic", b: "Okrogla ročica ukrivi pot, kvadratna premakne cilj, rdečo prečko blokade pa vrtiš z zlato ročico. Radirka odstrani puščico s klikom nanjo ali na igralca." },
       { h: "Podaje", b: "Podaje se pripnejo soigralcu in so vedno ravne. Če ima prejemnik gibanje, žoga prispe na KONEC tega gibanja. Bloker nikoli ne more prejeti žoge, igralec z žogo pa nikoli blokirati." },
       { h: "Dve akciji, en igralec", b: "Ko ima igralec z žogo podajo in gibanje, se svetlejša črta zgodi druga. Dvojni klik (ali dolg pritisk) postavi črto na prvo mesto — najprej gibanje pomeni vodenje žoge do tja pred podajo." },
@@ -1121,9 +1159,14 @@ const I18N = {
     ttArrow: "Βέλος κίνησης — σύρε από έναν παίκτη (2)",
     ttScreen: "Σκριν — σύρε από αυτόν που το βάζει (3)",
     ttPass: "Πάσα — σύρε οπουδήποτε στο γήπεδο· η γραμμή ξεκινά από την μπάλα (4)",
+    ttMaybePass: "Πιθανή πάσα — η πρώτη που σχεδιάζεις είναι η κύρια επιλογή (πράσινη), οι υπόλοιπες μπλε (5)",
+    ttMaybeToggle: "Κίνηση πιθανών πασών",
+    ttMaybeShow: "Εμφάνιση πιθανών πασών",
+    legCut: "Κίνηση", legDribble: "Ντρίμπλα", legScreen: "Σκριν", legPass: "Πάσα",
+    legMain: "Κύρια πιθανή πάσα", legOption: "Πιθανή πάσα", legDefender: "Κίνηση αμυντικού", legZone: "Περιοχή ευθύνης",
     ttZone: "Ζώνη — σύρε από έναν αμυντικό για την περιοχή ευθύνης του (3)",
     ttDefense: "Εμφάνιση / απόκρυψη αμυντικών",
-    ttEraser: "Γόμα — κλικ σε βέλος ή παίκτη (5)",
+    ttEraser: "Γόμα — κλικ σε βέλος ή παίκτη (6)",
     ttBack: "Πίσω στα συστήματα", ttRename: "Μετονομασία συστήματος",
     ttExport: "Εξαγωγή ως GIF, βίντεο ή PDF", ttDelete: "Διαγραφή συστήματος",
     ttDeleteStep: "Διαγραφή βήματος", ttResetAll: "Καθαρισμός όλων των βημάτων",
@@ -1184,7 +1227,7 @@ const I18N = {
     helpSections: [
       { h: "Συστήματα", b: "Η αρχική οθόνη δείχνει τα συστήματά σου: πάτησε ένα για άνοιγμα, σύρε τις κουκκίδες για αναδιάταξη, ο κάδος διαγράφει. Μετονόμασε πατώντας το όνομα στον επεξεργαστή." },
       { h: "Παίκτες και μπάλα", b: "Στο βήμα 1 σύρε τους παίκτες οπουδήποτε (και εκτός γηπέδου). Η μπάλα ανήκει πάντα σε έναν παίκτη — σύρε τη για να τη δώσεις σε άλλον." },
-      { h: "Εργαλεία σχεδίασης", b: "Εργαλειοθήκη (μετακινείται από τη λαβή): 1 επιλογή, 2 βέλος κίνησης, 3 σκριν, 4 πάσα, 5 γόμα. Σύρε από παίκτη για κόψιμο ή σκριν. Με το εργαλείο πάσας σύρε οπουδήποτε — η γραμμή ξεκινά πάντα από την μπάλα. Η ντρίμπλα του κατόχου σχεδιάζεται ως κυματιστή γραμμή. Πλήκτρα 1–5 αλλάζουν εργαλείο." },
+      { h: "Εργαλεία σχεδίασης", b: "Εργαλειοθήκη (μετακινείται από τη λαβή): 1 επιλογή, 2 βέλος κίνησης, 3 σκριν, 4 πάσα, 5 πιθανή πάσα, 6 γόμα. Σύρε από παίκτη για κόψιμο ή σκριν. Με το εργαλείο πάσας σύρε οπουδήποτε — η γραμμή ξεκινά πάντα από την μπάλα. Η ντρίμπλα του κατόχου σχεδιάζεται ως κυματιστή γραμμή. Πλήκτρα 1–6 αλλάζουν εργαλείο." },
       { h: "Επεξεργασία βελών", b: "Η στρογγυλή λαβή καμπυλώνει τη διαδρομή, η τετράγωνη μετακινεί τον προορισμό, και η κόκκινη μπάρα του σκριν περιστρέφεται με τη χρυσή λαβή. Η γόμα σβήνει βέλος με κλικ σε αυτό ή στον παίκτη του." },
       { h: "Πάσες", b: "Οι πάσες κουμπώνουν σε συμπαίκτη και είναι πάντα ευθείες. Αν ο παραλήπτης κινείται, η μπάλα φτάνει στο ΤΕΛΟΣ της κίνησης. Όποιος βάζει σκριν δεν παίρνει ποτέ πάσα, κι ο κάτοχος της μπάλας δεν βάζει ποτέ σκριν." },
       { h: "Δύο ενέργειες, ένας παίκτης", b: "Όταν ο κάτοχος έχει πάσα και κίνηση, η πιο αχνή γραμμή γίνεται δεύτερη. Διπλό κλικ (ή παρατεταμένο πάτημα) βάζει τη γραμμή πρώτη — κίνηση πρώτα σημαίνει ντρίμπλα ως εκεί πριν την πάσα." },
@@ -1258,10 +1301,11 @@ function applyLang() {
     exportAllBtn: "ttExportAll", importAllBtn: "ttImportAll",
     addStepBtn: "nextStep", resetAllBtn: "ttResetAll", defenseBtn: "ttDefense",
     zoomIn: "ttZoomIn", zoomOut: "ttZoomOut", zoomLabel: "ttZoomReset",
+    maybeTogWrap: "ttMaybeToggle", maybeShowWrap: "ttMaybeShow",
   };
   for (const [id, key] of Object.entries(titles)) $(id).title = t(key);
 
-  const toolTitles = { select: "ttSelect", arrow: "ttArrow", screen: "ttScreen", zone: "ttZone", pass: "ttPass", eraser: "ttEraser" };
+  const toolTitles = { select: "ttSelect", arrow: "ttArrow", screen: "ttScreen", zone: "ttZone", pass: "ttPass", mpass: "ttMaybePass", eraser: "ttEraser" };
   for (const [toolName, key] of Object.entries(toolTitles)) {
     toolbar.querySelector(`[data-tool="${toolName}"]`).title = t(key);
   }
@@ -1924,7 +1968,8 @@ function ballPoint(p) {
 }
 
 function hasMoves(step) {
-  return Object.keys(step.moves).length > 0 || !!step.pass;
+  return Object.keys(step.moves).length > 0 || !!step.pass ||
+    !!(step.maybePasses && step.maybePasses.length);
 }
 
 // Positions after applying a step's drawn arrows.
@@ -1994,7 +2039,9 @@ function segmentPhases(step) {
   const receiverMoves = !!(pass && step.moves[pass.to]);
   const passOrder = passOrderOf(step);
   const ownerMoveLate = !!(ownerMove && pass && passOrder === 1);
-  const passInMain = !!(pass && !receiverMoves && passOrder === 1);
+  const hasMaybes = !!(step.maybePasses && step.maybePasses.length) &&
+    !currentPlay().probeOff && !currentPlay().maybesHidden;
+  const passInMain = !!(pass && !receiverMoves && passOrder === 1) && !hasMaybes;
   const moverIds = Object.keys(step.moves);
   // in defensive plays the attack acts first and the defence reacts in
   // its own closing phase
@@ -2007,6 +2054,7 @@ function segmentPhases(step) {
     passInMain;
   if (hasMain) phases.push("main");
   if (attackMovers.some((id) => receivers.has(id) && !(id === owner && ownerMoveLate))) phases.push("recv");
+  if (hasMaybes) phases.push("maybe");
   if (pass && !passInMain) phases.push("pass");
   if (ownerMoveLate) phases.push("ownermove");
   if (defKind && moverIds.some((id) => DEFENDER_IDS.includes(id))) phases.push("defense");
@@ -2017,13 +2065,18 @@ function segmentPhases(step) {
 // "Next step" commits them, so drawing is immediately watchable.
 function segmentCount(play) {
   const n = play.steps.length;
-  return n - 1 + (hasMoves(play.steps[n - 1]) ? 1 : 0);
+  // the pending segment only exists if the last step will actually play
+  return n - 1 + (segmentPhases(play.steps[n - 1]).phases.length > 0 ? 1 : 0);
 }
 
 // Playback duration of a segment at 1x: one slot per sequential phase.
 function segmentDuration(play, i) {
   const step = play.steps[Math.min(i, play.steps.length - 1)];
-  return Math.max(segmentPhases(step).phases.length, 1) * SECONDS_PER_PHASE;
+  const ph = segmentPhases(step).phases.length;
+  // a step with nothing visible to play (e.g. only hidden possible
+  // passes) is skipped almost instantly
+  if (ph === 0) return 0.05;
+  return ph * SECONDS_PER_PHASE;
 }
 
 // Where everyone ends up after the segment starting at stepIdx.
@@ -2068,6 +2121,22 @@ function positionsAt(t) {
     out[id] = m && m.via
       ? bezierPoint(a, m.via, b, u)
       : { x: lerp(a.x, b.x, u), y: lerp(a.y, b.y, u) };
+  }
+
+  // Possible passes: the ball zips to each optional receiver and back,
+  // in the order they were drawn, inside its own quick phase.
+  const maybes = (play.probeOff || play.maybesHidden ? null : from.maybePasses) || [];
+  const mu = maybes.length ? localU("maybe") : 1;
+  if (maybes.length && mu > 0 && mu < 1) {
+    const N = maybes.length;
+    const slice = Math.min(Math.floor(mu * N), N - 1);
+    const local = mu * N - slice;
+    const tri = local < 0.5 ? local * 2 : 2 - local * 2;
+    const u2 = easeInOutCubic(tri);
+    const A = ballPoint(out[from.ball]);
+    const B = ballPoint(out[maybes[slice].to]);
+    out.BALL = { x: lerp(A.x, B.x, u2), y: lerp(A.y, B.y, u2) };
+    return out;
   }
 
   // Ball: attached to its owner unless a pass is in flight (the owner never
@@ -2235,6 +2304,18 @@ function syncBallChain() {
     const s = steps[i];
     if (i > 0) s.ball = steps[i - 1].pass ? steps[i - 1].pass.to : steps[i - 1].ball;
     if (s.pass && s.pass.to === s.ball) s.pass = null;
+    // possible passes never point at the carrier, at a screener, or at
+    // the receiver of the actual pass — the real pass overrides the
+    // option (and the next lane in line becomes the main one)
+    if (s.maybePasses) {
+      s.maybePasses = s.maybePasses.filter((mp) => {
+        if (mp.to === s.ball || !PLAYER_IDS.includes(mp.to)) return false;
+        if (s.pass && s.pass.to === mp.to) return false;
+        const rm = s.moves[mp.to];
+        return !(rm && rm.type === "screen");
+      });
+      if (!s.maybePasses.length) delete s.maybePasses;
+    }
     // the ball carrier can never be setting a screen
     const om = s.moves[s.ball];
     if (om && om.type === "screen") {
@@ -2264,6 +2345,11 @@ function renderAll() {
   sizeNameInput();
   $("defenseBtn").hidden = playKind(currentPlay()) === "defense";
   $("defenseBtn").classList.toggle("on", !!currentPlay().defense);
+  const anyMaybes = currentPlay().steps.some((st) => st.maybePasses && st.maybePasses.length);
+  $("maybeControls").hidden = playKind(currentPlay()) !== "offense" || !anyMaybes;
+  $("maybeShowTog").checked = !currentPlay().maybesHidden;
+  $("maybeTog").checked = !currentPlay().probeOff;
+  $("maybeTog").disabled = !!currentPlay().maybesHidden;
   renderStepChips();
   buildTokens();
   renderPositions(positionsAt(playhead));
@@ -2487,6 +2573,17 @@ function wavyPathD(a, via, b) {
 function isDribbleMove(step, id, m) {
   return m.type === "move" && id === step.ball &&
     (!step.pass || passOrderOf(step) === 2);
+}
+
+// Pull a line's endpoint back towards its origin so the tip lands just
+// in front of the receiver's circle instead of underneath it.
+const RECEIVER_GAP = 2.9;
+function shortenTo(a, b, dist) {
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const len = Math.hypot(dx, dy);
+  if (len <= dist + 0.5) return b;
+  const k = (len - dist) / len;
+  return { x: a.x + dx * k, y: a.y + dy * k };
 }
 
 // Direction of the path as it arrives at its destination.
@@ -2797,11 +2894,46 @@ function renderArrows() {
     if (isDualMove) addOrderHandlers(els, false);
   }
   if (step.pass) {
-    const { a, b } = passEndpoints(step);
-    const els = makeArrowEls("BALL", a, { to: b, via: null, type: "move" },
+    const { a } = passEndpoints(step);
+    const prm = step.moves[step.pass.to];
+    const bCenter = prm ? prm.to : step.pos[step.pass.to];
+    const els = makeArrowEls("BALL", a, { to: shortenTo(a, bCenter, RECEIVER_GAP), via: null, type: "move" },
       ghost || (dual && passOrder === 2));
     addEls(els);
     if (dual) addOrderHandlers(els, true);
+  }
+
+  // possible passes: lighter dashed lanes ending in a star, erasable one
+  // by one, probed by the ball in drawn order during playback
+  const maybes = (play.maybesHidden ? null : step.maybePasses) || [];
+  if (maybes.length) {
+    const aM = ballPoint(ownerMove && passOrderOf(step) === 2 ? ownerMove.to : step.pos[step.ball]);
+    maybes.forEach((mp, idx) => {
+      const rm = step.moves[mp.to];
+      const bM = shortenTo(aM, rm ? rm.to : step.pos[mp.to], RECEIVER_GAP);
+      const path = document.createElementNS(SVG_NS, "path");
+      path.setAttribute("d", arrowPathD(aM, null, bM));
+      path.setAttribute("class", "arrow-path move ball-path maybe" +
+        (idx === 0 ? " main" : "") + (ghost ? " ghost" : ""));
+      path.setAttribute("marker-end", "url(#maybeStar)");
+      const hit = document.createElementNS(SVG_NS, "path");
+      hit.setAttribute("d", path.getAttribute("d"));
+      hit.setAttribute("class", "order-hit");
+      for (const el of [path, hit]) {
+        el.addEventListener("pointerdown", (e) => {
+          if (tool !== "eraser" || playing || editLocked()) return;
+          e.preventDefault();
+          e.stopPropagation();
+          pushUndo();
+          const list = currentPlay().steps[currentStep].maybePasses;
+          list.splice(idx, 1);
+          if (!list.length) delete currentPlay().steps[currentStep].maybePasses;
+          save();
+          refreshEdit();
+        });
+        arrowsGroup.appendChild(el);
+      }
+    });
   }
 
   // one-time hint the first time a player has two ordered actions
@@ -2816,7 +2948,10 @@ function handlePoint(step, tokenId, kind) {
   if (tokenId === "BALL") {
     const ends = passEndpoints(step);
     a = ends.a;
-    to = ends.b;
+    // the pass line stops short of the receiver, and its handle must sit
+    // on the visible tip, not on the old full-length endpoint
+    const prm = step.moves[step.pass.to];
+    to = shortenTo(a, prm ? prm.to : step.pos[step.pass.to], RECEIVER_GAP);
     via = null; // passes are straight
   } else {
     const m = step.moves[tokenId];
@@ -2940,11 +3075,13 @@ function updateToolAvailability() {
   const disabled = currentStep > 0 && contextIds(p).length === 0;
   selectBtn.disabled = disabled;
   if (disabled && tool === "select") setTool("arrow");
-  // screens are offensive, zones are defensive — they share the slot
+  // screens are offensive, zones are defensive — they share the slot;
+  // possible passes only exist on offense
   const isDef = playKind(p) === "defense";
   toolbar.querySelector('[data-tool="screen"]').hidden = isDef;
   toolbar.querySelector('[data-tool="zone"]').hidden = !isDef;
-  if (isDef && tool === "screen") setTool("arrow");
+  toolbar.querySelector('[data-tool="mpass"]').hidden = isDef;
+  if (isDef && (tool === "screen" || tool === "mpass")) setTool("arrow");
   if (!isDef && tool === "zone") setTool("arrow");
 }
 
@@ -3050,6 +3187,12 @@ stageEl.addEventListener("pointerdown", (e) => {
   if (tool === "zone" && !playing && !editLocked() && playKind(currentPlay()) === "defense") {
     playhead = currentStep;
     startZoneDraw(stageEl, null, e);
+    return;
+  }
+  // possible-pass tool: same anywhere-drag as the real pass
+  if (tool === "mpass" && !playing && !editLocked() && playKind(currentPlay()) === "offense") {
+    playhead = currentStep;
+    startMaybeDraw(stageEl, e);
     return;
   }
   stagePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -3191,6 +3334,11 @@ function attachTokenPointer(el, tokenId) {
       if (DEFENDER_IDS.includes(tokenId) && playKind(currentPlay()) === "defense") {
         startZoneDraw(el, tokenId, e);
       }
+      return;
+    }
+
+    if (tool === "mpass") {
+      if (playKind(currentPlay()) === "offense") startMaybeDraw(el, e);
       return;
     }
 
@@ -3341,6 +3489,53 @@ function startZoneDraw(el, tokenId, e) {
   el.addEventListener("pointercancel", up);
 }
 
+// A possible pass: an optional lane the ball probes during playback.
+// Drawn like a pass (from wherever the ball is), snapping to a teammate.
+function startMaybeDraw(el, e) {
+  const step = currentPlay().steps[currentStep];
+  const om = step.moves[step.ball];
+  const start = ballPoint(om && passOrderOf(step) === 2 ? om.to : step.pos[step.ball]);
+  try { el.setPointerCapture(e.pointerId); } catch (_) {}
+  let dest = null;
+  const drawPreview = () => {
+    previewGroup.innerHTML = "";
+    if (!dest) return;
+    const p = document.createElementNS(SVG_NS, "path");
+    p.setAttribute("d", arrowPathD(start, null, dest));
+    const willBeMain = !(step.maybePasses && step.maybePasses.length);
+    p.setAttribute("class", "arrow-path move ball-path maybe preview" + (willBeMain ? " main" : ""));
+    p.setAttribute("marker-end", "url(#maybeStar)");
+    previewGroup.appendChild(p);
+  };
+  const move = (ev) => {
+    dest = pointerToCourt(ev);
+    drawPreview();
+  };
+  const up = () => {
+    el.removeEventListener("pointermove", move);
+    el.removeEventListener("pointerup", up);
+    el.removeEventListener("pointercancel", up);
+    previewGroup.innerHTML = "";
+    if (dest && Math.hypot(dest.x - start.x, dest.y - start.y) > 1.2) {
+      const tgt = nearestPassTarget(step, dest);
+      // the actual pass owns its receiver — no possible pass may overlap it
+      if (tgt && tgt.to !== step.ball && !(step.pass && step.pass.to === tgt.to)) {
+        const list = step.maybePasses || [];
+        if (!list.some((mp) => mp.to === tgt.to)) {
+          pushUndo();
+          list.push({ to: tgt.to });
+          step.maybePasses = list;
+          save();
+        }
+      }
+    }
+    refreshEdit();
+  };
+  el.addEventListener("pointermove", move);
+  el.addEventListener("pointerup", up);
+  el.addEventListener("pointercancel", up);
+}
+
 function attachHandleDrag(handle, tokenId, kind) {
   handle.addEventListener("pointerdown", (e) => {
     if (playing) return;
@@ -3352,7 +3547,7 @@ function attachHandleDrag(handle, tokenId, kind) {
       return;
     }
 
-    handle.setPointerCapture(e.pointerId);
+    try { handle.setPointerCapture(e.pointerId); } catch (_) {}
     beginAction();
     const step = currentPlay().steps[currentStep];
 
@@ -3627,6 +3822,26 @@ async function deleteSelectedPlays() {
   renderHome();
 }
 
+$("maybeTog").addEventListener("change", (e) => {
+  const p = currentPlay();
+  if (!p) return;
+  if (e.target.checked) delete p.probeOff;
+  else p.probeOff = true;
+  if (!viewPlay) save();
+  stopPlayback();
+  renderAll();
+});
+
+$("maybeShowTog").addEventListener("change", (e) => {
+  const p = currentPlay();
+  if (!p) return;
+  if (e.target.checked) delete p.maybesHidden;
+  else p.maybesHidden = true;
+  if (!viewPlay) save();
+  stopPlayback();
+  renderAll();
+});
+
 $("deleteSelectedBtn").addEventListener("click", deleteSelectedPlays);
 $("deleteSelectedTop").addEventListener("click", deleteSelectedPlays);
 
@@ -3850,6 +4065,8 @@ document.addEventListener("keydown", (e) => {
   } else if (e.code === "Digit4") {
     setTool("pass");
   } else if (e.code === "Digit5") {
+    if (playKind(currentPlay()) === "offense") setTool("mpass");
+  } else if (e.code === "Digit6") {
     setTool("eraser");
   }
 });

@@ -1256,12 +1256,6 @@ input[type="range"]::-moz-range-thumb {
   color: var(--muted);
 }
 
-.maybe-controls .mc-star {
-  width: 15px;
-  height: 15px;
-  color: #27a35a;
-}
-
 .mc-item {
   display: inline-flex;
   align-items: center;
@@ -1278,6 +1272,8 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .mc-item input:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.mc-item:has(input:disabled) { opacity: 0.5; cursor: not-allowed; }
 
 .mc-item svg { width: 15px; height: 15px; }
 

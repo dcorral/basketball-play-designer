@@ -2345,11 +2345,7 @@ function renderAll() {
   sizeNameInput();
   $("defenseBtn").hidden = playKind(currentPlay()) === "defense";
   $("defenseBtn").classList.toggle("on", !!currentPlay().defense);
-  const anyMaybes = currentPlay().steps.some((st) => st.maybePasses && st.maybePasses.length);
-  $("maybeControls").hidden = playKind(currentPlay()) !== "offense" || !anyMaybes;
-  $("maybeShowTog").checked = !currentPlay().maybesHidden;
-  $("maybeTog").checked = !currentPlay().probeOff;
-  $("maybeTog").disabled = !!currentPlay().maybesHidden;
+  updateMaybeControls();
   renderStepChips();
   buildTokens();
   renderPositions(positionsAt(playhead));
@@ -3047,12 +3043,23 @@ function updateAddStepState() {
 }
 
 // Re-render everything that changes while editing the current step.
+function updateMaybeControls() {
+  const p = currentPlay();
+  const anyMaybes = p.steps.some((st) => st.maybePasses && st.maybePasses.length);
+  $("maybeControls").hidden = playKind(p) !== "offense";
+  $("maybeShowTog").checked = !p.maybesHidden;
+  $("maybeShowTog").disabled = !anyMaybes;
+  $("maybeTog").checked = !p.probeOff;
+  $("maybeTog").disabled = !anyMaybes || !!p.maybesHidden;
+}
+
 function refreshEdit() {
   renderPositions(positionsAt(playhead));
   renderArrows();
   renderHandles();
   renderScrubber();
   updateAddStepState();
+  updateMaybeControls();
 }
 
 /* ================= Tools ================= */

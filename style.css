@@ -1604,6 +1604,9 @@ body[data-tool="eraser"] .def-ghost-hit { cursor: pointer; }
   .step-chip { padding: 5px 9px; font-size: 12px; }
 
   .stage-wrap { padding: 8px; }
+  /* bigger touch targets: players and ball grow on small screens */
+  .token { width: 7.6%; font-size: 1.2em; }
+  .token.ball { width: 5.2%; }
   .toolbar { padding: 4px; gap: 2px; border-radius: 10px; }
   .tool { width: 32px; height: 32px; }
   .tool svg { width: 17px; height: 17px; }

@@ -53,6 +53,22 @@ body.home-view .home {
   min-height: 100vh;
 }
 
+.topbar-logo {
+  flex: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.topbar-logo img {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+
 .sort-select {
   width: 100%;
   max-width: 500px;
@@ -282,6 +298,46 @@ body.home-view .home {
 }
 
 .play-card:not(.kind-offense):not(.kind-defense):hover { border-color: var(--accent); background: var(--panel-2); }
+
+/* undo-delete: restored cards reappear with a magician's puff.
+   transform/opacity only — heavier effects (blur, gradients) are what
+   corrupted this list on mobile GPUs in the first place */
+@keyframes puffIn {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes puffFlash {
+  0% { opacity: 0.35; }
+  100% { opacity: 0; }
+}
+
+.play-card.puff-in {
+  position: relative;
+  animation: puffIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes puffOut {
+  0% { transform: scale(1); opacity: 1; }
+  35% { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(0.4); opacity: 0; }
+}
+
+.play-card.puff-out {
+  animation: puffOut 0.4s ease-in forwards;
+  pointer-events: none;
+}
+
+.play-card.puff-in::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #fff;
+  pointer-events: none;
+  animation: puffFlash 0.5s ease-out forwards;
+}
 
 .play-card .card-name {
   overflow: hidden;

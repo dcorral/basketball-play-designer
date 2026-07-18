@@ -1354,7 +1354,7 @@ function applyLang() {
   document.title = t("appTitle");
 
   const texts = {
-    createNewBtn: "createNew", backBtn: "back",
+    createNewBtn: "createNew",
     viewEditLabel: "viewEdit",
     modalCancel: "cancel", exportCancel: "cancel", exportGo: "exportGo",
     exportTitle: "exportTitle", exportFormatLabel: "formatLabel",
@@ -1896,6 +1896,10 @@ function renderHome() {
     });
     playListEl.appendChild(card);
   }
+  for (const id of [...puffQueue]) {
+    puffInCard(id);
+    puffQueue.delete(id); // one shot — present or not, it had its chance
+  }
   updateDeleteSelected();
 }
 
@@ -1979,6 +1983,7 @@ function createPlay(name, kind, court) {
   };
   if (play.kind === "defense") play.defense = true;
   plays.push(play);
+  puffQueue.add(play.id);
   save();
   return play;
 }
@@ -3930,6 +3935,17 @@ $("pageNext").addEventListener("click", () => { playPage++; renderHome(); });
 /* Deleted plays linger for 10 seconds behind an undo notification:
    tap the notification to restore them, swipe it away or hit its X to
    let them go. */
+// plays whose card should puff in on the next home render (new plays
+// puff when the user first returns to the list)
+const puffQueue = new Set();
+
+function puffInCard(id) {
+  const card = playListEl.querySelector(`.play-card[data-id="${id}"]`);
+  if (!card) return;
+  card.classList.add("puff-in");
+  card.addEventListener("animationend", () => card.classList.remove("puff-in"), { once: true });
+}
+
 let pendingDelete = null;
 
 function finalizePendingDelete() {
@@ -3940,6 +3956,18 @@ function finalizePendingDelete() {
 }
 
 function deletePlaysWithUndo(ids) {
+  const cards = ids
+    .map((id) => playListEl.querySelector(`.play-card[data-id="${id}"]`))
+    .filter((c) => c && !c.classList.contains("puff-out"));
+  if (!homeEl.hidden && cards.length) {
+    for (const c of cards) c.classList.add("puff-out");
+    setTimeout(() => reallyDeletePlays(ids), 380);
+  } else {
+    reallyDeletePlays(ids);
+  }
+}
+
+function reallyDeletePlays(ids) {
   finalizePendingDelete(); // an older pending delete becomes permanent
   const idSet = new Set(ids);
   const items = [];
@@ -3973,6 +4001,8 @@ function undoPendingDelete() {
   }
   save();
   renderHome();
+  // the returning cards materialise with a little puff
+  for (const it of items) puffInCard(it.play.id);
 }
 
 // tap = undo; the X or a horizontal swipe = dismiss
@@ -3982,6 +4012,9 @@ $("undoToastClose").addEventListener("click", (e) => {
 });
 $("undoToast").addEventListener("pointerdown", (e) => {
   if (e.target.closest("#undoToastClose")) return;
+  // once the toast hides, the browser's synthesized click would land on
+  // the card underneath and open it — swallow the ghost click
+  e.preventDefault();
   const toast = $("undoToast");
   const sx = e.clientX;
   let dx = 0;
@@ -3996,8 +4029,12 @@ $("undoToast").addEventListener("pointerdown", (e) => {
     toast.removeEventListener("pointerup", up);
     toast.removeEventListener("pointercancel", up);
     if (Math.abs(dx) > 60) {
+      cardDragJustEnded = true;
+      setTimeout(() => { cardDragJustEnded = false; }, 400);
       finalizePendingDelete(); // swiped away
     } else if (Math.abs(dx) < 8) {
+      cardDragJustEnded = true;
+      setTimeout(() => { cardDragJustEnded = false; }, 400);
       undoPendingDelete(); // a plain tap restores
     } else {
       toast.style.transform = "";

@@ -185,16 +185,24 @@ body {
   white-space: nowrap;
 }
 
-.card-badge.kind-offense {
-  color: #7dd8a0;
-  background: rgba(72, 180, 120, 0.13);
-  border-color: rgba(72, 180, 120, 0.4);
+.play-card.kind-offense {
+  border-color: rgba(72, 180, 120, 0.45);
+  background: linear-gradient(0deg, rgba(46, 164, 79, 0.07), rgba(46, 164, 79, 0.07)), var(--panel);
 }
 
-.card-badge.kind-defense {
-  color: #f08a84;
-  background: rgba(217, 60, 52, 0.13);
-  border-color: rgba(217, 60, 52, 0.4);
+.play-card.kind-offense:hover {
+  border-color: #48b478;
+  background: linear-gradient(0deg, rgba(46, 164, 79, 0.12), rgba(46, 164, 79, 0.12)), var(--panel-2);
+}
+
+.play-card.kind-defense {
+  border-color: rgba(217, 60, 52, 0.45);
+  background: linear-gradient(0deg, rgba(217, 60, 52, 0.07), rgba(217, 60, 52, 0.07)), var(--panel);
+}
+
+.play-card.kind-defense:hover {
+  border-color: var(--accent-2);
+  background: linear-gradient(0deg, rgba(217, 60, 52, 0.12), rgba(217, 60, 52, 0.12)), var(--panel-2);
 }
 
 .play-card {
@@ -210,7 +218,7 @@ body {
   user-select: none;
 }
 
-.play-card:hover { border-color: var(--accent); background: var(--panel-2); }
+.play-card:not(.kind-offense):not(.kind-defense):hover { border-color: var(--accent); background: var(--panel-2); }
 
 .play-card .card-name {
   overflow: hidden;
@@ -1502,6 +1510,28 @@ body.kind-defense .token.ball { opacity: 0.9; }
 }
 
 .kind-filter .seg-btn { padding: 6px 8px; font-size: 13px; }
+
+#filterAll.active {
+  background: #3d3d47;
+  border-color: #71717c;
+  color: #fff;
+}
+
+#filterOffense { color: #7dd8a0; }
+
+#filterOffense.active {
+  background: #2e9e53;
+  border-color: #2e9e53;
+  color: #fff;
+}
+
+#filterDefense { color: #f08a84; }
+
+#filterDefense.active {
+  background: #c9352d;
+  border-color: #c9352d;
+  color: #fff;
+}
 
 .def-ghost { cursor: grab; }
 

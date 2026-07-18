@@ -1720,12 +1720,9 @@ function renderHome() {
     name.className = "card-name";
     name.textContent = p.name;
 
-    // single-letter tags keep the row compact; the full word is the hint
-    const kindText = t(playKind(p) === "defense" ? "kindDefense" : "kindOffense");
-    const kindBadge = document.createElement("span");
-    kindBadge.className = "card-badge kind-" + playKind(p);
-    kindBadge.textContent = kindText.trim().charAt(0);
-    kindBadge.title = kindText;
+    // play type shows as the card's colour (border + tinted background)
+    card.classList.add("kind-" + playKind(p));
+    card.title = t(playKind(p) === "defense" ? "kindDefense" : "kindOffense");
 
     let badge = null;
     if (p.imported) {
@@ -1809,7 +1806,6 @@ function renderHome() {
 
     card.append(check, grip, thumb, name);
     if (lockIc) card.append(lockIc);
-    card.append(kindBadge);
     if (badge) card.append(badge);
     card.append(meta, dup, shareIc, del);
     card.addEventListener("click", () => {
@@ -2178,6 +2174,9 @@ function pushUndo() {
   if (undoStack.length > HISTORY_LIMIT) undoStack.shift();
   redoStack.length = 0;
   updateUndoButtons();
+  // an edited imported play becomes the user's own
+  const p = currentPlay();
+  if (p && !viewPlay && p.imported) delete p.imported;
 }
 
 function beginAction() {
@@ -2189,6 +2188,8 @@ function endAction() {
     undoStack.push(pendingSnapshot);
     if (undoStack.length > HISTORY_LIMIT) undoStack.shift();
     redoStack.length = 0;
+    const p = currentPlay();
+    if (p && !viewPlay && p.imported) delete p.imported;
   }
   pendingSnapshot = null;
   updateUndoButtons();

@@ -4017,22 +4017,25 @@ $("undoToast").addEventListener("pointerdown", (e) => {
   e.preventDefault();
   const toast = $("undoToast");
   const sx = e.clientX;
-  let dx = 0;
+  const sy = e.clientY;
+  let dx = 0, dy = 0;
   try { toast.setPointerCapture(e.pointerId); } catch (_) {}
   const move = (ev) => {
     dx = ev.clientX - sx;
-    toast.style.transform = `translateX(calc(-50% + ${dx}px))`;
-    toast.style.opacity = String(Math.max(1 - Math.abs(dx) / 140, 0.15));
+    dy = ev.clientY - sy;
+    toast.style.transform = `translate(calc(-50% + ${dx}px), ${dy}px)`;
+    toast.style.opacity = String(Math.max(1 - Math.hypot(dx, dy) / 140, 0.15));
   };
   const up = () => {
     toast.removeEventListener("pointermove", move);
     toast.removeEventListener("pointerup", up);
     toast.removeEventListener("pointercancel", up);
-    if (Math.abs(dx) > 60) {
+    const dist = Math.hypot(dx, dy);
+    if (dist > 60) {
       cardDragJustEnded = true;
       setTimeout(() => { cardDragJustEnded = false; }, 400);
-      finalizePendingDelete(); // swiped away
-    } else if (Math.abs(dx) < 8) {
+      finalizePendingDelete(); // swiped away (any direction)
+    } else if (dist < 8) {
       cardDragJustEnded = true;
       setTimeout(() => { cardDragJustEnded = false; }, 400);
       undoPendingDelete(); // a plain tap restores

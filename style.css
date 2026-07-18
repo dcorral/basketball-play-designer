@@ -520,14 +520,17 @@ body {
 }
 
 /* ---------- Help button & wizard ---------- */
-.help-btn {
+.btn.help-btn {
   width: 34px;
   height: 34px;
   padding: 0;
-  font-weight: 700;
-  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex: none;
 }
+
+.help-btn svg { width: 22px; height: 22px; flex: none; }
 
 #helpHome {
   position: fixed;
@@ -1607,6 +1610,14 @@ body[data-tool="eraser"] .def-ghost-hit { cursor: pointer; }
   /* bigger touch targets: players and ball grow on small screens */
   .token { width: 7.6%; font-size: 1.2em; }
   .token.ball { width: 5.2%; }
+
+  /* play cards: tighter row so the action icons never overflow */
+  .play-card { gap: 6px; padding: 10px 4px 10px 10px; }
+  .card-thumb { height: 40px; }
+  .card-grip { padding: 6px 1px; }
+  .card-dup, .card-share, .card-del, .bulk-btn { padding: 5px; }
+  .play-card .card-name { min-width: 46px; font-size: 15px; }
+  .play-card .meta { font-size: 12px; }
   .toolbar { padding: 4px; gap: 2px; border-radius: 10px; }
   .tool { width: 32px; height: 32px; }
   .tool svg { width: 17px; height: 17px; }
@@ -1618,6 +1629,14 @@ body[data-tool="eraser"] .def-ghost-hit { cursor: pointer; }
   .timeline-wrap, .step-indicator, .speed-select { display: none; }
   .pbtn { font-size: 18px; padding: 6px 8px; }
   .pbtn-main { width: 46px; height: 46px; font-size: 20px; }
+}
+
+@media (max-width: 500px) {
+  .card-thumb { display: none; }
+}
+
+@media (max-width: 410px) {
+  .play-card .meta { display: none; }
 
   .home { gap: 22px; }
   .home h1 { font-size: 30px; }

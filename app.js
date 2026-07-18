@@ -137,6 +137,12 @@ const I18N = {
     deleteSelected: (n) => `Delete selected (${n})`,
     selectAll: "Select all",
     searchPlays: "Search plays…",
+    sortCustom: "Custom order",
+    sortModified: "Last modified",
+    sortCreated: "Date created",
+    sortAlpha: "Alphabetical",
+    createdLabel: "Created",
+    modifiedLabel: "Modified",
     noResults: "No plays match your search.",
     deleteSelTitle: "Delete selected plays?",
     deleteAllBtn: "Delete all plays",
@@ -246,7 +252,7 @@ const I18N = {
       { h: "Sharing", b: "The share button (in the editor or on each card) creates a link with the play inside it. By default it opens a view-only player with an Edit button; tick the checkbox to share an editable copy. The link modal shows a QR code — click it to copy it as an image, or use the button to copy the link." },
       { h: "Defenders", b: "The shield button beside the step controls adds five defenders \u2014 red X markers placed and moved exactly like your players. Defenders never draw arrows: drag them with the select tool to reposition them in any step, or use the arrow tool to set where they move during the step \u2014 a faint X marks the destination while you edit (drag it to adjust), and in playback they simply glide there. Defenders can\u2019t set screens or receive passes. Toggle again to remove them (undo brings everything back). In defensive plays the zone tool (3) shades each defender\u2019s area of action in a soft colour." },
       { h: "Offense, defense & courts", b: "When creating a play you pick its type and court size. Defensive plays flip the roles: the defenders draw the visible red arrows, the dimmed attack repositions silently, and playback runs the attack first with the defense reacting after. Full-court plays double the floor for presses and transition. The home list tags every play (A/D) and the filter above it shows one type at a time." },
-      { h: "Locking & organizing", b: "The padlock in the editor makes a play read-only until you unlock it. On the home screen every card has duplicate, share and delete buttons plus a thumbnail of step 1; the checkboxes select several plays at once to export, download as .zip, lock or delete together." },
+      { h: "Locking & organizing", b: "The padlock in the editor makes a play read-only until you unlock it. On the home screen every card has duplicate, share and delete buttons and the checkboxes select several plays at once to export, download as .zip, lock or delete together." },
       { h: "Exporting and backups", b: "The save button exports the play as a GIF, a video or a step-by-step PDF. On the home screen, Export all downloads every play as a .zip you can import on another device." },
       { h: "Undo", b: "Ctrl+Z undoes and Ctrl+Shift+Z (or Ctrl+Y) redoes any edit: drags, arrows, steps, renames." },
     ],
@@ -281,6 +287,12 @@ const I18N = {
     deleteSelected: (n) => `Eliminar seleccionadas (${n})`,
     selectAll: "Seleccionar todas",
     searchPlays: "Buscar jugadas…",
+    sortCustom: "Orden personalizado",
+    sortModified: "Última modificación",
+    sortCreated: "Fecha de creación",
+    sortAlpha: "Alfabético",
+    createdLabel: "Creada",
+    modifiedLabel: "Modificada",
     noResults: "Ninguna jugada coincide con tu búsqueda.",
     deleteSelTitle: "¿Eliminar las jugadas seleccionadas?",
     deleteAllBtn: "Eliminar todas las jugadas",
@@ -390,7 +402,7 @@ const I18N = {
       { h: "Compartir", b: "El botón de compartir (en el editor o en cada tarjeta) crea un enlace con la jugada dentro. Por defecto abre un visor de solo lectura con botón Editar; marca la casilla para compartir una copia editable. El diálogo del enlace muestra un código QR: púlsalo para copiarlo como imagen, o usa el botón para copiar el enlace." },
       { h: "Defensores", b: "El botón del escudo junto a los controles de paso añade cinco defensores: marcas X rojas que se colocan y mueven igual que tus jugadores. Los defensores nunca dibujan flechas: arrástralos con la herramienta de selección para recolocarlos en cualquier paso, o usa la flecha de movimiento para marcar a dónde se desplazan durante el paso — una X tenue señala el destino mientras editas (arrástrala para ajustarla) y en la reproducción simplemente se deslizan hasta allí. No pueden bloquear ni recibir pases. Vuelve a pulsarlo para quitarlos (deshacer lo recupera todo). En las jugadas defensivas, la herramienta de zona (3) sombrea con un color suave el área de acción de cada defensor." },
       { h: "Ataque, defensa y pistas", b: "Al crear una jugada eliges su tipo y el tamaño de pista. Las jugadas defensivas invierten los papeles: los defensores dibujan las flechas rojas visibles, el ataque (atenuado) se recoloca en silencio y en la reproducción primero actúa el ataque y después reacciona la defensa. Las jugadas a pista completa doblan el campo para presiones y transiciones. La lista de inicio etiqueta cada jugada (A/D) y el filtro superior muestra un tipo a la vez." },
-      { h: "Bloqueo y organización", b: "El candado del editor hace la jugada de solo lectura hasta que la desbloquees. En la pantalla de inicio cada tarjeta tiene botones de duplicar, compartir y eliminar, más una miniatura del paso 1; las casillas seleccionan varias jugadas a la vez para exportarlas, descargarlas en .zip, bloquearlas o eliminarlas juntas." },
+      { h: "Bloqueo y organización", b: "El candado del editor hace la jugada de solo lectura hasta que la desbloquees. En la pantalla de inicio cada tarjeta tiene botones de duplicar, compartir y eliminar, y las casillas seleccionan varias jugadas a la vez para exportarlas, descargarlas en .zip, bloquearlas o eliminarlas juntas." },
       { h: "Exportar y copias", b: "El botón de guardar exporta la jugada como GIF, vídeo o PDF paso a paso. En el inicio, Exportar todo descarga todas tus jugadas en un .zip que puedes importar en otro dispositivo." },
       { h: "Deshacer", b: "Ctrl+Z deshace y Ctrl+Mayús+Z (o Ctrl+Y) rehace cualquier edición: arrastres, flechas, pasos, renombrados." },
     ],
@@ -425,6 +437,12 @@ const I18N = {
     deleteSelected: (n) => `Elimina selezionate (${n})`,
     selectAll: "Seleziona tutte",
     searchPlays: "Cerca giocate…",
+    sortCustom: "Ordine personalizzato",
+    sortModified: "Ultima modifica",
+    sortCreated: "Data di creazione",
+    sortAlpha: "Alfabetico",
+    createdLabel: "Creata",
+    modifiedLabel: "Modificata",
     noResults: "Nessuna giocata corrisponde alla ricerca.",
     deleteSelTitle: "Eliminare le giocate selezionate?",
     deleteAllBtn: "Elimina tutte le giocate",
@@ -545,7 +563,7 @@ const I18N = {
       { h: "Condivisione", b: "Il pulsante di condivisione (nell\u2019editor o su ogni scheda) crea un link con la giocata dentro. Per impostazione predefinita apre un visualizzatore in sola lettura con pulsante Modifica; spunta la casella per condividere una copia modificabile. La finestra del link mostra un codice QR: cliccalo per copiarlo come immagine, o usa il pulsante per copiare il link." },
       { h: "Difensori", b: "Il pulsante con lo scudo accanto ai controlli dei passi aggiunge cinque difensori: X rosse che si posizionano e muovono come i tuoi giocatori. I difensori non disegnano mai frecce: trascinali con lo strumento di selezione per riposizionarli in qualsiasi passo, oppure usa la freccia di movimento per indicare dove si spostano durante il passo — una X tenue segna la destinazione mentre modifichi (trascinala per regolarla) e nella riproduzione scivolano semplicemente lì. Non possono fare blocchi né ricevere passaggi. Premilo di nuovo per toglierli (annulla ripristina tutto). Nelle giocate difensive lo strumento zona (3) evidenzia con un colore tenue l\u2019area di azione di ogni difensore." },
       { h: "Attacco, difesa e campi", b: "Creando una giocata scegli tipo e dimensione del campo. Le giocate difensive invertono i ruoli: i difensori disegnano le frecce rosse visibili, l\u2019attacco (attenuato) si riposiziona in silenzio e nella riproduzione prima agisce l\u2019attacco, poi reagisce la difesa. Le giocate a campo intero raddoppiano il parquet per pressing e transizione. La lista iniziale etichetta ogni giocata (A/D) e il filtro in alto mostra un tipo alla volta." },
-      { h: "Blocco e organizzazione", b: "Il lucchetto nell\u2019editor rende la giocata di sola lettura finché non la sblocchi. Nella schermata iniziale ogni scheda ha pulsanti per duplicare, condividere ed eliminare, più una miniatura del passo 1; le caselle selezionano più giocate insieme per esportarle, scaricarle in .zip, bloccarle o eliminarle." },
+      { h: "Blocco e organizzazione", b: "Il lucchetto nell\u2019editor rende la giocata di sola lettura finché non la sblocchi. Nella schermata iniziale ogni scheda ha pulsanti per duplicare, condividere ed eliminare, e le caselle selezionano più giocate insieme per esportarle, scaricarle in .zip, bloccarle o eliminarle." },
       { h: "Esportazione e backup", b: "Il pulsante di salvataggio esporta la giocata come GIF, video o PDF passo-passo. Nella schermata iniziale, Esporta tutto scarica ogni giocata in un .zip importabile su un altro dispositivo." },
       { h: "Annulla", b: "Ctrl+Z annulla e Ctrl+Maiusc+Z (o Ctrl+Y) ripristina qualsiasi modifica: trascinamenti, frecce, passi, rinominazioni." },
     ],
@@ -568,6 +586,12 @@ const I18N = {
     deleteSelected: (n) => `Удалить выбранные (${n})`,
     selectAll: "Выбрать все",
     searchPlays: "Поиск комбинаций…",
+    sortCustom: "Свой порядок",
+    sortModified: "Последнее изменение",
+    sortCreated: "Дата создания",
+    sortAlpha: "По алфавиту",
+    createdLabel: "Создана",
+    modifiedLabel: "Изменена",
     noResults: "По вашему запросу ничего не найдено.",
     deleteSelTitle: "Удалить выбранные комбинации?",
     deleteAllBtn: "Удалить все комбинации",
@@ -688,7 +712,7 @@ const I18N = {
       { h: "Обмен", b: "Кнопка «поделиться» (в редакторе или на карточке) создаёт ссылку, содержащую комбинацию. По умолчанию она открывает просмотр с кнопкой «Редактировать»; отметьте флажок, чтобы поделиться редактируемой копией. В окне ссылки есть QR-код — нажмите на него, чтобы скопировать как картинку, или скопируйте ссылку кнопкой." },
       { h: "Защитники", b: "Кнопка со щитом рядом с управлением шагами добавляет пятерых защитников — красные метки X, которые расставляются и двигаются так же, как ваши игроки. Защитники никогда не рисуют стрелок: перетаскивайте их инструментом выбора на любом шаге либо инструментом стрелки укажите, куда они смещаются в течение шага — при редактировании цель отмечает бледный X (его можно перетащить), а при воспроизведении они просто плавно скользят туда. Они не ставят заслоны и не получают передачи. Нажмите ещё раз, чтобы убрать их (отмена всё вернёт). В защитных комбинациях инструмент зоны (3) мягким цветом выделяет зону ответственности каждого защитника." },
       { h: "Нападение, защита и площадки", b: "При создании комбинации вы выбираете её тип и размер площадки. В защитных комбинациях роли меняются: защитники рисуют видимые красные стрелки, приглушённое нападение переставляется без стрелок, а при воспроизведении сначала действует нападение и лишь затем реагирует защита. Комбинации на всю площадку удваивают паркет — для прессинга и перехода. Список на главном экране помечает каждую комбинацию (Н/З), а фильтр сверху показывает один тип за раз." },
-      { h: "Блокировка и порядок", b: "Замок в редакторе делает комбинацию доступной только для чтения, пока вы её не разблокируете. На главном экране у каждой карточки есть кнопки дублирования, отправки и удаления, а также миниатюра шага 1; флажки выбирают несколько комбинаций сразу — их можно вместе экспортировать, скачать в .zip, заблокировать или удалить." },
+      { h: "Блокировка и порядок", b: "Замок в редакторе делает комбинацию доступной только для чтения, пока вы её не разблокируете. На главном экране у каждой карточки есть кнопки дублирования, отправки и удаления, а флажки выбирают несколько комбинаций сразу — их можно вместе экспортировать, скачать в .zip, заблокировать или удалить." },
       { h: "Экспорт и резервные копии", b: "Кнопка сохранения экспортирует комбинацию в GIF, видео или пошаговый PDF. На главном экране «Экспорт всего» скачивает все комбинации в .zip для переноса на другое устройство." },
       { h: "Отмена", b: "Ctrl+Z отменяет, Ctrl+Shift+Z (или Ctrl+Y) повторяет любое действие: перетаскивания, стрелки, шаги, переименования." },
     ],
@@ -711,6 +735,12 @@ const I18N = {
     deleteSelected: (n) => `删除所选（${n}）`,
     selectAll: "全选",
     searchPlays: "搜索战术…",
+    sortCustom: "自定义顺序",
+    sortModified: "最近修改",
+    sortCreated: "创建时间",
+    sortAlpha: "按名称",
+    createdLabel: "创建",
+    modifiedLabel: "修改",
     noResults: "没有符合搜索的战术。",
     deleteSelTitle: "删除所选战术？",
     deleteAllBtn: "删除全部战术",
@@ -831,7 +861,7 @@ const I18N = {
       { h: "分享", b: "分享按钮（编辑器中或每张卡片上）生成包含战术的链接。默认打开带“编辑”按钮的只读播放器；勾选复选框则直接分享可编辑副本。链接窗口会显示二维码——点击可将其复制为图片，或用按钮复制链接。" },
       { h: "防守球员", b: "步骤控制旁的盾牌按钮会添加五名防守球员——红色 X 标记，可像己方球员一样放置和移动。防守球员从不画箭头：用选择工具在任意步骤拖动它们重新定位，或用移动箭头工具指定他们在该步骤中的移动目标——编辑时淡淡的 X 标出目的地（可拖动调整），回放时他们会平滑滑过去。防守球员不能掩护也不能接球。再次点击可移除（撤销可恢复全部）。在防守战术中，区域工具（3）会用柔和的颜色标出每名防守球员的负责区域。" },
       { h: "进攻、防守与场地", b: "创建战术时可选择类型和场地大小。防守战术会互换角色：防守球员绘制可见的红色箭头，进攻方（淡化显示）静默重新定位，回放时先进攻后防守依次进行。全场战术将场地加倍，适合紧逼和攻防转换。主屏幕列表为每套战术加上标签（进/防），上方的筛选器可按类型查看。" },
-      { h: "锁定与整理", b: "编辑器中的挂锁可将战术设为只读，直到再次解锁。主屏幕上每张卡片都有复制、分享和删除按钮，以及第 1 步的缩略图；勾选复选框可同时选择多套战术，一起导出、打包下载 .zip、锁定或删除。" },
+      { h: "锁定与整理", b: "编辑器中的挂锁可将战术设为只读，直到再次解锁。主屏幕上每张卡片都有复制、分享和删除按钮，勾选复选框可同时选择多套战术，一起导出、打包下载 .zip、锁定或删除。" },
       { h: "导出与备份", b: "保存按钮可将战术导出为 GIF、视频或分步 PDF。主屏幕的“导出全部”会把所有战术打包成 .zip，可在其他设备导入。" },
       { h: "撤销", b: "Ctrl+Z 撤销，Ctrl+Shift+Z（或 Ctrl+Y）重做任何编辑：拖动、箭头、步骤、重命名。" },
     ],
@@ -854,6 +884,12 @@ const I18N = {
     deleteSelected: (n) => `Obriši izabrane (${n})`,
     selectAll: "Izaberi sve",
     searchPlays: "Pretraži akcije…",
+    sortCustom: "Prilagođeni redosled",
+    sortModified: "Poslednja izmena",
+    sortCreated: "Datum kreiranja",
+    sortAlpha: "Abecedno",
+    createdLabel: "Kreirana",
+    modifiedLabel: "Izmenjena",
     noResults: "Nijedna akcija ne odgovara pretrazi.",
     deleteSelTitle: "Obrisati izabrane akcije?",
     deleteAllBtn: "Obriši sve akcije",
@@ -974,7 +1010,7 @@ const I18N = {
       { h: "Deljenje", b: "Dugme za deljenje (u editoru ili na svakoj kartici) pravi link koji sadrži akciju. Podrazumevano otvara plejer samo za gledanje sa dugmetom Izmeni; štikliraj kućicu za deljenje kopije koja se može menjati. Prozor sa linkom prikazuje QR kod — klikni ga da ga kopiraš kao sliku, ili kopiraj link dugmetom." },
       { h: "Odbrana", b: "Dugme sa štitom pored kontrola koraka dodaje pet odbrambenih igrača — crvene X oznake koje se postavljaju i pomeraju kao tvoji igrači. Odbrana nikada ne crta strelice: prevlači ih alatom za izbor u bilo kom koraku, ili alatom za strelicu odredi kuda se pomeraju tokom koraka — bledi X označava odredište dok uređuješ (prevuci ga da ga podesiš), a pri reprodukciji jednostavno klize tamo. Ne mogu da blokiraju niti primaju dodavanja. Pritisni ponovo da ih ukloniš (poništavanje sve vraća). U odbrambenim akcijama alat za zonu (3) blago boji zonu delovanja svakog odbrambenog igrača." },
       { h: "Napad, odbrana i tereni", b: "Pri pravljenju akcije biraš njen tip i veličinu terena. Odbrambene akcije menjaju uloge: odbrana crta vidljive crvene strelice, prigušeni napad se premešta bez strelica, a pri reprodukciji prvo deluje napad pa reaguje odbrana. Akcije na celom terenu udvostručuju parket za presing i tranziciju. Početna lista označava svaku akciju (N/O), a filter iznad prikazuje jedan tip odjednom." },
-      { h: "Zaključavanje i organizacija", b: "Katanac u editoru čini akciju samo za čitanje dok je ne otključaš. Na početnom ekranu svaka kartica ima dugmad za dupliranje, deljenje i brisanje, plus sličicu koraka 1; kućice biraju više akcija odjednom za zajednički izvoz, preuzimanje u .zip, zaključavanje ili brisanje." },
+      { h: "Zaključavanje i organizacija", b: "Katanac u editoru čini akciju samo za čitanje dok je ne otključaš. Na početnom ekranu svaka kartica ima dugmad za dupliranje, deljenje i brisanje, a kućice biraju više akcija odjednom za zajednički izvoz, preuzimanje u .zip, zaključavanje ili brisanje." },
       { h: "Izvoz i rezervne kopije", b: "Dugme za čuvanje izvozi akciju kao GIF, video ili PDF korak-po-korak. Na početnom ekranu, Izvezi sve preuzima sve akcije u .zip koji se uvozi na drugom uređaju." },
       { h: "Poništavanje", b: "Ctrl+Z poništava, a Ctrl+Shift+Z (ili Ctrl+Y) ponavlja svaku izmenu: prevlačenja, strelice, korake, imena." },
     ],
@@ -997,6 +1033,12 @@ const I18N = {
     deleteSelected: (n) => `Izbriši izbrane (${n})`,
     selectAll: "Izberi vse",
     searchPlays: "Išči akcije…",
+    sortCustom: "Poljubni vrstni red",
+    sortModified: "Zadnja sprememba",
+    sortCreated: "Datum nastanka",
+    sortAlpha: "Abecedno",
+    createdLabel: "Ustvarjena",
+    modifiedLabel: "Spremenjena",
     noResults: "Nobena akcija ne ustreza iskanju.",
     deleteSelTitle: "Izbrišem izbrane akcije?",
     deleteAllBtn: "Izbriši vse akcije",
@@ -1117,7 +1159,7 @@ const I18N = {
       { h: "Deljenje", b: "Gumb za deljenje (v urejevalniku ali na vsaki kartici) ustvari povezavo z akcijo. Privzeto odpre predvajalnik samo za ogled z gumbom Uredi; označi potrditveno polje za deljenje kopije, ki jo je mogoče urejati. Okno s povezavo prikaže kodo QR — klikni jo, da jo kopiraš kot sliko, ali kopiraj povezavo z gumbom." },
       { h: "Obramba", b: "Gumb s ščitom ob kontrolah korakov doda pet obrambnih igralcev — rdeče oznake X, ki jih postavljaš in premikaš enako kot svoje igralce. Obramba nikoli ne riše puščic: povleci jih z orodjem za izbiro v kateremkoli koraku ali z orodjem za puščico določi, kam se premaknejo med korakom — bled X označuje cilj med urejanjem (povleci ga za prilagoditev), med predvajanjem pa preprosto zdrsnejo tja. Ne morejo postavljati blokad niti prejemati podaj. Pritisni znova, da jih odstraniš (razveljavitev vse povrne). Pri obrambnih akcijah orodje za cono (3) nežno obarva območje delovanja vsakega obrambnega igralca." },
       { h: "Napad, obramba in igrišča", b: "Ob ustvarjanju akcije izbereš njeno vrsto in velikost igrišča. Obrambne akcije zamenjajo vlogi: obramba riše vidne rdeče puščice, zatemnjen napad se premešča brez puščic, pri predvajanju pa najprej deluje napad in nato reagira obramba. Akcije na celem igrišču podvojijo parket za presing in tranzicijo. Začetni seznam označi vsako akcijo (N/O), filter zgoraj pa prikaže eno vrsto naenkrat." },
-      { h: "Zaklepanje in urejanje", b: "Ključavnica v urejevalniku naredi akcijo samo za branje, dokler je ne odkleneš. Na začetnem zaslonu ima vsaka kartica gumbe za podvajanje, deljenje in brisanje ter sličico koraka 1; potrditvena polja izberejo več akcij hkrati za skupni izvoz, prenos v .zip, zaklepanje ali brisanje." },
+      { h: "Zaklepanje in urejanje", b: "Ključavnica v urejevalniku naredi akcijo samo za branje, dokler je ne odkleneš. Na začetnem zaslonu ima vsaka kartica gumbe za podvajanje, deljenje in brisanje potrditvena polja pa izberejo več akcij hkrati za skupni izvoz, prenos v .zip, zaklepanje ali brisanje." },
       { h: "Izvoz in varnostne kopije", b: "Gumb za shranjevanje izvozi akcijo kot GIF, video ali PDF po korakih. Na začetnem zaslonu Izvozi vse prenese vse akcije v .zip, ki ga uvoziš na drugi napravi." },
       { h: "Razveljavitev", b: "Ctrl+Z razveljavi, Ctrl+Shift+Z (ali Ctrl+Y) ponovi vsako urejanje: vlečenja, puščice, korake, preimenovanja." },
     ],
@@ -1140,6 +1182,12 @@ const I18N = {
     deleteSelected: (n) => `Διαγραφή επιλεγμένων (${n})`,
     selectAll: "Επιλογή όλων",
     searchPlays: "Αναζήτηση συστημάτων…",
+    sortCustom: "Προσαρμοσμένη σειρά",
+    sortModified: "Τελευταία τροποποίηση",
+    sortCreated: "Ημερομηνία δημιουργίας",
+    sortAlpha: "Αλφαβητικά",
+    createdLabel: "Δημιουργήθηκε",
+    modifiedLabel: "Τροποποιήθηκε",
     noResults: "Κανένα σύστημα δεν ταιριάζει με την αναζήτηση.",
     deleteSelTitle: "Διαγραφή επιλεγμένων συστημάτων;",
     deleteAllBtn: "Διαγραφή όλων των συστημάτων",
@@ -1260,7 +1308,7 @@ const I18N = {
       { h: "Κοινοποίηση", b: "Το κουμπί κοινοποίησης (στον επεξεργαστή ή σε κάθε κάρτα) φτιάχνει σύνδεσμο που περιέχει το σύστημα. Από προεπιλογή ανοίγει προβολή μόνο για ανάγνωση με κουμπί Επεξεργασίας· τσέκαρε το κουτάκι για επεξεργάσιμο αντίγραφο. Το παράθυρο του συνδέσμου δείχνει κωδικό QR — κλικ πάνω του για αντιγραφή ως εικόνα, ή αντέγραψε τον σύνδεσμο με το κουμπί." },
       { h: "Αμυντικοί", b: "Το κουμπί με την ασπίδα δίπλα στα χειριστήρια βημάτων προσθέτει πέντε αμυντικούς — κόκκινα X που τοποθετούνται και κινούνται όπως οι παίκτες σου. Οι αμυντικοί δεν σχεδιάζουν ποτέ βέλη: σύρε τους με το εργαλείο επιλογής σε οποιοδήποτε βήμα, ή με το βέλος κίνησης όρισε πού μετακινούνται στη διάρκεια του βήματος — ένα αχνό X σημειώνει τον προορισμό όσο επεξεργάζεσαι (σύρε το για προσαρμογή), και στην αναπαραγωγή απλώς γλιστρούν εκεί. Δεν βάζουν σκριν ούτε δέχονται πάσες. Πάτησέ το ξανά για να τους αφαιρέσεις (η αναίρεση τα επαναφέρει όλα). Στα αμυντικά συστήματα το εργαλείο ζώνης (3) χρωματίζει απαλά την περιοχή ευθύνης κάθε αμυντικού." },
       { h: "Επίθεση, άμυνα και γήπεδα", b: "Δημιουργώντας ένα σύστημα διαλέγεις τον τύπο και το μέγεθος γηπέδου. Τα αμυντικά συστήματα αντιστρέφουν τους ρόλους: οι αμυντικοί σχεδιάζουν τα ορατά κόκκινα βέλη, η (αχνή) επίθεση επανατοποθετείται σιωπηλά και στην αναπαραγωγή πρώτα ενεργεί η επίθεση και μετά αντιδρά η άμυνα. Τα συστήματα ολόκληρου γηπέδου διπλασιάζουν το παρκέ για πρέσινγκ και μετάβαση. Η αρχική λίστα μαρκάρει κάθε σύστημα (Ε/Α) και το φίλτρο από πάνω δείχνει έναν τύπο τη φορά." },
-      { h: "Κλείδωμα και οργάνωση", b: "Το λουκέτο στον επεξεργαστή κάνει το σύστημα μόνο για ανάγνωση μέχρι να το ξεκλειδώσεις. Στην αρχική οθόνη κάθε κάρτα έχει κουμπιά αντιγραφής, κοινοποίησης και διαγραφής, συν μια μικρογραφία του βήματος 1· τα πλαίσια επιλογής επιλέγουν πολλά συστήματα μαζί για εξαγωγή, λήψη σε .zip, κλείδωμα ή διαγραφή." },
+      { h: "Κλείδωμα και οργάνωση", b: "Το λουκέτο στον επεξεργαστή κάνει το σύστημα μόνο για ανάγνωση μέχρι να το ξεκλειδώσεις. Στην αρχική οθόνη κάθε κάρτα έχει κουμπιά αντιγραφής, κοινοποίησης και διαγραφής, και τα πλαίσια επιλογής επιλέγουν πολλά συστήματα μαζί για εξαγωγή, λήψη σε .zip, κλείδωμα ή διαγραφή." },
       { h: "Εξαγωγή και αντίγραφα", b: "Το κουμπί αποθήκευσης εξάγει το σύστημα ως GIF, βίντεο ή PDF βήμα-βήμα. Στην αρχική, η Εξαγωγή όλων κατεβάζει όλα τα συστήματα σε .zip για εισαγωγή σε άλλη συσκευή." },
       { h: "Αναίρεση", b: "Ctrl+Z αναιρεί και Ctrl+Shift+Z (ή Ctrl+Y) επαναλαμβάνει κάθε αλλαγή: μετακινήσεις, βέλη, βήματα, μετονομασίες." },
     ],
@@ -1469,6 +1517,8 @@ function save() {
 
 // Older saves stored steps as flat {tokenId: {x,y}, screens: [...]}.
 function migratePlay(p) {
+  if (!p.createdAt) p.createdAt = Date.now();
+  if (!p.updatedAt) p.updatedAt = p.createdAt;
   if (!p.steps.length || p.steps[0].pos) return p;
   const steps = p.steps.map((s) => {
     const pos = {};
@@ -1484,7 +1534,7 @@ function migratePlay(p) {
       }
     }
   }
-  return { id: p.id, name: p.name, steps };
+  return { id: p.id, name: p.name, createdAt: p.createdAt, updatedAt: p.updatedAt, steps };
 }
 
 function nearestPlayerIn(pos, p, excludeId) {
@@ -1542,20 +1592,40 @@ function load() {
 
 /* ================= Navigation ================= */
 
-function showHome() {
+// Each opened play gets its own history entry (#play=<id>) so the
+// browser back button returns to the list instead of leaving the site.
+const BASE_URL = location.pathname + location.search;
+
+function markHomeUrl() {
+  history.replaceState({ view: "home" }, "", BASE_URL);
+}
+
+window.addEventListener("popstate", (e) => {
+  const st = e.state;
+  if (st && st.view === "play" && plays.some((p) => p.id === st.id)) {
+    openPlay(st.id, true);
+  } else {
+    showHome(true);
+  }
+});
+
+function showHome(fromHistory) {
   playing = false;
   viewPlay = null;
   document.body.classList.remove("playing", "view-only", "play-locked");
+  document.body.classList.add("home-view");
   playNameEl.readOnly = false;
   editorEl.hidden = true;
   homeEl.hidden = false;
   renderHome();
+  // reached without the back button (delete, help…) — retarget the URL
+  if (!fromHistory && history.state && history.state.view === "play") markHomeUrl();
 }
 
-function openPlay(id) {
+function openPlay(id, fromHistory) {
   currentPlayId = id;
   viewPlay = null;
-  document.body.classList.remove("view-only");
+  document.body.classList.remove("view-only", "home-view");
   playNameEl.readOnly = false;
   applyCourtMode(currentPlay());
   applyLockState();
@@ -1570,13 +1640,19 @@ function openPlay(id) {
   renderAll();
   applyToolbarPos();
   resetZoom();
+  if (!fromHistory) {
+    const entry = { view: "play", id };
+    const url = "#play=" + encodeURIComponent(id);
+    if (history.state && history.state.view === "play") history.replaceState(entry, "", url);
+    else history.pushState(entry, "", url);
+  }
 }
 
 // Read-only viewer for a shared play: court, name and playback only.
 function openViewer(play) {
   viewPlay = play;
   applyCourtMode(play);
-  document.body.classList.remove("play-locked");
+  document.body.classList.remove("play-locked", "home-view");
   document.body.classList.add("view-only");
   playNameEl.readOnly = true;
   currentStep = 0;
@@ -1594,6 +1670,10 @@ let cardDragJustEnded = false;
 const selectedPlayIds = new Set();
 const PAGE_SIZE = 10;
 let playKindFilter = "all";
+// custom keeps the user's dragged order (the array); a list that was
+// never hand-ordered defaults to most recently modified first
+let playSort = localStorage.getItem("playbook-sort") ||
+  (localStorage.getItem("playbook-reordered") ? "custom" : "modified");
 let playSearch = "";
 let playPage = 0;
 let pageOffset = 0; // index in `plays` of the first visible card (for drag reorder)
@@ -1603,6 +1683,13 @@ function filteredPlays() {
   let list = plays;
   if (playKindFilter !== "all") list = list.filter((p) => playKind(p) === playKindFilter);
   if (q) list = list.filter((p) => p.name.toLowerCase().includes(q));
+  if (playSort === "alpha") {
+    list = [...list].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" }));
+  } else if (playSort === "created") {
+    list = [...list].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  } else if (playSort === "modified") {
+    list = [...list].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  }
   return list;
 }
 
@@ -1641,45 +1728,6 @@ function updateDeleteSelected() {
   $("deleteAllBtn").textContent = t("deleteAllBtn");
 }
 
-// Tiny static render of a play's first step for its card. The export
-// renderer does the drawing; one court raster is shared per court type.
-// applyCourtMode mutates the live court svg, so thumbnails render one
-// at a time through a promise chain.
-const thumbCourts = {};
-let thumbChain = Promise.resolve();
-function drawCardThumb(canvas, play) {
-  if (typeof exRasterizeCourt !== "function") {
-    // export.js loads after app.js — retry once everything is in
-    window.addEventListener("load", () => drawCardThumb(canvas, play), { once: true });
-    return;
-  }
-  thumbChain = thumbChain.then(async () => {
-    if (!canvas.isConnected) return;
-    const key = playCourt(play);
-    const prevVB = VB, prevClamp = CLAMP;
-    const opened = viewPlay || plays.find((x) => x.id === currentPlayId);
-    applyCourtMode(play);
-    try {
-      const img = await (thumbCourts[key] ||= exRasterizeCourt(canvas.width, canvas.height));
-      const step = play.steps[0];
-      const posMap = {};
-      for (const id of idsFor(play)) posMap[id] = step.pos[id];
-      posMap.BALL = ballPoint(step.pos[step.ball]);
-      const prev = currentPlayId;
-      currentPlayId = play.id; // exDrawScene reads arrows via currentPlay()
-      try {
-        exDrawScene(canvas.getContext("2d"), canvas.width, canvas.height, img, posMap, 0, false, null);
-      } finally {
-        currentPlayId = prev;
-      }
-    } finally {
-      // put the geometry back the way the open play (if any) needs it
-      if (opened) applyCourtMode(opened);
-      else { VB = prevVB; CLAMP = prevClamp; }
-    }
-  }).catch(() => {});
-}
-
 function renderHome() {
   playListEl.innerHTML = "";
   $("exportAllBtn").hidden = plays.length === 0;
@@ -1697,12 +1745,24 @@ function renderHome() {
     b.classList.toggle("active", b.dataset.v === playKindFilter);
   }
 
+  const ss = $("sortSelect");
+  ss.hidden = plays.length < 2;
+  ss.innerHTML = "";
+  for (const [v, k] of [["custom", "sortCustom"], ["modified", "sortModified"],
+                        ["created", "sortCreated"], ["alpha", "sortAlpha"]]) {
+    const o = document.createElement("option");
+    o.value = v;
+    o.textContent = t(k);
+    ss.append(o);
+  }
+  ss.value = playSort;
+
   const filtered = filteredPlays();
   const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   playPage = Math.min(Math.max(playPage, 0), pages - 1);
   pageOffset = playPage * PAGE_SIZE;
   const visible = filtered.slice(pageOffset, pageOffset + PAGE_SIZE);
-  const reorderable = !playSearch.trim() && playKindFilter === "all";
+  const reorderable = !playSearch.trim() && playKindFilter === "all" && playSort === "custom";
 
   const empty = $("noResults");
   empty.hidden = !(plays.length > 0 && filtered.length === 0);
@@ -1756,13 +1816,6 @@ function renderHome() {
       badge.title = t("importedBadge");
     }
 
-    const thumb = document.createElement("canvas");
-    thumb.className = "card-thumb";
-    const tvb = playCourt(p) === "full" ? VB_FULL : VB_HALF;
-    thumb.width = 108;
-    thumb.height = Math.round(108 * tvb.h / tvb.w);
-    drawCardThumb(thumb, p);
-
     const dup = document.createElement("button");
     dup.className = "card-dup";
     dup.title = t("ttDuplicate");
@@ -1776,6 +1829,7 @@ function renderHome() {
       delete copy.locked;
       delete copy.imported;
       copy.name = uniquePlayName(p.name);
+      copy.createdAt = copy.updatedAt = Date.now();
       const idx = plays.findIndex((x) => x.id === p.id);
       plays.splice(idx + 1, 0, copy);
       save();
@@ -1824,9 +1878,15 @@ function renderHome() {
 
     const meta = document.createElement("span");
     meta.className = "meta";
-    meta.textContent = p.steps.length + " " + (p.steps.length === 1 ? t("stepSingular") : t("stepPlural"));
+    const dateOpts = { day: "2-digit", month: "2-digit", year: "2-digit" };
+    meta.textContent = p.steps.length + " " + (p.steps.length === 1 ? t("stepSingular") : t("stepPlural")) +
+      (p.updatedAt ? " · " + new Date(p.updatedAt).toLocaleDateString(undefined, dateOpts) : "");
+    if (p.createdAt) {
+      card.title += "\n" + t("createdLabel") + ": " + new Date(p.createdAt).toLocaleDateString(undefined, dateOpts) +
+        "\n" + t("modifiedLabel") + ": " + new Date(p.updatedAt).toLocaleDateString(undefined, dateOpts);
+    }
 
-    card.append(check, grip, thumb, name);
+    card.append(check, grip, name);
     if (lockIc) card.append(lockIc);
     if (badge) card.append(badge);
     card.append(meta, dup, shareIc, del);
@@ -1875,6 +1935,7 @@ function attachCardReorder(grip, card) {
       if (oldIdx >= 0 && newIdx !== oldIdx) {
         const [p] = plays.splice(oldIdx, 1);
         plays.splice(newIdx, 0, p);
+        localStorage.setItem("playbook-reordered", "1");
         save();
       }
       renderHome();
@@ -1912,6 +1973,8 @@ function createPlay(name, kind, court) {
     name,
     kind: kind === "defense" ? "defense" : "offense",
     court: court === "full" ? "full" : "half",
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
     steps: [defaultStep(kind)],
   };
   if (play.kind === "defense") play.defense = true;
@@ -2206,7 +2269,10 @@ function pushUndo() {
   updateUndoButtons();
   // an edited imported play becomes the user's own
   const p = currentPlay();
-  if (p && !viewPlay && p.imported) delete p.imported;
+  if (p && !viewPlay) {
+    if (p.imported) delete p.imported;
+    p.updatedAt = Date.now();
+  }
 }
 
 function beginAction() {
@@ -2219,7 +2285,10 @@ function endAction() {
     if (undoStack.length > HISTORY_LIMIT) undoStack.shift();
     redoStack.length = 0;
     const p = currentPlay();
-    if (p && !viewPlay && p.imported) delete p.imported;
+    if (p && !viewPlay) {
+      if (p.imported) delete p.imported;
+      p.updatedAt = Date.now();
+    }
   }
   pendingSnapshot = null;
   updateUndoButtons();
@@ -3840,6 +3909,13 @@ $("playSearch").addEventListener("input", (e) => {
   renderHome();
 });
 
+$("sortSelect").addEventListener("change", (e) => {
+  playSort = e.target.value;
+  localStorage.setItem("playbook-sort", playSort);
+  playPage = 0;
+  renderHome();
+});
+
 $("kindFilter").addEventListener("click", (e) => {
   const b = e.target.closest(".seg-btn");
   if (!b) return;
@@ -4141,7 +4217,10 @@ $("saveSelectedBtn").addEventListener("click", () => {
   if (selectedPlayIds.size) openExportModalFor([...selectedPlayIds]);
 });
 
-$("backBtn").addEventListener("click", showHome);
+$("backBtn").addEventListener("click", () => {
+  if (history.state && history.state.view === "play") history.back();
+  else showHome();
+});
 
 /* ---- inline rename ---- */
 
@@ -4489,7 +4568,7 @@ async function addSharedPlay(p) {
 async function importFromLink() {
   const m = location.hash.match(/^#(p|v)=(.+)$/);
   if (!m) return;
-  history.replaceState(null, "", location.pathname + location.search);
+  markHomeUrl();
   try {
     const raw = await decodeSharePlay(m[2]);
     if (!raw || !raw.name || !Array.isArray(raw.steps) || !raw.steps.length) throw new Error("bad");
@@ -4680,6 +4759,12 @@ applyLang();
 applyToolbarFold();
 showHome();
 const arrivedViaShareLink = /^#(p|v)=/.test(location.hash);
+if (!arrivedViaShareLink) {
+  const deepLink = location.hash.match(/^#play=(.+)$/);
+  const deepId = deepLink && decodeURIComponent(deepLink[1]);
+  markHomeUrl();
+  if (deepId && plays.some((p) => p.id === deepId)) openPlay(deepId);
+}
 importFromLink();
 if (!arrivedViaShareLink && !localStorage.getItem(WIZ_FLAG)) startTour();
 

@@ -37,6 +37,30 @@ body {
   padding: 0 24px;
 }
 
+/* On the home view the DOCUMENT is the scroller: a long play list
+   inside a composited overflow div corrupts raster tiles on some
+   Android GPUs (garbage pixels over the cards), while the root
+   scroller is safe. The editor keeps the fixed full-height layout. */
+body.home-view {
+  overflow: visible;
+  height: auto;
+  min-height: 100%;
+}
+
+body.home-view .home {
+  flex: none;
+  overflow: visible;
+  min-height: 100vh;
+}
+
+.sort-select {
+  width: 100%;
+  max-width: 500px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
 /* margin:auto centres the content when it fits and lets the page
    scroll naturally when it doesn't */
 .home-inner {
@@ -219,29 +243,29 @@ body {
   text-align: center;
   border-radius: 999px;
   color: #8fb4e8;
-  background: rgba(95, 145, 220, 0.14);
-  border: 1px solid rgba(95, 145, 220, 0.4);
+  background: #242b39;
+  border: 1px solid #364a6a;
   white-space: nowrap;
 }
 
 .play-card.kind-offense {
-  border-color: rgba(72, 180, 120, 0.45);
-  background: linear-gradient(0deg, rgba(46, 164, 79, 0.07), rgba(46, 164, 79, 0.07)), var(--panel);
+  border-color: #2f5f46;
+  background: #1b2421;
 }
 
 .play-card.kind-offense:hover {
   border-color: #48b478;
-  background: linear-gradient(0deg, rgba(46, 164, 79, 0.12), rgba(46, 164, 79, 0.12)), var(--panel-2);
+  background: #27352f;
 }
 
 .play-card.kind-defense {
-  border-color: rgba(217, 60, 52, 0.45);
-  background: linear-gradient(0deg, rgba(217, 60, 52, 0.07), rgba(217, 60, 52, 0.07)), var(--panel);
+  border-color: #702928;
+  background: #271c20;
 }
 
 .play-card.kind-defense:hover {
   border-color: var(--accent-2);
-  background: linear-gradient(0deg, rgba(217, 60, 52, 0.12), rgba(217, 60, 52, 0.12)), var(--panel-2);
+  background: #3b292c;
 }
 
 .play-card {
@@ -327,14 +351,6 @@ body {
 }
 
 .card-lock svg { width: 13px; height: 13px; }
-
-.card-thumb {
-  flex: none;
-  height: 50px;
-  width: auto;
-  border-radius: 6px;
-  background: #2a2a2f;
-}
 
 .play-card .card-dup { margin-left: auto; }
 .play-card .card-del { margin-left: 0; }
@@ -1799,7 +1815,6 @@ body[data-tool="eraser"] .def-ghost-hit { cursor: pointer; }
 
   /* play cards: tighter row so the action icons never overflow */
   .play-card { gap: 6px; padding: 10px 4px 10px 10px; }
-  .card-thumb { height: 40px; }
   .card-grip { padding: 6px 1px; }
   .card-dup, .card-share, .card-del, .bulk-btn { padding: 5px; }
   .play-card .card-name { min-width: 46px; font-size: 15px; }
@@ -1815,10 +1830,6 @@ body[data-tool="eraser"] .def-ghost-hit { cursor: pointer; }
   .timeline-wrap, .step-indicator, .speed-select { display: none; }
   .pbtn { font-size: 18px; padding: 6px 8px; }
   .pbtn-main { width: 46px; height: 46px; font-size: 20px; }
-}
-
-@media (max-width: 500px) {
-  .card-thumb { display: none; }
 }
 
 @media (max-width: 410px) {

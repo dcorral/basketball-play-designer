@@ -32,7 +32,7 @@ Creating an offensive play — players, screens, cuts and passes — then a defe
 - **Backup** — export all plays as a `.zip` and import them on another device (imported plays get a badge, never overwrite anything).
 - **Defenders in offensive plays** — an optional shield toggle adds five X markers that reposition on any step and move silently in playback (no arrow clutter), with a draggable ghost X marking their destination.
 - **Lockable plays** — a padlock button in the editor freezes a play against accidental edits; unlocking asks for confirmation. Locked plays still play back, export and share.
-- **Organized home screen** — search, an offense/defense filter, pagination, drag-to-reorder, per-play thumbnails and letter tags (A/D/I), and multi-select with per-page select-all plus bulk actions: export each selected play as GIF/video/PDF, download them as a `.zip`, lock/unlock them, or delete them.
+- **Organized home screen** — search, an offense/defense filter, pagination, drag-to-reorder, letter tags (A/D/I), and multi-select with per-page select-all plus bulk actions: export each selected play as GIF/video/PDF, download them as a `.zip`, lock/unlock them, or delete them.
 - **8 languages** — English, Spanish, Italian, Russian, Chinese, Serbian, Slovenian and Greek, via the flag selector.
 - **Works offline** — a service worker caches the whole app (exports included); installable on a phone as a standalone app.
 - **Interactive tour** — a skippable guided walkthrough on first visit, restartable any time from the **?** help menu.

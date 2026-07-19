@@ -4785,6 +4785,7 @@ function tourPlace() {
     return;
   }
   const r = el.getBoundingClientRect();
+  tourAnchor = { top: r.top, left: r.left, width: r.width, height: r.height };
   const pad = 8;
   const hx = Math.max(r.left - pad, 0);
   const hy = Math.max(r.top - pad, 0);
@@ -4832,6 +4833,32 @@ function startTour() {
   tourPlace();
   // the first stop advances from inside the create flow, once the play
   // really exists (the creation modal sits in between)
+  if (!tourTracking) {
+    tourTracking = true;
+    requestAnimationFrame(trackTour);
+  }
+}
+
+// The layout keeps moving right after load on phones (URL bar settling,
+// images arriving) — glue the spotlight to its target every frame.
+let tourAnchor = null;
+let tourTracking = false;
+
+function trackTour() {
+  if ($("tour").hidden) {
+    tourTracking = false;
+    return;
+  }
+  const def = tourDefs[tourIdx];
+  const el = def && document.querySelector(def.sel);
+  if (el && tourAnchor) {
+    const r = el.getBoundingClientRect();
+    if (Math.abs(r.top - tourAnchor.top) > 1 || Math.abs(r.left - tourAnchor.left) > 1 ||
+        Math.abs(r.width - tourAnchor.width) > 1 || Math.abs(r.height - tourAnchor.height) > 1) {
+      tourPlace();
+    }
+  }
+  requestAnimationFrame(trackTour);
 }
 
 function endTour() {
@@ -4839,6 +4866,7 @@ function endTour() {
   localStorage.setItem(WIZ_FLAG, "1");
   maybeShowInstallHint();
 }
+
 
 function nextTour() {
   tourIdx += 1;

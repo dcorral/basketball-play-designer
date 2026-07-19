@@ -1635,6 +1635,7 @@ function showHome(fromHistory) {
 function openPlay(id, fromHistory) {
   setFsMode(false);
   previewOwnId = null;
+  $("installHint").hidden = true;
   currentPlayId = id;
   viewPlay = null;
   document.body.classList.remove("view-only", "home-view");
@@ -1670,16 +1671,18 @@ function setFsMode(on) {
   if (fsMode === on) return;
   fsMode = on;
   document.body.classList.toggle("fs-mode", on);
-  const bar = document.querySelector(".player-bar");
   if (on) {
-    bar.insertBefore($("addStepBtn"), $("prevBtn"));
-    bar.appendChild($("defenseBtn"));
+    // ＋ and the defense toggle join the step chips up top
+    const row = document.querySelector(".steps-row");
+    row.appendChild($("addStepBtn"));
+    row.appendChild($("defenseBtn"));
   } else {
     const sa = document.querySelector(".step-actions");
     sa.insertBefore($("addStepBtn"), sa.firstChild);
     sa.insertBefore($("defenseBtn"), $("resetAllBtn"));
   }
   resetZoom();
+  placeZoomCtrl();
 }
 
 let previewOwnId = null;
@@ -1708,6 +1711,7 @@ $("fsBtn").addEventListener("click", () => {
 
 // Read-only viewer for a shared play: court, name and playback only.
 function openViewer(play) {
+  $("installHint").hidden = true;
   viewPlay = play;
   applyCourtMode(play);
   document.body.classList.remove("play-locked", "home-view");
@@ -1723,6 +1727,7 @@ function openViewer(play) {
   renderAll();
   resetZoom();
   setFsMode(true);
+  placeZoomCtrl();
 }
 
 let cardDragJustEnded = false;
@@ -2526,7 +2531,7 @@ function renderStepChips() {
   stepChipsEl.innerHTML = "";
   steps.forEach((_, i) => {
     const chip = document.createElement("div");
-    chip.className = "step-chip" + (i === currentStep && !playing ? " active" : "");
+    chip.className = "step-chip" + (i === currentStep ? " active" : "");
     const word = document.createElement("span");
     word.className = "chip-word";
     word.textContent = t("step") + " ";
@@ -2561,8 +2566,12 @@ function renderStepChips() {
   });
 
   updateAddStepState();
+  lastActiveChip = currentStep;
+  scrollActiveChipIntoView();
+}
 
-  // keep the active chip visible in the carousel
+// keep the active chip visible in the carousel
+function scrollActiveChipIntoView() {
   const active = stepChipsEl.querySelector(".step-chip.active");
   if (active) {
     const margin = 24;
@@ -2573,6 +2582,20 @@ function renderStepChips() {
     }
   }
   updateChipsFade();
+}
+
+// During playback the highlighted chip follows the playhead; paused, it
+// marks the step being edited.
+let lastActiveChip = -1;
+
+function updateActiveChip() {
+  const play = currentPlay();
+  if (!play || !stepChipsEl.children.length) return;
+  const idx = Math.min(playing ? Math.floor(playhead) : currentStep, play.steps.length - 1);
+  if (idx === lastActiveChip) return;
+  lastActiveChip = idx;
+  [...stepChipsEl.children].forEach((c, i) => c.classList.toggle("active", i === idx));
+  scrollActiveChipIntoView();
 }
 
 // left-edge fade: scrolled-away chips fade in from the left
@@ -3194,6 +3217,7 @@ function renderScrubber() {
     play.steps.length
   );
   stepIndicator.textContent = `${t("step")} ${shownStep} / ${play.steps.length}`;
+  updateActiveChip();
 
   timelineTicks.innerHTML = "";
   if (segs > 0) {
@@ -3307,6 +3331,35 @@ document.addEventListener("pointerdown", (e) => {
 const ZOOM_MAX = 4;
 let zoom = 1, panX = 0, panY = 0;
 const zoomLabelEl = $("zoomLabel");
+
+// The zoom pill sits inside the court's bottom-right corner. The court
+// centres itself in the stage wrap, so CSS can't anchor to it — track
+// its layout box (transforms from zooming don't move it).
+function placeZoomCtrl() {
+  const zc = document.querySelector(".zoom-ctrl");
+  if (!zc || !stageEl.offsetWidth) return;
+  zc.style.left = (stageEl.offsetLeft + stageEl.offsetWidth - zc.offsetWidth - 10) + "px";
+  zc.style.top = (stageEl.offsetTop + stageEl.offsetHeight - zc.offsetHeight - 10) + "px";
+  zc.style.right = "auto";
+  zc.style.bottom = "auto";
+  // fullscreen: the floating step chips hug the court's top edge
+  const row = document.querySelector(".steps-row");
+  if (document.body.classList.contains("fs-mode")) {
+    const wrapTop = stageEl.parentElement.getBoundingClientRect().top;
+    const min = document.body.classList.contains("view-only") ? 60 : 8;
+    row.style.top = Math.max(wrapTop + stageEl.offsetTop - row.offsetHeight - 8, min) + "px";
+  } else {
+    row.style.top = "";
+  }
+}
+
+const stageObserver = new ResizeObserver(placeZoomCtrl);
+stageObserver.observe(stageEl);
+// the pill itself changes width when buttons hide (viewer mode) and the
+// chips row changes height with the step count — track both
+stageObserver.observe(document.querySelector(".zoom-ctrl"));
+stageObserver.observe(document.querySelector(".steps-row"));
+window.addEventListener("resize", placeZoomCtrl);
 
 function applyZoomTransform() {
   const maxX = ((zoom - 1) * stageEl.offsetWidth) / 2;
@@ -3798,7 +3851,7 @@ function startPlayback() {
   playing = true;
   lastFrameTime = null;
   document.body.classList.add("playing");
-  playBtn.textContent = "❚❚";
+  playBtn.classList.add("playing");
   renderStepChips();
   renderArrows();
   renderHandles();
@@ -3809,7 +3862,7 @@ function stopPlayback() {
   if (!playing) return;
   playing = false;
   document.body.classList.remove("playing");
-  playBtn.textContent = "▶";
+  playBtn.classList.remove("playing");
   currentStep = Math.min(Math.round(playhead), currentPlay().steps.length - 1);
   playhead = Math.min(playhead, segmentCount(currentPlay()));
   renderAll();
@@ -3835,7 +3888,7 @@ function tick(now) {
   if (playhead >= maxT) {
     playing = false;
     document.body.classList.remove("playing");
-    playBtn.textContent = "▶";
+    playBtn.classList.remove("playing");
     currentStep = currentPlay().steps.length - 1;
     renderAll();
     return;
@@ -4417,7 +4470,7 @@ scrubber.addEventListener("input", () => {
   if (playing) {
     playing = false;
     document.body.classList.remove("playing");
-    playBtn.textContent = "▶";
+    playBtn.classList.remove("playing");
   }
   playhead = parseInt(scrubber.value, 10) / 1000;
   currentStep = Math.min(Math.round(playhead), currentPlay().steps.length - 1);
@@ -4880,7 +4933,6 @@ function maybeShowInstallHint() {
   if (!$("tour").hidden) return; // let the tour finish first
   const ios = isIOSBrowser();
   if (!ios && !deferredInstall) return;
-  localStorage.setItem("playbook-install-hinted", "1");
   $("installHintMsg").textContent = t(ios ? "installHintIOS" : "installHintAndroid");
   $("installHintGo").hidden = ios;
   $("installHintGo").textContent = t("installGo");
@@ -4889,6 +4941,7 @@ function maybeShowInstallHint() {
 
 async function promptInstall() {
   if (!deferredInstall) return;
+  localStorage.setItem("playbook-install-hinted", "1");
   const ev = deferredInstall;
   deferredInstall = null;
   $("installBtn").hidden = true;
@@ -4905,6 +4958,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
 });
 
 window.addEventListener("appinstalled", () => {
+  localStorage.setItem("playbook-install-hinted", "1");
   deferredInstall = null;
   $("installBtn").hidden = true;
   $("installHint").hidden = true;
@@ -4912,7 +4966,10 @@ window.addEventListener("appinstalled", () => {
 
 $("installBtn").addEventListener("click", promptInstall);
 $("installHintGo").addEventListener("click", promptInstall);
-$("installHintClose").addEventListener("click", () => { $("installHint").hidden = true; });
+$("installHintClose").addEventListener("click", () => {
+  localStorage.setItem("playbook-install-hinted", "1");
+  $("installHint").hidden = true;
+});
 
 load();
 applyLang();

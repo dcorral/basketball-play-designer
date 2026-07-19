@@ -710,9 +710,23 @@ body.home-view .home {
 }
 
 #helpEditor {
-  position: absolute;
-  top: 9px;
-  right: 62px;
+  flex: none;
+  margin-left: auto;
+}
+
+/* the editor topbar's ? and language match the icon buttons' size */
+.topbar .help-btn {
+  width: auto;
+  height: auto;
+  padding: 7px 12px;
+}
+
+.topbar .help-btn svg { width: 15px; height: 15px; }
+
+.topbar .lang-select {
+  width: 41px;
+  height: 31px;
+  font-size: 13px;
 }
 
 /* spotlight tour — the container passes clicks through; only the shades
@@ -901,6 +915,7 @@ body.view-only #shareBtn { display: none !important; }
 
 body.view-only #viewEditBtn { display: inline-flex; }
 body.view-only #lockBtn { display: none; }
+body.view-only #langEditor { display: none !important; }
 
 #lockBtn.locked {
   background: var(--accent);
@@ -963,17 +978,12 @@ body.view-only .play-name { cursor: default; pointer-events: none; }
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 10px 124px 10px 16px; /* corner space for help + language */
+  padding: 10px 16px;
   background: var(--panel);
   flex-wrap: wrap;
 }
 
-/* pinned to the screen's top-right corner, level with the title row */
-#langEditor {
-  position: absolute;
-  top: 9px;
-  right: 14px;
-}
+#langEditor { flex: none; }
 
 .name-wrap {
   display: flex;
@@ -1227,7 +1237,8 @@ body.fs-mode .topbar,
 body.fs-mode .step-actions,
 body.fs-mode .maybe-controls { display: none !important; }
 
-/* the step chips float top center */
+/* the step chips float top center, bare — each chip is its own pill;
+   the ＋ next-step button docks right after the last chip */
 body.fs-mode .steps-row {
   position: fixed;
   top: 8px;
@@ -1236,13 +1247,17 @@ body.fs-mode .steps-row {
   z-index: 54;
   width: max-content;
   max-width: calc(100vw - 16px);
-  background: var(--panel);
-  border: 1px solid #3c3c42;
-  border-bottom: 1px solid #3c3c42;
-  border-radius: 999px;
-  padding: 5px 10px;
-  box-shadow: 0 12px 34px #000b;
+  background: none;
+  border: none;
+  padding: 0;
+  align-items: center;
+  gap: 6px;
 }
+
+body.fs-mode .steps-row .step-add,
+body.fs-mode .steps-row .step-defense { padding: 0; width: 44px; height: 30px; }
+
+body.fs-mode .steps-row .step-defense svg { width: 16px; height: 16px; }
 
 /* in the viewer the name pill owns the top — chips slide below it */
 body.view-only.fs-mode .steps-row { top: 60px; }
@@ -1265,9 +1280,6 @@ body.fs-mode .player-bar {
   box-shadow: 0 12px 34px #000b;
 }
 
-/* keep the corner controls clear of the floating pill */
-body.fs-mode .zoom-ctrl { bottom: 70px; }
-
 body.fs-mode .timeline-wrap,
 body.fs-mode .step-indicator,
 body.fs-mode .speed-select { display: none !important; }
@@ -1278,7 +1290,11 @@ body.fs-mode .player-bar .step-chip { padding: 7px 14px; margin: 0; flex: none; 
 
 /* no editing controls in the bar when the play cannot be edited */
 body.view-only .player-bar .step-chip,
-body.play-locked .player-bar .step-chip { display: none !important; }
+body.play-locked .player-bar .step-chip,
+body.view-only .steps-row .step-add,
+body.view-only .steps-row .step-defense,
+body.play-locked .steps-row .step-add,
+body.play-locked .steps-row .step-defense { display: none !important; }
 
 /* the shared-play viewer always runs fullscreen: only a floating pill
    with the logo, name, Edit and language survives of the topbar */
@@ -1435,6 +1451,11 @@ body.view-only.fs-mode #viewEditBtn {
   justify-content: center;
 }
 .pbtn-main:hover { background: #ee3b34; }
+
+.pbtn-main svg { width: 24px; height: 24px; display: block; flex: none; }
+.pbtn-main .ic-pause { display: none; }
+#playBtn.playing .ic-play { display: none; }
+#playBtn.playing .ic-pause { display: block; }
 
 .timeline-wrap {
   flex: 1;
@@ -2011,11 +2032,11 @@ body[data-tool="eraser"] .def-ghost-hit { cursor: pointer; }
 
 /* ---------- Phones ---------- */
 @media (max-width: 640px) {
-  .topbar { padding: 6px 104px 6px 8px; gap: 6px; }
-  #helpEditor { right: 58px; top: 6px; }
+  .topbar { padding: 6px 8px; gap: 6px; }
+  .topbar .help-btn { padding: 5px 8px; }
+  .topbar .lang-select { width: 33px; height: 27px; }
   #helpHome { right: 60px; }
   #installBtn { right: 108px; }
-  #langEditor { top: 6px; right: 8px; }
   .topbar .btn { padding: 5px 8px; font-size: 12px; border-radius: 7px; }
   .play-name { font-size: 15px; padding: 3px 4px; max-width: 40vw; }
   .lang-select { padding: 4px 6px; font-size: 12px; }

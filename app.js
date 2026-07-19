@@ -194,7 +194,7 @@ const I18N = {
     ttZone: "Zone — drag from a defender to mark their area of action (3)",
     ttDefense: "Show / hide defenders",
     ttEraser: "Eraser — click an arrow or a player to remove its arrow (6)",
-    ttBack: "Back to all plays", ttFullscreen: "Full screen", ttRename: "Rename current play",
+    ttBack: "Back to all plays", ttFullscreen: "Full screen", ttPreview: "Preview as a viewer", ttRename: "Rename current play",
     ttExport: "Export as GIF, video or PDF", ttDelete: "Delete current play",
     ttDeleteStep: "Delete current step", ttResetAll: "Clear all steps",
     ttPrev: "Previous step", ttNext: "Next step", ttPlay: "Play / Pause",
@@ -344,7 +344,7 @@ const I18N = {
     ttZone: "Zona — arrastra desde un defensor para marcar su área de acción (3)",
     ttDefense: "Mostrar / ocultar defensores",
     ttEraser: "Borrador — pulsa una flecha o un jugador para quitar su flecha (6)",
-    ttBack: "Volver a todas las jugadas", ttFullscreen: "Pantalla completa", ttRename: "Renombrar la jugada",
+    ttBack: "Volver a todas las jugadas", ttFullscreen: "Pantalla completa", ttPreview: "Ver como espectador", ttRename: "Renombrar la jugada",
     ttExport: "Exportar como GIF, vídeo o PDF", ttDelete: "Eliminar la jugada",
     ttDeleteStep: "Eliminar el paso actual", ttResetAll: "Borrar todos los pasos",
     ttPrev: "Paso anterior", ttNext: "Paso siguiente", ttPlay: "Reproducir / Pausa",
@@ -494,7 +494,7 @@ const I18N = {
     ttZone: "Zona — trascina da un difensore per segnare la sua area di azione (3)",
     ttDefense: "Mostra / nascondi difensori",
     ttEraser: "Gomma — clicca una freccia o un giocatore (6)",
-    ttBack: "Torna alle giocate", ttFullscreen: "Schermo intero", ttRename: "Rinomina la giocata",
+    ttBack: "Torna alle giocate", ttFullscreen: "Schermo intero", ttPreview: "Anteprima come spettatore", ttRename: "Rinomina la giocata",
     ttExport: "Esporta come GIF, video o PDF", ttDelete: "Elimina la giocata",
     ttDeleteStep: "Elimina il passo", ttResetAll: "Cancella tutti i passi",
     ttPrev: "Passo precedente", ttNext: "Passo successivo", ttPlay: "Riproduci / Pausa",
@@ -643,7 +643,7 @@ const I18N = {
     ttZone: "Зона — тяните от защитника, чтобы обозначить его зону действий (3)",
     ttDefense: "Показать / скрыть защитников",
     ttEraser: "Ластик — нажмите на стрелку или игрока (6)",
-    ttBack: "Ко всем комбинациям", ttFullscreen: "Во весь экран", ttRename: "Переименовать комбинацию",
+    ttBack: "Ко всем комбинациям", ttFullscreen: "Во весь экран", ttPreview: "Как увидят другие", ttRename: "Переименовать комбинацию",
     ttExport: "Экспорт в GIF, видео или PDF", ttDelete: "Удалить комбинацию",
     ttDeleteStep: "Удалить шаг", ttResetAll: "Очистить все шаги",
     ttPrev: "Предыдущий шаг", ttNext: "Следующий шаг", ttPlay: "Пуск / Пауза",
@@ -792,7 +792,7 @@ const I18N = {
     ttZone: "区域 — 从防守球员拖出以标记其负责区域（3）",
     ttDefense: "显示 / 隐藏防守球员",
     ttEraser: "橡皮擦 — 点击箭头或球员（6）",
-    ttBack: "返回全部战术", ttFullscreen: "全屏", ttRename: "重命名战术",
+    ttBack: "返回全部战术", ttFullscreen: "全屏", ttPreview: "以观看模式预览", ttRename: "重命名战术",
     ttExport: "导出为 GIF、视频或 PDF", ttDelete: "删除战术",
     ttDeleteStep: "删除此步", ttResetAll: "清除所有步骤",
     ttPrev: "上一步", ttNext: "下一步", ttPlay: "播放 / 暂停",
@@ -941,7 +941,7 @@ const I18N = {
     ttZone: "Zona — prevuci od odbrambenog igrača da označiš njegovu zonu (3)",
     ttDefense: "Prikaži / sakrij odbranu",
     ttEraser: "Gumica — klikni strelicu ili igrača (6)",
-    ttBack: "Nazad na akcije", ttFullscreen: "Ceo ekran", ttRename: "Preimenuj akciju",
+    ttBack: "Nazad na akcije", ttFullscreen: "Ceo ekran", ttPreview: "Prikaz kao gledalac", ttRename: "Preimenuj akciju",
     ttExport: "Izvezi kao GIF, video ili PDF", ttDelete: "Obriši akciju",
     ttDeleteStep: "Obriši korak", ttResetAll: "Obriši sve korake",
     ttPrev: "Prethodni korak", ttNext: "Sledeći korak", ttPlay: "Pusti / Pauza",
@@ -1090,7 +1090,7 @@ const I18N = {
     ttZone: "Cona — povleci od obrambnega igralca za njegovo območje delovanja (3)",
     ttDefense: "Prikaži / skrij obrambo",
     ttEraser: "Radirka — klikni puščico ali igralca (6)",
-    ttBack: "Nazaj na akcije", ttFullscreen: "Celozaslonski način", ttRename: "Preimenuj akcijo",
+    ttBack: "Nazaj na akcije", ttFullscreen: "Celozaslonski način", ttPreview: "Predogled kot gledalec", ttRename: "Preimenuj akcijo",
     ttExport: "Izvozi kot GIF, video ali PDF", ttDelete: "Izbriši akcijo",
     ttDeleteStep: "Izbriši korak", ttResetAll: "Počisti vse korake",
     ttPrev: "Prejšnji korak", ttNext: "Naslednji korak", ttPlay: "Predvajaj / Premor",
@@ -1239,7 +1239,7 @@ const I18N = {
     ttZone: "Ζώνη — σύρε από έναν αμυντικό για την περιοχή ευθύνης του (3)",
     ttDefense: "Εμφάνιση / απόκρυψη αμυντικών",
     ttEraser: "Γόμα — κλικ σε βέλος ή παίκτη (6)",
-    ttBack: "Πίσω στα συστήματα", ttFullscreen: "Πλήρης οθόνη", ttRename: "Μετονομασία συστήματος",
+    ttBack: "Πίσω στα συστήματα", ttFullscreen: "Πλήρης οθόνη", ttPreview: "Προβολή ως θεατής", ttRename: "Μετονομασία συστήματος",
     ttExport: "Εξαγωγή ως GIF, βίντεο ή PDF", ttDelete: "Διαγραφή συστήματος",
     ttDeleteStep: "Διαγραφή βήματος", ttResetAll: "Καθαρισμός όλων των βημάτων",
     ttPrev: "Προηγούμενο βήμα", ttNext: "Επόμενο βήμα", ttPlay: "Αναπαραγωγή / Παύση",
@@ -1365,7 +1365,7 @@ function applyLang() {
 
   const titles = {
     backBtn: "ttBack", exportBtn: "ttExport",
-    fsBtn: "ttFullscreen",
+    fsBtn: "ttFullscreen", previewBtn: "ttPreview",
     shareBtn: "ttShare",
     deletePlayBtn: "ttDelete",
     prevBtn: "ttPrev", nextBtn: "ttNext",
@@ -1618,6 +1618,7 @@ window.addEventListener("popstate", (e) => {
 
 function showHome(fromHistory) {
   setFsMode(false);
+  previewOwnId = null;
   playing = false;
   viewPlay = null;
   document.body.classList.remove("playing", "view-only", "play-locked");
@@ -1631,6 +1632,8 @@ function showHome(fromHistory) {
 }
 
 function openPlay(id, fromHistory) {
+  setFsMode(false);
+  previewOwnId = null;
   currentPlayId = id;
   viewPlay = null;
   document.body.classList.remove("view-only", "home-view");
@@ -1678,6 +1681,19 @@ function setFsMode(on) {
   resetZoom();
 }
 
+let previewOwnId = null;
+
+$("previewBtn").addEventListener("click", () => {
+  if (viewPlay) return;
+  const p = currentPlay();
+  if (!p) return;
+  previewOwnId = p.id;
+  const copy = JSON.parse(JSON.stringify(p));
+  delete copy.locked; // recipients get an unlocked copy — mirror that
+  openViewer(copy);
+  history.pushState({ view: "play", id: p.id, preview: true }, "", location.hash || undefined);
+});
+
 $("fsBtn").addEventListener("click", () => {
   if (!fsMode) {
     setFsMode(true);
@@ -1705,6 +1721,7 @@ function openViewer(play) {
   setTool("select");
   renderAll();
   resetZoom();
+  setFsMode(true);
 }
 
 let cardDragJustEnded = false;
@@ -4666,6 +4683,11 @@ async function importFromLink() {
 // The viewer's Edit button hands the play over to the normal add flow.
 $("viewEditBtn").addEventListener("click", async () => {
   if (!viewPlay) return;
+  if (previewOwnId) {
+    if (history.state && history.state.preview) history.back();
+    else openPlay(previewOwnId);
+    return;
+  }
   const p = viewPlay;
   const added = await addSharedPlay(p);
   if (!added) return; // cancelled — stay in the viewer

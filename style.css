@@ -856,6 +856,7 @@ body.view-only #handles,
 body.view-only #exportBtn,
 body.view-only #maybeControls,
 body.view-only #fsBtn,
+body.view-only #previewBtn,
 body.view-only #shareBtn { display: none !important; }
 
 body.view-only #viewEditBtn { display: inline-flex; }
@@ -1219,6 +1220,52 @@ body.fs-mode .player-bar .step-chip { padding: 7px 14px; margin: 0; flex: none; 
 /* no editing controls in the bar when the play cannot be edited */
 body.view-only .player-bar .step-chip,
 body.play-locked .player-bar .step-chip { display: none !important; }
+
+/* the shared-play viewer always runs fullscreen: only a floating pill
+   with the logo, name, Edit and language survives of the topbar */
+body.view-only.fs-mode .topbar {
+  display: flex !important;
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: calc(100vw - 16px);
+  background: var(--panel);
+  border: 1px solid #3c3c42;
+  border-radius: 999px;
+  padding: 5px 12px;
+  gap: 8px;
+  z-index: 55;
+  box-shadow: 0 12px 34px #000b;
+}
+
+body.view-only.fs-mode .topbar #langEditor { position: static; flex: none; width: 34px; height: 30px; }
+body.view-only.fs-mode .topbar #helpEditor { display: none; }
+body.view-only.fs-mode .name-wrap { flex: none; min-width: 0; }
+
+/* one compact row, always: cap the name and shrink the pieces instead
+   of wrapping into a tall blob on phones */
+body.view-only.fs-mode .topbar {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+body.view-only.fs-mode .topbar-logo img { height: 24px; }
+
+body.view-only.fs-mode .play-name {
+  font-size: 15px;
+  padding: 3px 4px;
+  max-width: calc(100vw - 220px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.view-only.fs-mode #viewEditBtn {
+  flex: none;
+  padding: 6px 10px;
+  font-size: 13px;
+}
 
 #zoomLabel { font-size: 12px; color: var(--muted); min-width: 46px; }
 

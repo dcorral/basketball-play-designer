@@ -1225,8 +1225,27 @@ body.fs-mode .ic-fs-off { display: block !important; }
 /* ---------- Fullscreen edition mode ---------- */
 body.fs-mode .topbar,
 body.fs-mode .step-actions,
-body.fs-mode .steps-row,
 body.fs-mode .maybe-controls { display: none !important; }
+
+/* the step chips float top center */
+body.fs-mode .steps-row {
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 54;
+  width: max-content;
+  max-width: calc(100vw - 16px);
+  background: var(--panel);
+  border: 1px solid #3c3c42;
+  border-bottom: 1px solid #3c3c42;
+  border-radius: 999px;
+  padding: 5px 10px;
+  box-shadow: 0 12px 34px #000b;
+}
+
+/* in the viewer the name pill owns the top — chips slide below it */
+body.view-only.fs-mode .steps-row { top: 60px; }
 
 body.fs-mode .stage-wrap { padding: 0; }
 

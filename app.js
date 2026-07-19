@@ -194,7 +194,7 @@ const I18N = {
     ttZone: "Zone — drag from a defender to mark their area of action (3)",
     ttDefense: "Show / hide defenders",
     ttEraser: "Eraser — click an arrow or a player to remove its arrow (6)",
-    ttBack: "Back to all plays", ttFullscreen: "Full screen", ttPreview: "Preview as a viewer", ttRename: "Rename current play",
+    ttBack: "Back to all plays", ttFullscreen: "Full screen", ttPreview: "Preview as a viewer", installHintAndroid: "Get the playbook as an app on your home screen.", installHintIOS: "To install: tap Share and then \u201cAdd to Home Screen\u201d.", installGo: "Install", ttInstall: "Install app", ttRename: "Rename current play",
     ttExport: "Export as GIF, video or PDF", ttDelete: "Delete current play",
     ttDeleteStep: "Delete current step", ttResetAll: "Clear all steps",
     ttPrev: "Previous step", ttNext: "Next step", ttPlay: "Play / Pause",
@@ -344,7 +344,7 @@ const I18N = {
     ttZone: "Zona — arrastra desde un defensor para marcar su área de acción (3)",
     ttDefense: "Mostrar / ocultar defensores",
     ttEraser: "Borrador — pulsa una flecha o un jugador para quitar su flecha (6)",
-    ttBack: "Volver a todas las jugadas", ttFullscreen: "Pantalla completa", ttPreview: "Ver como espectador", ttRename: "Renombrar la jugada",
+    ttBack: "Volver a todas las jugadas", ttFullscreen: "Pantalla completa", ttPreview: "Ver como espectador", installHintAndroid: "Lleva el playbook como app en tu pantalla de inicio.", installHintIOS: "Para instalarla: toca Compartir y luego \u201cA\u00f1adir a pantalla de inicio\u201d.", installGo: "Instalar", ttInstall: "Instalar app", ttRename: "Renombrar la jugada",
     ttExport: "Exportar como GIF, vídeo o PDF", ttDelete: "Eliminar la jugada",
     ttDeleteStep: "Eliminar el paso actual", ttResetAll: "Borrar todos los pasos",
     ttPrev: "Paso anterior", ttNext: "Paso siguiente", ttPlay: "Reproducir / Pausa",
@@ -494,7 +494,7 @@ const I18N = {
     ttZone: "Zona — trascina da un difensore per segnare la sua area di azione (3)",
     ttDefense: "Mostra / nascondi difensori",
     ttEraser: "Gomma — clicca una freccia o un giocatore (6)",
-    ttBack: "Torna alle giocate", ttFullscreen: "Schermo intero", ttPreview: "Anteprima come spettatore", ttRename: "Rinomina la giocata",
+    ttBack: "Torna alle giocate", ttFullscreen: "Schermo intero", ttPreview: "Anteprima come spettatore", installHintAndroid: "Porta il playbook come app nella schermata iniziale.", installHintIOS: "Per installare: tocca Condividi e poi \u201cAggiungi a schermata Home\u201d.", installGo: "Installa", ttInstall: "Installa app", ttRename: "Rinomina la giocata",
     ttExport: "Esporta come GIF, video o PDF", ttDelete: "Elimina la giocata",
     ttDeleteStep: "Elimina il passo", ttResetAll: "Cancella tutti i passi",
     ttPrev: "Passo precedente", ttNext: "Passo successivo", ttPlay: "Riproduci / Pausa",
@@ -643,7 +643,7 @@ const I18N = {
     ttZone: "Зона — тяните от защитника, чтобы обозначить его зону действий (3)",
     ttDefense: "Показать / скрыть защитников",
     ttEraser: "Ластик — нажмите на стрелку или игрока (6)",
-    ttBack: "Ко всем комбинациям", ttFullscreen: "Во весь экран", ttPreview: "Как увидят другие", ttRename: "Переименовать комбинацию",
+    ttBack: "Ко всем комбинациям", ttFullscreen: "Во весь экран", ttPreview: "Как увидят другие", installHintAndroid: "Установите плейбук как приложение на главный экран.", installHintIOS: "Чтобы установить: нажмите «Поделиться», затем «На экран \u201eДомой\u201c».", installGo: "Установить", ttInstall: "Установить приложение", ttRename: "Переименовать комбинацию",
     ttExport: "Экспорт в GIF, видео или PDF", ttDelete: "Удалить комбинацию",
     ttDeleteStep: "Удалить шаг", ttResetAll: "Очистить все шаги",
     ttPrev: "Предыдущий шаг", ttNext: "Следующий шаг", ttPlay: "Пуск / Пауза",
@@ -792,7 +792,7 @@ const I18N = {
     ttZone: "区域 — 从防守球员拖出以标记其负责区域（3）",
     ttDefense: "显示 / 隐藏防守球员",
     ttEraser: "橡皮擦 — 点击箭头或球员（6）",
-    ttBack: "返回全部战术", ttFullscreen: "全屏", ttPreview: "以观看模式预览", ttRename: "重命名战术",
+    ttBack: "返回全部战术", ttFullscreen: "全屏", ttPreview: "以观看模式预览", installHintAndroid: "把战术板安装为主屏幕应用。", installHintIOS: "安装方法：点按分享，再选择\u201c添加到主屏幕\u201d。", installGo: "安装", ttInstall: "安装应用", ttRename: "重命名战术",
     ttExport: "导出为 GIF、视频或 PDF", ttDelete: "删除战术",
     ttDeleteStep: "删除此步", ttResetAll: "清除所有步骤",
     ttPrev: "上一步", ttNext: "下一步", ttPlay: "播放 / 暂停",
@@ -941,7 +941,7 @@ const I18N = {
     ttZone: "Zona — prevuci od odbrambenog igrača da označiš njegovu zonu (3)",
     ttDefense: "Prikaži / sakrij odbranu",
     ttEraser: "Gumica — klikni strelicu ili igrača (6)",
-    ttBack: "Nazad na akcije", ttFullscreen: "Ceo ekran", ttPreview: "Prikaz kao gledalac", ttRename: "Preimenuj akciju",
+    ttBack: "Nazad na akcije", ttFullscreen: "Ceo ekran", ttPreview: "Prikaz kao gledalac", installHintAndroid: "Dodaj plejbuk kao aplikaciju na po\u010detni ekran.", installHintIOS: "Za instalaciju: dodirni Deljenje pa \u201eDodaj na po\u010detni ekran\u201d.", installGo: "Instaliraj", ttInstall: "Instaliraj aplikaciju", ttRename: "Preimenuj akciju",
     ttExport: "Izvezi kao GIF, video ili PDF", ttDelete: "Obriši akciju",
     ttDeleteStep: "Obriši korak", ttResetAll: "Obriši sve korake",
     ttPrev: "Prethodni korak", ttNext: "Sledeći korak", ttPlay: "Pusti / Pauza",
@@ -1090,7 +1090,7 @@ const I18N = {
     ttZone: "Cona — povleci od obrambnega igralca za njegovo območje delovanja (3)",
     ttDefense: "Prikaži / skrij obrambo",
     ttEraser: "Radirka — klikni puščico ali igralca (6)",
-    ttBack: "Nazaj na akcije", ttFullscreen: "Celozaslonski način", ttPreview: "Predogled kot gledalec", ttRename: "Preimenuj akcijo",
+    ttBack: "Nazaj na akcije", ttFullscreen: "Celozaslonski način", ttPreview: "Predogled kot gledalec", installHintAndroid: "Dodaj playbook kot aplikacijo na za\u010detni zaslon.", installHintIOS: "Za namestitev: tapni Deli in nato \u00bbDodaj na za\u010detni zaslon\u00ab.", installGo: "Namesti", ttInstall: "Namesti aplikacijo", ttRename: "Preimenuj akcijo",
     ttExport: "Izvozi kot GIF, video ali PDF", ttDelete: "Izbriši akcijo",
     ttDeleteStep: "Izbriši korak", ttResetAll: "Počisti vse korake",
     ttPrev: "Prejšnji korak", ttNext: "Naslednji korak", ttPlay: "Predvajaj / Premor",
@@ -1239,7 +1239,7 @@ const I18N = {
     ttZone: "Ζώνη — σύρε από έναν αμυντικό για την περιοχή ευθύνης του (3)",
     ttDefense: "Εμφάνιση / απόκρυψη αμυντικών",
     ttEraser: "Γόμα — κλικ σε βέλος ή παίκτη (6)",
-    ttBack: "Πίσω στα συστήματα", ttFullscreen: "Πλήρης οθόνη", ttPreview: "Προβολή ως θεατής", ttRename: "Μετονομασία συστήματος",
+    ttBack: "Πίσω στα συστήματα", ttFullscreen: "Πλήρης οθόνη", ttPreview: "Προβολή ως θεατής", installHintAndroid: "Βάλε το playbook ως εφαρμογή στην αρχική οθόνη.", installHintIOS: "Για εγκατάσταση: πάτησε Κοινοποίηση και μετά «Προσθήκη στην αρχική οθόνη».", installGo: "Εγκατάσταση", ttInstall: "Εγκατάσταση εφαρμογής", ttRename: "Μετονομασία συστήματος",
     ttExport: "Εξαγωγή ως GIF, βίντεο ή PDF", ttDelete: "Διαγραφή συστήματος",
     ttDeleteStep: "Διαγραφή βήματος", ttResetAll: "Καθαρισμός όλων των βημάτων",
     ttPrev: "Προηγούμενο βήμα", ttNext: "Επόμενο βήμα", ttPlay: "Αναπαραγωγή / Παύση",
@@ -1365,7 +1365,7 @@ function applyLang() {
 
   const titles = {
     backBtn: "ttBack", exportBtn: "ttExport",
-    fsBtn: "ttFullscreen", previewBtn: "ttPreview",
+    fsBtn: "ttFullscreen", previewBtn: "ttPreview", installBtn: "ttInstall",
     shareBtn: "ttShare",
     deletePlayBtn: "ttDelete",
     prevBtn: "ttPrev", nextBtn: "ttNext",
@@ -1627,6 +1627,7 @@ function showHome(fromHistory) {
   editorEl.hidden = true;
   homeEl.hidden = false;
   renderHome();
+  maybeShowInstallHint();
   // reached without the back button (delete, help…) — retarget the URL
   if (!fromHistory && history.state && history.state.view === "play") markHomeUrl();
 }
@@ -4783,6 +4784,7 @@ function startTour() {
 function endTour() {
   $("tour").hidden = true;
   localStorage.setItem(WIZ_FLAG, "1");
+  maybeShowInstallHint();
 }
 
 function nextTour() {
@@ -4856,6 +4858,61 @@ document.addEventListener("keydown", (e) => {
     el.remove(); // no logo asset — plain court
   }
 })();
+
+/* ---------------- PWA install ---------------- */
+
+let deferredInstall = null;
+
+function isStandaloneMode() {
+  return matchMedia("(display-mode: standalone)").matches || !!navigator.standalone;
+}
+
+function isIOSBrowser() {
+  return /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
+// First visit only: a dismissible hint — Android gets a real install
+// button, iOS gets the Share → Add to Home Screen instruction.
+function maybeShowInstallHint() {
+  if (homeEl.hidden || isStandaloneMode()) return;
+  if (localStorage.getItem("playbook-install-hinted")) return;
+  if (!$("tour").hidden) return; // let the tour finish first
+  const ios = isIOSBrowser();
+  if (!ios && !deferredInstall) return;
+  localStorage.setItem("playbook-install-hinted", "1");
+  $("installHintMsg").textContent = t(ios ? "installHintIOS" : "installHintAndroid");
+  $("installHintGo").hidden = ios;
+  $("installHintGo").textContent = t("installGo");
+  $("installHint").hidden = false;
+}
+
+async function promptInstall() {
+  if (!deferredInstall) return;
+  const ev = deferredInstall;
+  deferredInstall = null;
+  $("installBtn").hidden = true;
+  $("installHint").hidden = true;
+  ev.prompt();
+  await ev.userChoice.catch(() => {});
+}
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredInstall = e;
+  $("installBtn").hidden = false;
+  maybeShowInstallHint();
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredInstall = null;
+  $("installBtn").hidden = true;
+  $("installHint").hidden = true;
+});
+
+$("installBtn").addEventListener("click", promptInstall);
+$("installHintGo").addEventListener("click", promptInstall);
+$("installHintClose").addEventListener("click", () => { $("installHint").hidden = true; });
 
 load();
 applyLang();

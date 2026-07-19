@@ -669,6 +669,46 @@ body.home-view .home {
   z-index: 5;
 }
 
+#installBtn {
+  position: fixed;
+  top: 12px;
+  right: 112px;
+  z-index: 5;
+}
+
+/* first-visit install hint, bottom center */
+.install-hint {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--panel);
+  border: 1px solid #56565f;
+  border-radius: 12px;
+  box-shadow: 0 14px 40px #000c;
+  /* left:50% halves the shrink-to-fit space — size to content instead */
+  width: max-content;
+  max-width: min(480px, calc(100vw - 12px));
+  user-select: none;
+}
+
+.install-hint span {
+  padding: 13px 8px 13px 14px;
+  font-size: 14px;
+  line-height: 1.35;
+  flex: 1;
+}
+
+.install-hint .btn-primary {
+  flex: none;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
 #helpEditor {
   position: absolute;
   top: 9px;
@@ -1955,6 +1995,7 @@ body[data-tool="eraser"] .def-ghost-hit { cursor: pointer; }
   .topbar { padding: 6px 104px 6px 8px; gap: 6px; }
   #helpEditor { right: 58px; top: 6px; }
   #helpHome { right: 60px; }
+  #installBtn { right: 108px; }
   #langEditor { top: 6px; right: 8px; }
   .topbar .btn { padding: 5px 8px; font-size: 12px; border-radius: 7px; }
   .play-name { font-size: 15px; padding: 3px 4px; max-width: 40vw; }

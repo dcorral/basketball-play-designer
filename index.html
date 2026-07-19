@@ -9,11 +9,16 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#101012">
+  <!-- standalone install on iOS versions that predate manifest support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Playbook">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <!-- ============ Home screen ============ -->
   <div id="home" class="home">
+    <button id="installBtn" class="btn help-btn install-btn" title="Install app" hidden><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 V14 M8 10.5 L12 14.5 L16 10.5 M5 19 H19"/></svg></button>
     <button id="helpHome" class="btn help-btn" title="Help"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8.2 8.8 a3.8 3.8 0 1 1 6.6 2.6 c-1.5 1.5 -2.8 1.9 -2.8 3.6"/><path d="M12 18.8 v 0.01"/></svg></button>
     <select id="langHome" class="lang-select" title="Language / Idioma">
       <option value="en">🇬🇧</option>
@@ -438,6 +443,12 @@
   </div>
 
   <!-- ============ Undo-delete notification ============ -->
+  <div id="installHint" class="install-hint" hidden>
+    <span id="installHintMsg"></span>
+    <button id="installHintGo" class="btn btn-primary"></button>
+    <button id="installHintClose" class="undo-close" title="Dismiss">✕</button>
+  </div>
+
   <div id="undoToast" class="undo-toast" hidden>
     <span id="undoToastMsg"></span>
     <button id="undoToastClose" class="undo-close" title="Dismiss">✕</button>

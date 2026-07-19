@@ -854,6 +854,8 @@ body.view-only .step-actions,
 body.view-only #deletePlayBtn,
 body.view-only #handles,
 body.view-only #exportBtn,
+body.view-only #maybeControls,
+body.view-only #fsBtn,
 body.view-only #shareBtn { display: none !important; }
 
 body.view-only #viewEditBtn { display: inline-flex; }
@@ -1171,6 +1173,52 @@ select:hover, .btn:hover { border-color: #5a5a63; }
 }
 
 .zoom-ctrl button:hover { background: var(--panel-2); }
+
+.zoom-ctrl button svg { width: 14px; height: 14px; display: block; }
+
+.ic-fs-off { display: none !important; }
+
+body.fs-mode .ic-fs-on { display: none !important; }
+body.fs-mode .ic-fs-off { display: block !important; }
+
+/* ---------- Fullscreen edition mode ---------- */
+body.fs-mode .topbar,
+body.fs-mode .step-actions,
+body.fs-mode .steps-row,
+body.fs-mode .maybe-controls { display: none !important; }
+
+body.fs-mode .stage-wrap { padding: 0; }
+
+body.fs-mode .player-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: calc(100vw - 16px);
+  border: 1px solid #3c3c42;
+  border-radius: 999px;
+  padding: 6px 12px;
+  gap: 8px;
+  justify-content: center;
+  z-index: 55;
+  box-shadow: 0 12px 34px #000b;
+}
+
+/* keep the corner controls clear of the floating pill */
+body.fs-mode .zoom-ctrl { bottom: 70px; }
+
+body.fs-mode .timeline-wrap,
+body.fs-mode .step-indicator,
+body.fs-mode .speed-select { display: none !important; }
+
+/* the step buttons docked into the floating bar keep their look but
+   shrink to fit the pill */
+body.fs-mode .player-bar .step-chip { padding: 7px 14px; margin: 0; flex: none; }
+
+/* no editing controls in the bar when the play cannot be edited */
+body.view-only .player-bar .step-chip,
+body.play-locked .player-bar .step-chip { display: none !important; }
 
 #zoomLabel { font-size: 12px; color: var(--muted); min-width: 46px; }
 

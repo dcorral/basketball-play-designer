@@ -49,6 +49,11 @@
         <input type="checkbox" id="selectAllCheck" class="card-check">
         <label for="selectAllCheck" id="selectAllLabel"></label>
         <div class="bulk-actions">
+          <button id="shareSelectedBtn" class="bulk-btn" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/>
+              <path d="M8.4 10.9 L15.6 6.3 M8.4 13.1 L15.6 17.7"/></svg>
+          </button>
           <button id="saveSelectedBtn" class="bulk-btn" hidden>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
@@ -87,6 +92,16 @@
       <button id="deleteAllBtn" class="delete-all" hidden></button>
     </div>
     <input id="importFile" type="file" accept=".zip,application/zip" hidden>
+  </div>
+
+  <!-- ============ Shared plays list (opened from a multi-play link) ============ -->
+  <div id="sharedScreen" class="home" hidden>
+    <div class="home-inner">
+      <img src="assets/logo.png" alt="Cejudos" class="home-logo" width="512" height="570">
+      <h1 id="sharedTitle"></h1>
+      <div id="sharedList" class="play-list"></div>
+      <button id="sharedHomeBtn" class="btn"></button>
+    </div>
   </div>
 
   <!-- ============ Editor ============ -->
@@ -131,6 +146,10 @@
         <span id="viewEditLabel">Edit</span>
       </button>
       <button id="helpEditor" class="btn help-btn" title="Help"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8.2 8.8 a3.8 3.8 0 1 1 6.6 2.6 c-1.5 1.5 -2.8 1.9 -2.8 3.6"/><path d="M12 18.8 v 0.01"/></svg></button>
+      <button id="viewCloseBtn" class="btn icon-btn" title="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+          <path d="M6 6 L18 18 M18 6 L6 18"/></svg>
+      </button>
       <select id="langEditor" class="lang-select" title="Language / Idioma">
         <option value="en">🇬🇧</option>
         <option value="es">🇪🇸</option>

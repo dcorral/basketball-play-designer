@@ -194,7 +194,7 @@ const I18N = {
     ttZone: "Zone — drag from a defender to mark their area of action (3)",
     ttDefense: "Show / hide defenders",
     ttEraser: "Eraser — click an arrow or a player to remove its arrow (6)",
-    ttBack: "Back to all plays", ttFullscreen: "Full screen", ttPreview: "Preview as a viewer", installHintAndroid: "Get the playbook as an app on your home screen.", installHintIOS: "To install: tap Share and then \u201cAdd to Home Screen\u201d.", installGo: "Install", ttInstall: "Install app", ttRename: "Rename current play",
+    ttBack: "Back to all plays", ttFullscreen: "Full screen", ttPreview: "Preview as a viewer", installHintAndroid: "Get the playbook as an app on your home screen.", installHintIOS: "To install: tap Share and then \u201cAdd to Home Screen\u201d.", installGo: "Install", sharedListTitle: "Shared plays", sharedListHome: "My playbook", ttBulkShare: "Share selected as one link", ttCloseView: "Close", ttInstall: "Install app", ttRename: "Rename current play",
     ttExport: "Export as GIF, video or PDF", ttDelete: "Delete current play",
     ttDeleteStep: "Delete current step", ttResetAll: "Clear all steps",
     ttPrev: "Previous step", ttNext: "Next step", ttPlay: "Play / Pause",
@@ -344,7 +344,7 @@ const I18N = {
     ttZone: "Zona — arrastra desde un defensor para marcar su área de acción (3)",
     ttDefense: "Mostrar / ocultar defensores",
     ttEraser: "Borrador — pulsa una flecha o un jugador para quitar su flecha (6)",
-    ttBack: "Volver a todas las jugadas", ttFullscreen: "Pantalla completa", ttPreview: "Ver como espectador", installHintAndroid: "Lleva el playbook como app en tu pantalla de inicio.", installHintIOS: "Para instalarla: toca Compartir y luego \u201cA\u00f1adir a pantalla de inicio\u201d.", installGo: "Instalar", ttInstall: "Instalar app", ttRename: "Renombrar la jugada",
+    ttBack: "Volver a todas las jugadas", ttFullscreen: "Pantalla completa", ttPreview: "Ver como espectador", installHintAndroid: "Lleva el playbook como app en tu pantalla de inicio.", installHintIOS: "Para instalarla: toca Compartir y luego \u201cA\u00f1adir a pantalla de inicio\u201d.", installGo: "Instalar", sharedListTitle: "Jugadas compartidas", sharedListHome: "Mi playbook", ttBulkShare: "Compartir seleccionadas en un enlace", ttCloseView: "Cerrar", ttInstall: "Instalar app", ttRename: "Renombrar la jugada",
     ttExport: "Exportar como GIF, vídeo o PDF", ttDelete: "Eliminar la jugada",
     ttDeleteStep: "Eliminar el paso actual", ttResetAll: "Borrar todos los pasos",
     ttPrev: "Paso anterior", ttNext: "Paso siguiente", ttPlay: "Reproducir / Pausa",
@@ -494,7 +494,7 @@ const I18N = {
     ttZone: "Zona — trascina da un difensore per segnare la sua area di azione (3)",
     ttDefense: "Mostra / nascondi difensori",
     ttEraser: "Gomma — clicca una freccia o un giocatore (6)",
-    ttBack: "Torna alle giocate", ttFullscreen: "Schermo intero", ttPreview: "Anteprima come spettatore", installHintAndroid: "Porta il playbook come app nella schermata iniziale.", installHintIOS: "Per installare: tocca Condividi e poi \u201cAggiungi a schermata Home\u201d.", installGo: "Installa", ttInstall: "Installa app", ttRename: "Rinomina la giocata",
+    ttBack: "Torna alle giocate", ttFullscreen: "Schermo intero", ttPreview: "Anteprima come spettatore", installHintAndroid: "Porta il playbook come app nella schermata iniziale.", installHintIOS: "Per installare: tocca Condividi e poi \u201cAggiungi a schermata Home\u201d.", installGo: "Installa", sharedListTitle: "Giocate condivise", sharedListHome: "Il mio playbook", ttBulkShare: "Condividi le selezionate in un unico link", ttCloseView: "Chiudi", ttInstall: "Installa app", ttRename: "Rinomina la giocata",
     ttExport: "Esporta come GIF, video o PDF", ttDelete: "Elimina la giocata",
     ttDeleteStep: "Elimina il passo", ttResetAll: "Cancella tutti i passi",
     ttPrev: "Passo precedente", ttNext: "Passo successivo", ttPlay: "Riproduci / Pausa",
@@ -643,7 +643,7 @@ const I18N = {
     ttZone: "Зона — тяните от защитника, чтобы обозначить его зону действий (3)",
     ttDefense: "Показать / скрыть защитников",
     ttEraser: "Ластик — нажмите на стрелку или игрока (6)",
-    ttBack: "Ко всем комбинациям", ttFullscreen: "Во весь экран", ttPreview: "Как увидят другие", installHintAndroid: "Установите плейбук как приложение на главный экран.", installHintIOS: "Чтобы установить: нажмите «Поделиться», затем «На экран \u201eДомой\u201c».", installGo: "Установить", ttInstall: "Установить приложение", ttRename: "Переименовать комбинацию",
+    ttBack: "Ко всем комбинациям", ttFullscreen: "Во весь экран", ttPreview: "Как увидят другие", installHintAndroid: "Установите плейбук как приложение на главный экран.", installHintIOS: "Чтобы установить: нажмите «Поделиться», затем «На экран \u201eДомой\u201c».", installGo: "Установить", sharedListTitle: "Комбинации по ссылке", sharedListHome: "Мой плейбук", ttBulkShare: "Поделиться выбранными одной ссылкой", ttCloseView: "Закрыть", ttInstall: "Установить приложение", ttRename: "Переименовать комбинацию",
     ttExport: "Экспорт в GIF, видео или PDF", ttDelete: "Удалить комбинацию",
     ttDeleteStep: "Удалить шаг", ttResetAll: "Очистить все шаги",
     ttPrev: "Предыдущий шаг", ttNext: "Следующий шаг", ttPlay: "Пуск / Пауза",
@@ -792,7 +792,7 @@ const I18N = {
     ttZone: "区域 — 从防守球员拖出以标记其负责区域（3）",
     ttDefense: "显示 / 隐藏防守球员",
     ttEraser: "橡皮擦 — 点击箭头或球员（6）",
-    ttBack: "返回全部战术", ttFullscreen: "全屏", ttPreview: "以观看模式预览", installHintAndroid: "把战术板安装为主屏幕应用。", installHintIOS: "安装方法：点按分享，再选择\u201c添加到主屏幕\u201d。", installGo: "安装", ttInstall: "安装应用", ttRename: "重命名战术",
+    ttBack: "返回全部战术", ttFullscreen: "全屏", ttPreview: "以观看模式预览", installHintAndroid: "把战术板安装为主屏幕应用。", installHintIOS: "安装方法：点按分享，再选择\u201c添加到主屏幕\u201d。", installGo: "安装", sharedListTitle: "分享的战术", sharedListHome: "我的战术板", ttBulkShare: "将所选战术合并为一个链接分享", ttCloseView: "关闭", ttInstall: "安装应用", ttRename: "重命名战术",
     ttExport: "导出为 GIF、视频或 PDF", ttDelete: "删除战术",
     ttDeleteStep: "删除此步", ttResetAll: "清除所有步骤",
     ttPrev: "上一步", ttNext: "下一步", ttPlay: "播放 / 暂停",
@@ -941,7 +941,7 @@ const I18N = {
     ttZone: "Zona — prevuci od odbrambenog igrača da označiš njegovu zonu (3)",
     ttDefense: "Prikaži / sakrij odbranu",
     ttEraser: "Gumica — klikni strelicu ili igrača (6)",
-    ttBack: "Nazad na akcije", ttFullscreen: "Ceo ekran", ttPreview: "Prikaz kao gledalac", installHintAndroid: "Dodaj plejbuk kao aplikaciju na po\u010detni ekran.", installHintIOS: "Za instalaciju: dodirni Deljenje pa \u201eDodaj na po\u010detni ekran\u201d.", installGo: "Instaliraj", ttInstall: "Instaliraj aplikaciju", ttRename: "Preimenuj akciju",
+    ttBack: "Nazad na akcije", ttFullscreen: "Ceo ekran", ttPreview: "Prikaz kao gledalac", installHintAndroid: "Dodaj plejbuk kao aplikaciju na po\u010detni ekran.", installHintIOS: "Za instalaciju: dodirni Deljenje pa \u201eDodaj na po\u010detni ekran\u201d.", installGo: "Instaliraj", sharedListTitle: "Podeljene akcije", sharedListHome: "Moj plejbuk", ttBulkShare: "Podeli izabrane jednim linkom", ttCloseView: "Zatvori", ttInstall: "Instaliraj aplikaciju", ttRename: "Preimenuj akciju",
     ttExport: "Izvezi kao GIF, video ili PDF", ttDelete: "Obriši akciju",
     ttDeleteStep: "Obriši korak", ttResetAll: "Obriši sve korake",
     ttPrev: "Prethodni korak", ttNext: "Sledeći korak", ttPlay: "Pusti / Pauza",
@@ -1090,7 +1090,7 @@ const I18N = {
     ttZone: "Cona — povleci od obrambnega igralca za njegovo območje delovanja (3)",
     ttDefense: "Prikaži / skrij obrambo",
     ttEraser: "Radirka — klikni puščico ali igralca (6)",
-    ttBack: "Nazaj na akcije", ttFullscreen: "Celozaslonski način", ttPreview: "Predogled kot gledalec", installHintAndroid: "Dodaj playbook kot aplikacijo na za\u010detni zaslon.", installHintIOS: "Za namestitev: tapni Deli in nato \u00bbDodaj na za\u010detni zaslon\u00ab.", installGo: "Namesti", ttInstall: "Namesti aplikacijo", ttRename: "Preimenuj akcijo",
+    ttBack: "Nazaj na akcije", ttFullscreen: "Celozaslonski način", ttPreview: "Predogled kot gledalec", installHintAndroid: "Dodaj playbook kot aplikacijo na za\u010detni zaslon.", installHintIOS: "Za namestitev: tapni Deli in nato \u00bbDodaj na za\u010detni zaslon\u00ab.", installGo: "Namesti", sharedListTitle: "Deljene akcije", sharedListHome: "Moj playbook", ttBulkShare: "Deli izbrane z eno povezavo", ttCloseView: "Zapri", ttInstall: "Namesti aplikacijo", ttRename: "Preimenuj akcijo",
     ttExport: "Izvozi kot GIF, video ali PDF", ttDelete: "Izbriši akcijo",
     ttDeleteStep: "Izbriši korak", ttResetAll: "Počisti vse korake",
     ttPrev: "Prejšnji korak", ttNext: "Naslednji korak", ttPlay: "Predvajaj / Premor",
@@ -1239,7 +1239,7 @@ const I18N = {
     ttZone: "Ζώνη — σύρε από έναν αμυντικό για την περιοχή ευθύνης του (3)",
     ttDefense: "Εμφάνιση / απόκρυψη αμυντικών",
     ttEraser: "Γόμα — κλικ σε βέλος ή παίκτη (6)",
-    ttBack: "Πίσω στα συστήματα", ttFullscreen: "Πλήρης οθόνη", ttPreview: "Προβολή ως θεατής", installHintAndroid: "Βάλε το playbook ως εφαρμογή στην αρχική οθόνη.", installHintIOS: "Για εγκατάσταση: πάτησε Κοινοποίηση και μετά «Προσθήκη στην αρχική οθόνη».", installGo: "Εγκατάσταση", ttInstall: "Εγκατάσταση εφαρμογής", ttRename: "Μετονομασία συστήματος",
+    ttBack: "Πίσω στα συστήματα", ttFullscreen: "Πλήρης οθόνη", ttPreview: "Προβολή ως θεατής", installHintAndroid: "Βάλε το playbook ως εφαρμογή στην αρχική οθόνη.", installHintIOS: "Για εγκατάσταση: πάτησε Κοινοποίηση και μετά «Προσθήκη στην αρχική οθόνη».", installGo: "Εγκατάσταση", sharedListTitle: "Κοινόχρηστα συστήματα", sharedListHome: "Το playbook μου", ttBulkShare: "Κοινοποίηση επιλεγμένων με έναν σύνδεσμο", ttCloseView: "Κλείσιμο", ttInstall: "Εγκατάσταση εφαρμογής", ttRename: "Μετονομασία συστήματος",
     ttExport: "Εξαγωγή ως GIF, βίντεο ή PDF", ttDelete: "Διαγραφή συστήματος",
     ttDeleteStep: "Διαγραφή βήματος", ttResetAll: "Καθαρισμός όλων των βημάτων",
     ttPrev: "Προηγούμενο βήμα", ttNext: "Επόμενο βήμα", ttPlay: "Αναπαραγωγή / Παύση",
@@ -1366,6 +1366,7 @@ function applyLang() {
   const titles = {
     backBtn: "ttBack", exportBtn: "ttExport",
     fsBtn: "ttFullscreen", previewBtn: "ttPreview", installBtn: "ttInstall",
+    viewCloseBtn: "ttCloseView", shareSelectedBtn: "ttBulkShare",
     shareBtn: "ttShare",
     deletePlayBtn: "ttDelete",
     prevBtn: "ttPrev", nextBtn: "ttNext",
@@ -1603,7 +1604,11 @@ function markHomeUrl() {
 
 window.addEventListener("popstate", (e) => {
   const st = e.state;
-  if (st && st.view === "play" && plays.some((p) => p.id === st.id)) {
+  if (st && st.view === "sharedview" && sharedList && sharedList[st.idx]) {
+    openSharedItem(st.idx, true);
+  } else if (st && st.view === "sharedlist" && sharedList) {
+    showSharedScreen();
+  } else if (st && st.view === "play" && plays.some((p) => p.id === st.id)) {
     if (!editorEl.hidden && !viewPlay && currentPlayId === st.id) {
       setFsMode(!!st.fs); // same play — only the fullscreen flag changed
     } else {
@@ -1626,6 +1631,7 @@ function showHome(fromHistory) {
   playNameEl.readOnly = false;
   editorEl.hidden = true;
   homeEl.hidden = false;
+  $("sharedScreen").hidden = true;
   renderHome();
   maybeShowInstallHint();
   // reached without the back button (delete, help…) — retarget the URL
@@ -1771,6 +1777,8 @@ function updateDeleteSelected() {
   topBtn.hidden = selectedPlayIds.size === 0;
   topBtn.title = t("deleteSelected", selectedPlayIds.size);
   const none = selectedPlayIds.size === 0;
+  $("shareSelectedBtn").hidden = none;
+  $("shareSelectedBtn").title = t("ttBulkShare");
   $("saveSelectedBtn").hidden = none;
   $("saveSelectedBtn").title = t("ttBulkSave");
   $("zipSelectedBtn").hidden = none;
@@ -4370,8 +4378,13 @@ $("saveSelectedBtn").addEventListener("click", () => {
 });
 
 $("backBtn").addEventListener("click", () => {
-  if (history.state && history.state.view === "play") history.back();
-  else showHome();
+  // inside a shared-link session the history below leads back to the
+  // shared list, not home — replace instead of popping
+  if (history.state && history.state.view === "play" && !sharedList) history.back();
+  else {
+    showHome();
+    markHomeUrl();
+  }
 });
 
 /* ---- inline rename ---- */
@@ -4708,6 +4721,7 @@ async function addSharedPlay(p) {
     if (!ok) return false;
   }
   const desired = p.name;
+  p.id = "play-" + Math.random().toString(36).slice(2, 10);
   p.name = uniquePlayName(desired);
   plays.push(p);
   save();
@@ -4716,10 +4730,111 @@ async function addSharedPlay(p) {
   return true;
 }
 
-// Opening a share link: #v= opens the read-only viewer, #p= adds directly.
+let sharedList = null; // plays that arrived via a multi-play link
+
+function showSharedScreen() {
+  playing = false;
+  viewPlay = null;
+  previewOwnId = null;
+  setFsMode(false);
+  document.body.classList.remove("playing", "view-only", "play-locked");
+  document.body.classList.add("home-view");
+  $("installHint").hidden = true;
+  editorEl.hidden = true;
+  homeEl.hidden = true;
+  $("sharedScreen").hidden = false;
+  $("sharedTitle").textContent = t("sharedListTitle");
+  $("sharedHomeBtn").textContent = "\u2190 " + t("sharedListHome");
+  const list = $("sharedList");
+  list.innerHTML = "";
+  sharedList.forEach((p, i) => {
+    const card = document.createElement("div");
+    card.className = "play-card kind-" + playKind(p);
+    const name = document.createElement("span");
+    name.className = "card-name";
+    name.textContent = p.name;
+    const meta = document.createElement("span");
+    meta.className = "meta";
+    meta.textContent = p.steps.length + " " + (p.steps.length === 1 ? t("stepSingular") : t("stepPlural"));
+    card.append(name, meta);
+    card.addEventListener("click", () => openSharedItem(i));
+    list.appendChild(card);
+  });
+}
+
+function openSharedItem(i, fromHistory) {
+  const p = sharedList && sharedList[i];
+  if (!p) return;
+  $("sharedScreen").hidden = true;
+  openViewer(JSON.parse(JSON.stringify(p)));
+  if (!fromHistory) history.pushState({ view: "sharedview", idx: i }, "", location.hash || undefined);
+}
+
+$("sharedHomeBtn").addEventListener("click", () => {
+  showHome();
+  history.pushState({ view: "home" }, "", BASE_URL); // back returns to the list
+});
+
+// ✕ in the viewer pill: back to wherever the viewer was opened from
+$("viewCloseBtn").addEventListener("click", () => {
+  if (!viewPlay) return;
+  if (previewOwnId) {
+    if (history.state && history.state.preview) history.back();
+    else openPlay(previewOwnId);
+  } else if (sharedList) {
+    if (history.state && history.state.view === "sharedview") history.back();
+    else showSharedScreen();
+  } else {
+    showHome();
+  }
+});
+
+$("shareSelectedBtn").addEventListener("click", async () => {
+  const sel = plays.filter((p) => selectedPlayIds.has(p.id));
+  if (!sel.length) return;
+  if (sel.length === 1) return sharePlayFlow(sel[0]);
+  const frag = "#l=" + await encodeSharePlay(sel);
+  const url = location.origin + location.pathname + frag;
+  if (navigator.share) {
+    try { await navigator.share({ title: t("sharedListTitle"), url }); } catch (_) { /* cancelled */ }
+    return;
+  }
+  openModal({
+    title: t("shareLinkTitle"),
+    noCancel: true,
+    xClose: true,
+    qr: url.length <= 2300 ? url : undefined, // longer links don't fit a QR
+    copyLink: url,
+  });
+});
+
+// Opening a share link: #v= opens the read-only viewer, #p= adds
+// directly, #l= shows a list of shared plays.
 async function importFromLink() {
-  const m = location.hash.match(/^#(p|v)=(.+)$/);
+  const m = location.hash.match(/^#(p|v|l)=(.+)$/);
   if (!m) return;
+  if (m[1] === "l") {
+    try {
+      const raw = await decodeSharePlay(m[2]);
+      if (!Array.isArray(raw)) throw new Error("bad");
+      sharedList = raw
+        .filter((r) => r && r.name && Array.isArray(r.steps) && r.steps.length)
+        .map((r) => {
+          const p = normalizePassTimings(migrateBall(migratePlay(r)));
+          delete p.locked;
+          return p;
+        });
+      if (!sharedList.length) throw new Error("bad");
+      // keep the #l= hash so a reload restores the list
+      history.replaceState({ view: "sharedlist" }, "", location.pathname + location.search + location.hash);
+      showSharedScreen();
+    } catch (_) {
+      sharedList = null;
+      markHomeUrl();
+      openModal({ title: t("importErrTitle"), message: t("sharedErrMsg"), confirmLabel: "OK", noCancel: true });
+    }
+    return;
+  }
   markHomeUrl();
   try {
     const raw = await decodeSharePlay(m[2]);
@@ -5003,7 +5118,7 @@ load();
 applyLang();
 applyToolbarFold();
 showHome();
-const arrivedViaShareLink = /^#(p|v)=/.test(location.hash);
+const arrivedViaShareLink = /^#(p|v|l)=/.test(location.hash);
 if (!arrivedViaShareLink) {
   const deepLink = location.hash.match(/^#play=(.+)$/);
   const deepId = deepLink && decodeURIComponent(deepLink[1]);

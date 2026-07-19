@@ -915,6 +915,14 @@ body.view-only #shareBtn { display: none !important; }
 
 body.view-only #viewEditBtn { display: inline-flex; }
 body.view-only #lockBtn { display: none; }
+
+/* ✕ back to the shared list / home — viewer only */
+#viewCloseBtn { display: none; }
+body.view-only #viewCloseBtn { display: inline-flex; }
+
+/* shared-plays list (multi-play link) */
+#sharedList .play-card { justify-content: space-between; }
+#sharedHomeBtn { margin-top: 4px; }
 body.view-only #langEditor { display: none !important; }
 
 #lockBtn.locked {
